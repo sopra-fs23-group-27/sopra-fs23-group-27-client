@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from "styled-components";
+import "./App.css";
+import { Link } from "react-router-dom";
 
-function App() {
+const Container = styled.div`
+  display: flex;
+  height: 90vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Ul = styled.ul`
+  list-style-type: none;
+  padding-inline-start: 0;
+`;
+const SamplePlayers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <h1>Hello World!</h1>
+      <Ul>
+        {SamplePlayers.map((id) => (
+          <li>
+            <Link to={`/players/${id}`}>Player {id}</Link>
+          </li>
+        ))}
+      </Ul>
+    </Container>
   );
-}
-
-export default App;
+};
