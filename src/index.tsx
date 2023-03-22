@@ -7,6 +7,7 @@ import { App } from "./App";
 import { ErrorPage } from "./components/ErrorPage";
 import reportWebVitals from "./reportWebVitals";
 import { Player } from "./components/Player";
+import { HomePage } from "./components/HomePage";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <HomePage />
+    {
+      //<RouterProvider router={router} />
+    }
   </React.StrictMode>
 );
 
