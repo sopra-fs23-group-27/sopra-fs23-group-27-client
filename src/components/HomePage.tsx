@@ -13,7 +13,7 @@ export const HomePage = () => {
   return (
     <Container>
       <h1>Group 27</h1>
-      <h1>FlagMaina</h1>
+      <h1>FlagMania</h1>
     </Container>
   );
 };
