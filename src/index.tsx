@@ -28,7 +28,7 @@ root.render(
   <React.StrictMode>
     <HomePage />
     {
-      //<RouterProvider router={router} />
+      <RouterProvider router={router} />
     }
   </React.StrictMode>
 );
