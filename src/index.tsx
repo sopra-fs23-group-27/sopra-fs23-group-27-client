@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { MantineProvider, Text } from "@mantine/core";
 
 import "./index.css";
 import { App } from "./App";
 import { ErrorPage } from "./components/ErrorPage";
 import reportWebVitals from "./reportWebVitals";
 import { Player } from "./components/Player";
-import { HomePage } from "./components/HomePage";
+import { ActiveGameOverview } from "./components/ActiveGamesOverview";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
     path: "players/:playerId",
     element: <Player />,
   },
+  { path: "publicGames", element: <ActiveGameOverview /> },
 ]);
 
 const root = ReactDOM.createRoot(
@@ -26,10 +28,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <HomePage />
-    {
-      //<RouterProvider router={router} />
-    }
+    <MantineProvider withGlobalStyles withNormalizeCSS>
+      <RouterProvider router={router} />
+    </MantineProvider>
   </React.StrictMode>
 );
 
