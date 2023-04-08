@@ -5,10 +5,11 @@ import { MantineProvider, Text } from "@mantine/core";
 
 import "./index.css";
 import { App } from "./App";
-import { ErrorPage } from "./components/ErrorPage";
+import { ErrorPage } from "./views/ErrorPage";
 import reportWebVitals from "./reportWebVitals";
 import { Player } from "./components/Player";
-import { ActiveGameOverview } from "./components/ActiveGamesOverview";
+import { ActiveGameOverview } from "./views/ActiveGamesOverview";
+import { ConfigureGame } from "./views/ConfigureGame";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
     element: <Player />,
   },
   { path: "publicGames", element: <ActiveGameOverview /> },
+  { path: "configureGame", element: <ConfigureGame /> },
 ]);
 
 const root = ReactDOM.createRoot(

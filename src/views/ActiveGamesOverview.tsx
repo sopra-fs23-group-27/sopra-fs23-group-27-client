@@ -3,7 +3,7 @@ import { game } from "../types/databaseTypes";
 import { useState, useEffect } from "react";
 
 import styled from "styled-components";
-import { RainbowLoader } from "./RainbowLoader";
+import { RainbowLoader } from "../components/RainbowLoader";
 
 const GameContainer = styled.li`
   display: flex;
