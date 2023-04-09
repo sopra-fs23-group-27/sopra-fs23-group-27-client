@@ -1,9 +1,10 @@
-import { games } from "../helpers/fakeDatabase";
+import { emptyGame, games } from "../helpers/fakeDatabase";
 import { game } from "../types/databaseTypes";
 import { useState, useEffect } from "react";
 
 import styled from "styled-components";
 import { RainbowLoader } from "../components/RainbowLoader";
+import { httpGet } from "../helpers/httpService";
 
 const GameContainer = styled.li`
   display: flex;
@@ -58,6 +59,15 @@ const GameList = styled.ul`
 `;
 export const ActiveGameOverview = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [games, setGames] = useState<game[]>([emptyGame]);
+
+  /*
+  useEffect(() => {
+    const games = httpGet("/lobbies") as unknown as game[];
+    setGames(games);
+  }, []);
+  */
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
