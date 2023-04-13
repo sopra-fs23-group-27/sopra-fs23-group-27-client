@@ -37,8 +37,15 @@ const StartButton = styled.button`
 `;
 
 export const ConfigureGame = () => {
-  const [isAdvanced, setIsAdvanced] = useState<boolean>(false);
+  //Field states
   const [gameName, setGameName] = useState("");
+  const [isAdvanced, setIsAdvanced] = useState<boolean>(false);
+  //ADVANCED
+  const [hintsDelay, setHintsDelay] = useState(10);
+  const [hintsInterval, setHintsInterval] = useState(5);
+  const [roundTimeLimit, setRoundTimeLimit] = useState(10);
+  const [guessingLimit, setGuessingLimit] = useState(1);
+  //BASIC
   const [numberOfOptions, setNumberOfOptions] = useState(3);
   const [roundDuration, setRoundDuration] = useState(10);
   const [isPublic, setIsPublic] = useState(false);
@@ -47,6 +54,11 @@ export const ConfigureGame = () => {
     <Container>
       <Application>
         <h1>Configure your Game</h1>
+        <FloatingTextInput
+          label="Name"
+          value={gameName}
+          onChange={(newVal: string) => setGameName(newVal)}
+        />
         <div>
           <Button onClick={() => setIsAdvanced(false)} isActive={!isAdvanced}>
             BASIC
@@ -55,30 +67,70 @@ export const ConfigureGame = () => {
             ADVANCED
           </Button>
         </div>
-        <FloatingTextInput
-          label="Name"
-          value={gameName}
-          onChange={(newVal: string) => setGameName(newVal)}
-        />
-        <div>
-          <h2>Number of Options</h2>
-          <RangeInput
-            min={2}
-            max={6}
-            value={numberOfOptions}
-            setNewValue={setNumberOfOptions}
-          />
-        </div>
 
-        <div>
-          <h2>Round duration</h2>
-          <RangeInput
-            min={5}
-            max={30}
-            value={roundDuration}
-            setNewValue={setRoundDuration}
-          />
-        </div>
+        {isAdvanced ? (
+          <div>
+            <div>
+              <h2>Show first hint after</h2>
+              <RangeInput
+                min={10}
+                max={30}
+                value={hintsDelay}
+                setNewValue={setHintsDelay}
+              />
+            </div>
+            <div>
+              <h2>Hints interval</h2>
+              <RangeInput
+                min={5}
+                max={20}
+                value={hintsInterval}
+                setNewValue={setHintsInterval}
+              />
+            </div>
+            <div>
+              <h2>Time Limit per round</h2>
+              <RangeInput
+                min={10}
+                max={120}
+                value={roundTimeLimit}
+                setNewValue={setRoundTimeLimit}
+              />
+            </div>
+            <div>
+              <h2>Guessing Limit</h2>
+              <RangeInput
+                min={1}
+                max={10}
+                value={guessingLimit}
+                setNewValue={setGuessingLimit}
+              />
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div>
+              <h2>Number of Options</h2>
+              <RangeInput
+                min={2}
+                max={6}
+                value={numberOfOptions}
+                setNewValue={setNumberOfOptions}
+              />
+            </div>
+
+            <div>
+              <h2>Round duration</h2>
+              <RangeInput
+                min={5}
+                max={30}
+                value={roundDuration}
+                setNewValue={setRoundDuration}
+              />
+            </div>
+          </div>
+        )}
+
         <div>
           <Button onClick={() => setIsPublic(true)} isActive={isPublic}>
             Public
