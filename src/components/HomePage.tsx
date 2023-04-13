@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import "../styles/HomePage.css";
 import { Link } from "react-router-dom";
+import "../styles/HomePage.css";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -15,7 +17,7 @@ const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: space-between;
+  align-items: center;
   height: 40vh;
 `;
 
@@ -50,9 +52,12 @@ export const HomePage = () => {
         <Link to="/publicGame"><OrangeButton>
           Join Public Game
         </OrangeButton></Link>
-        <Link to="/newGame"><GreenButton>
-          Create New Game
+        <Link to="/privateGame"><GreenButton>
+          Join Private Game
         </GreenButton></Link>
+        <Link to="/newGame"><OrangeButton>
+          Create New Game
+        </OrangeButton></Link>
       </ButtonContainer>
     </Container>
   );
