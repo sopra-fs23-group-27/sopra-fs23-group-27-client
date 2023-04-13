@@ -1,15 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { MantineProvider} from "@mantine/core";
+import { MantineProvider, Text } from "@mantine/core";
 
 import "./index.css";
 import { App } from "./App";
 import { ErrorPage } from "./views/ErrorPage";
 import reportWebVitals from "./reportWebVitals";
 import { Player } from "./components/Player";
+import { ActiveGameOverview } from "./views/ActiveGamesOverview";
+import { ConfigureGame } from "./views/ConfigureGame";
 import { NewGame } from "./views/NewGame";
 import { HomePage } from "./components/HomePage";
+
 
 const router = createBrowserRouter([
   {
@@ -25,10 +28,11 @@ const router = createBrowserRouter([
     path: "players/:playerId",
     element: <Player />,
   },
+  { path: "publicGames", element: <ActiveGameOverview /> },
+  { path: "configureGame", element: <ConfigureGame /> },
   { path: "newGame", 
-    element: <NewGame />,
-    errorElement: <ErrorPage />
-  },
+    element: <NewGame />
+  }
 ]);
 
 const root = ReactDOM.createRoot(
