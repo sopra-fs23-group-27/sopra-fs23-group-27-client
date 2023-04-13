@@ -10,6 +10,9 @@ import reportWebVitals from "./reportWebVitals";
 import { Player } from "./components/Player";
 import { ActiveGameOverview } from "./views/ActiveGamesOverview";
 import { ConfigureGame } from "./views/ConfigureGame";
+import { NewGame } from "./views/NewGame";
+import { HomePage } from "./components/HomePage";
+
 
 const router = createBrowserRouter([
   {
@@ -18,11 +21,18 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: "home",
+    element: <HomePage />,
+  },
+  {
     path: "players/:playerId",
     element: <Player />,
   },
   { path: "publicGames", element: <ActiveGameOverview /> },
   { path: "configureGame", element: <ConfigureGame /> },
+  { path: "newGame", 
+    element: <NewGame />
+  }
 ]);
 
 const root = ReactDOM.createRoot(
