@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import "../styles/HomePage.css";
 import { Link } from "react-router-dom";
-import "../styles/HomePage.css";
 
 const Container = styled.div`
   display: flex;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -48,9 +49,11 @@ export const NewGame = () => {
         setGamePasswordRepeat(event.target.value);
     }
 
+    let navigate = useNavigate();
+
     const handleCreateGame = () => {
-        alert("something will happen here");
         console.log("create game");
+        return navigate("/scanQRCode");
     }
 
     return (

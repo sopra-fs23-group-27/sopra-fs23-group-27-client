@@ -12,6 +12,7 @@ import { ActiveGameOverview } from "./views/ActiveGamesOverview";
 import { ConfigureGame } from "./views/ConfigureGame";
 import { NewGame } from "./views/NewGame";
 import { HomePage } from "./components/HomePage";
+import { ScanQRCode } from "./views/ScanQRCode";
 
 
 const router = createBrowserRouter([
@@ -30,9 +31,8 @@ const router = createBrowserRouter([
   },
   { path: "publicGames", element: <ActiveGameOverview /> },
   { path: "configureGame", element: <ConfigureGame /> },
-  { path: "newGame", 
-    element: <NewGame />
-  }
+  { path: "newGame", element: <NewGame /> },
+  { path: "scanQRCode", element: <ScanQRCode /> },
 ]);
 
 const root = ReactDOM.createRoot(
