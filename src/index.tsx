@@ -13,6 +13,7 @@ import { ConfigureGame } from "./views/ConfigureGame";
 import { NewGame } from "./views/NewGame";
 import { HomePage } from "./components/HomePage";
 import { WebSocket } from "./components/WebSocket";
+import { Register } from "./views/Register";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
   { path: "configureGame", element: <ConfigureGame /> },
   { path: "newGame", element: <NewGame /> },
   { path: "webSocket", element: <WebSocket /> },
+  { path: "register", element: <Register /> },
 ]);
 
 const root = ReactDOM.createRoot(
