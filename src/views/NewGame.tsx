@@ -53,7 +53,7 @@ export const NewGame = () => {
 
     const handleCreateGame = () => {
         console.log("create game");
-        return navigate("/scanQRCode");
+        return navigate("/configureGame");
     }
 
     return (

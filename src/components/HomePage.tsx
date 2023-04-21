@@ -47,10 +47,10 @@ export const HomePage = () => {
       <h1>FlagMania</h1>
       <p>Play the game and learn about the flags of the world!</p>
       <ButtonContainer>
-        <Link to="/publicGame"><OrangeButton>
+        <Link to="/publicGames"><OrangeButton>
           Join Public Game
         </OrangeButton></Link>
-        <Link to="/privateGame"><GreenButton>
+        <Link to="/scanQRCode"><GreenButton>
           Join Private Game
         </GreenButton></Link>
         <Link to="/newGame"><OrangeButton>

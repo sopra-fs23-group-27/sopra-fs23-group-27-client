@@ -1,6 +1,7 @@
 import QRCode from "react-qr-code";
 
 export const ScanQRCode = () => {
+
   return (
     <div
         style={{
@@ -14,8 +15,8 @@ export const ScanQRCode = () => {
     >
       <h1>Scan the following QR code to join the game</h1>
 
-      {/* TODO: replace with actual URL */}
-      <p><QRCode value="url-to-game" /></p>
+      {/* TODO: replace with dynamic URL */}
+      <p><QRCode value="https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=5s" /></p>
       
     </div>
   );
