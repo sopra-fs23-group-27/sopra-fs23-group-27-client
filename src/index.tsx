@@ -16,6 +16,7 @@ import { WebSocket } from "./components/WebSocket";
 import { Register } from "./views/Register";
 import { Login } from "./views/Login";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
