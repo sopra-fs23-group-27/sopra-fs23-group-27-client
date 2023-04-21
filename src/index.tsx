@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { MantineProvider, Text } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 
 import "./index.css";
 import { App } from "./App";
@@ -12,7 +12,7 @@ import { ActiveGameOverview } from "./views/ActiveGamesOverview";
 import { ConfigureGame } from "./views/ConfigureGame";
 import { NewGame } from "./views/NewGame";
 import { HomePage } from "./components/HomePage";
-
+import { WebSocket } from "./components/WebSocket";
 
 const router = createBrowserRouter([
   {
@@ -30,9 +30,8 @@ const router = createBrowserRouter([
   },
   { path: "publicGames", element: <ActiveGameOverview /> },
   { path: "configureGame", element: <ConfigureGame /> },
-  { path: "newGame", 
-    element: <NewGame />
-  }
+  { path: "newGame", element: <NewGame /> },
+  { path: "webSocket", element: <WebSocket /> },
 ]);
 
 const root = ReactDOM.createRoot(

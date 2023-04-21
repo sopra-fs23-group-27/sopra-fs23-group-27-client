@@ -11,8 +11,8 @@ const Container = styled.div`
 
   font-size: 38px;
 `;
-export const HomePage = () => {
-  const socket = io("ws://localhost:8080");
+export const WebSocket = () => {
+  const socket = io("ws://sopra-fs23-group-27-server.oa.r.appspot.com");
 
   socket.on("message", (message) => {
     const extendedMessages = [...messages];
