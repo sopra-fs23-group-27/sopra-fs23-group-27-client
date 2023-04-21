@@ -7,3 +7,7 @@ const mainURL = onlineURL;
 export const httpGet = (endpoint: string) => {
   return axios.get(mainURL + endpoint);
 };
+
+export const httpPost = (endpoint: string, body: Object) => {
+  return axios.post(mainURL + endpoint, body);
+};
