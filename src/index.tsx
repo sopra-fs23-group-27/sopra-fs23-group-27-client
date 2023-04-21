@@ -14,6 +14,7 @@ import { NewGame } from "./views/NewGame";
 import { HomePage } from "./components/HomePage";
 import { WebSocket } from "./components/WebSocket";
 import { Register } from "./views/Register";
+import { Login } from "./views/Login";
 import { ScanQRCode } from "./views/ScanQRCode";
 
 
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
   { path: "newGame", element: <NewGame /> },
   { path: "webSocket", element: <WebSocket /> },
   { path: "register", element: <Register /> },
+  { path: "login", element: <Login /> },
   { path: "newGame", element: <NewGame /> },
   { path: "scanQRCode", element: <ScanQRCode /> },
 ]);

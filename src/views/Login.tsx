@@ -1,18 +1,21 @@
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
+import { httpPost } from "../helpers/httpService";
 
 const Application = styled.div`
-  display: flex;
   width: 100%;
   height: 100vh;
+  display: flex;
   justify-content: center;
   align-items: center;
 `;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 type props = {
   isActive: boolean;
 };
@@ -23,12 +26,9 @@ const Button = styled.button<props>`
   border: 3px solid lightgray;
   padding: 8px 16px;
 `;
-
-export const Register = () => {
+export const Login = () => {
   const [nameInput, setNameInput] = useState("");
-  const [mailInput, setMailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
-  const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
 
   useEffect(() => {
@@ -36,52 +36,42 @@ export const Register = () => {
       if (!nameInput) {
         return false;
       }
-
-      if (!mailInput.includes("@") || !mailInput.includes(".")) {
+      if (!passwordInput) {
         return false;
       }
-
-      if (passwordInput.length < 6) {
-        return false;
-      }
-      if (passwordInput !== passwordRepetitionInput) {
-        return false;
-      }
-
       return true;
     };
-
     setIsFormFilledOut(formCheck());
-  }, [nameInput, mailInput, passwordInput, passwordRepetitionInput]);
+  }, [nameInput, passwordInput]);
+
+  const loginUser = async () => {
+    const res = await httpPost("/login", {
+      playername: nameInput,
+      password: passwordInput,
+    });
+    console.log(res);
+  };
+
   return (
     <Application>
       <Container>
-        <h1>Register</h1>
+        <h1>Login</h1>
         <FloatingTextInput
           label="Name"
           value={nameInput}
           onChange={setNameInput}
         />
         <FloatingTextInput
-          label="Email"
-          value={mailInput}
-          onChange={setMailInput}
-        />
-        <p>
-          Minimum password lenght: <br />6 characters
-        </p>
-        <FloatingTextInput
           label="Password"
           value={passwordInput}
           onChange={setPasswordInput}
         />
-        <FloatingTextInput
-          label="repeat Password"
-          value={passwordRepetitionInput}
-          onChange={setPasswordRepetitionInput}
-        />
-        <Button isActive={isFormFilledOut} disabled={!isFormFilledOut}>
-          Register
+        <Button
+          isActive={isFormFilledOut}
+          onClick={loginUser}
+          disabled={!isFormFilledOut}
+        >
+          Login
         </Button>
       </Container>
     </Application>
