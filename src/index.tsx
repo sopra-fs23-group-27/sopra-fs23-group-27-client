@@ -17,6 +17,8 @@ import { WebSocket } from "./components/WebSocket";
 import { Register } from "./views/Register";
 import { Login } from "./views/Login";
 
+import { ScanQRCode } from "./views/ScanQRCode";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,6 +40,8 @@ const router = createBrowserRouter([
   { path: "register", element: <Register /> },
   { path: "login", element: <Login /> },
   { path: "websocket", element: <WebSocket /> },
+  { path: "newGame", element: <NewGame /> },
+  { path: "scanQRCode", element: <ScanQRCode /> },
 ]);
 
 const root = ReactDOM.createRoot(
