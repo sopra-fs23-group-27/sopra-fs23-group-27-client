@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
+import { StompSessionProvider, useSubscription } from "react-stomp-hooks";
 
 import "./index.css";
 import { App } from "./App";
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
   { path: "webSocket", element: <WebSocket /> },
   { path: "register", element: <Register /> },
   { path: "login", element: <Login /> },
+  { path: "websocket", element: <WebSocket /> },
 ]);
 
 const root = ReactDOM.createRoot(
@@ -44,7 +46,12 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <MantineProvider withGlobalStyles withNormalizeCSS>
-      <RouterProvider router={router} />
+      <StompSessionProvider
+        url={"http://localhost:8080/ws"}
+        //All options supported by @stomp/stompjs can be used here
+      >
+        <RouterProvider router={router} />
+      </StompSessionProvider>
     </MantineProvider>
   </React.StrictMode>
 );
