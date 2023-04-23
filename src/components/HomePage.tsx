@@ -50,7 +50,7 @@ export const HomePage = () => {
         <Link to="/publicGames"><OrangeButton>
           Join Public Game
         </OrangeButton></Link>
-        <Link to="/scanQRCode"><GreenButton>
+        <Link to="/enterGameId"><GreenButton>
           Join Private Game
         </GreenButton></Link>
         <Link to="/newGame"><OrangeButton>
