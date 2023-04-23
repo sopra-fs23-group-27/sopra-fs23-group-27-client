@@ -20,7 +20,7 @@ type props = {
   isActive: boolean;
 };
 const Button = styled.button<props>`
-  cursor: pointer;
+  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
   background-color: ${(props) => (props.isActive ? "lightgray" : "white")};
   text-align: center;
   border: 3px solid lightgray;

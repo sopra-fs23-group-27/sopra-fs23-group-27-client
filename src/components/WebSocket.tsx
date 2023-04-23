@@ -1,6 +1,9 @@
 import styled from "styled-components";
-import { useState } from "react";
-import { io } from "socket.io-client";
+import { useEffect, useState } from "react";
+import { useSubscription, useStompClient } from "react-stomp-hooks";
+
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 
 const Container = styled.div`
   display: flex;
@@ -11,22 +14,28 @@ const Container = styled.div`
 
   font-size: 38px;
 `;
-export const HomePage = () => {
-  const socket = io("ws://localhost:8080");
-
-  socket.on("message", (message) => {
-    const extendedMessages = [...messages];
-    extendedMessages.push(message);
-    setMessages(extendedMessages);
-  });
-  const sendMessage = () => {
-    console.log("sending: ", currentMessage);
-    socket.emit("message", currentMessage);
-  };
-
+export const WebSocket = () => {
   const [messages, setMessages] = useState<Array<string>>(["Sample"]);
   const [currentMessage, setCurrentMessage] = useState<string>("");
 
+  useSubscription("/topic/messages", (message: any) => {
+    const newMessage = JSON.parse(message.body).message;
+    setMessages([...messages, newMessage]);
+  });
+  const stompClient = useStompClient();
+
+  const sendMessage = () => {
+    if (stompClient) {
+      //Send Message
+      stompClient.publish({
+        destination: "/app/chat",
+        body: JSON.stringify({ message: currentMessage }),
+      });
+      setCurrentMessage("");
+    } else {
+      console.error("Error: Could not send message");
+    }
+  };
   return (
     <Container>
       <h1>Group 27</h1>
