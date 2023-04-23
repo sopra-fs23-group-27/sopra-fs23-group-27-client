@@ -22,12 +22,8 @@ import { ScanQRCode } from "./views/ScanQRCode";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "home",
     element: <HomePage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "players/:playerId",
