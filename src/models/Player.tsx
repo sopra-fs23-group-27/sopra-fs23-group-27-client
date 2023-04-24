@@ -9,12 +9,11 @@ class Player {
     lobbyId: number;
     headers: any;
     constructor(data = {}) {
-      this.id = 1;
+      this.id = 0;
       this.playerName = "";
       this.isCreator = true;
       this.password = "";
-      this.lobbyId = 1;
-      this.headers = {authorization: ""};
+      this.lobbyId = 0;
       Object.assign(this, data);
     }
   }

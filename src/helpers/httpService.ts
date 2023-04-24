@@ -5,20 +5,20 @@ const localURL = "http://localhost:8080";
 const onlineURL = "https://sopra-fs23-group-27-server.oa.r.appspot.com";
 const mainURL = localURL;
 
-export const httpGet = (endpoint: string) => {
-  return axios.get(mainURL + endpoint);
+export const httpGet = (endpoint: string, headers: Object) => {
+  return axios.get(mainURL + endpoint, headers);
 };
 
-export const httpPost = (endpoint: string, body: Object) => {
-  return axios.post(mainURL + endpoint, body);
+export const httpPost = (endpoint: string, body: Object, headers: Object) => {
+  return axios.post(mainURL + endpoint, body, headers);
 };
 
-export const httpPut = (endpoint: string, body: Object) => {
-  return axios.put(mainURL + endpoint, body);
+export const httpPut = (endpoint: string, body: Object, headers: Object) => {
+  return axios.put(mainURL + endpoint, body, headers);
 }
 
-export const httpDelete = (endpoint: string) => {
-  return axios.delete(mainURL + endpoint);
+export const httpDelete = (endpoint: string, headers: Object) => {
+  return axios.delete(mainURL + endpoint, headers);
 }
 
 export const handleError = (error: { response: any; message: string; }) => {
