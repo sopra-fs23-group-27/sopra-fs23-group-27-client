@@ -9,7 +9,7 @@ const PlayerBox = styled.div`
   align-items: center;
 `;
 
-export const Player = () => {
+export const PlayerTest = () => {
   const { playerId } = useParams();
 
   return (

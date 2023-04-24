@@ -5,10 +5,8 @@ import { MantineProvider } from "@mantine/core";
 import { StompSessionProvider, useSubscription } from "react-stomp-hooks";
 
 import "./index.css";
-import { App } from "./App";
 import { ErrorPage } from "./views/ErrorPage";
 import reportWebVitals from "./reportWebVitals";
-import { Player } from "./components/Player";
 import { ActiveGameOverview } from "./views/ActiveGamesOverview";
 import { ConfigureGame } from "./views/ConfigureGame";
 import { NewGame } from "./views/NewGame";
@@ -23,16 +21,8 @@ import { GameLobby } from "./views/GameLobby";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "home",
     element: <HomePage />,
-  },
-  {
-    path: "players/:playerId",
-    element: <Player />,
+    errorElement: <ErrorPage />,
   },
   { path: "publicGames", element: <ActiveGameOverview /> },
   { path: "configureGame", element: <ConfigureGame /> },
