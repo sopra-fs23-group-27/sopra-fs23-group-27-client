@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import "../styles/HomePage.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { FloatingTextInput } from "./FloatingTextInput";
+import { useState } from "react";
+import { handleError, httpPost } from "../helpers/httpService";
+import Player from "../models/Player";
 
 const Container = styled.div`
   display: flex;
@@ -41,21 +45,60 @@ const GreenButton = styled.button`
   cursor: pointer;
 `;
   
-export const HomePage = () => {  
+export const HomePage = () => {
+  const [playerName, setPlayerName] = useState("");
+  const navigate = useNavigate();
+
+  const handleUserJoin = async (link: string) => {
+    const password = "1234";
+    try {
+      const response = await httpPost('/players', {
+        playerName: playerName,
+        password: password,
+      }, {headers: {}});
+      console.log(response.data);
+
+      // Create a new Player instance from the JSON data in the response
+      const player = new Player(response.data);
+      console.log(player);
+
+      // Store the token into the local storage.
+      localStorage.setItem('token', response.headers.authorization);
+
+      // Store the ID of the currently logged-in user in localstorage
+      localStorage.setItem('currentPlayerId', player.id.toString());
+
+      // Store the Name of the currently logged-in user in localstorage
+      localStorage.setItem('currentPlayer', player.playerName);
+
+      // navigate to respective view
+      navigate(link);
+
+      // catch errors
+    } catch (error: any) {
+      alert(`Something went wrong: \n${handleError(error)}`);
+    }
+  };
+
   return (
     <Container>
       <h1>FlagMania</h1>
       <p>Play the game and learn about the flags of the world!</p>
+      <FloatingTextInput
+          label="Name"
+          onChange={(newVal: string) => setPlayerName(newVal)}
+          value={playerName}
+      />
       <ButtonContainer>
-        <Link to="/publicGames"><OrangeButton>
+        <OrangeButton disabled={!playerName} onClick={() => handleUserJoin("/publicGames")}>
           Join Public Game
-        </OrangeButton></Link>
-        <Link to="/scanQRCode"><GreenButton>
+        </OrangeButton>
+        <GreenButton disabled={!playerName} onClick={() => handleUserJoin("/enterGameId")}>
           Join Private Game
-        </GreenButton></Link>
-        <Link to="/newGame"><OrangeButton>
+        </GreenButton>
+        <OrangeButton disabled={!playerName} onClick={() => handleUserJoin("/configureGame")}>
           Create New Game
-        </OrangeButton></Link>
+        </OrangeButton>
       </ButtonContainer>
     </Container>
   );
