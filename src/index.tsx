@@ -25,7 +25,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   { path: "publicGames", element: <ActiveGameOverview /> },
-  { path: "newGame", element: <ConfigureGame /> },
+  { path: "configureGame", element: <ConfigureGame /> },
   { path: "lobby", element: <GameLobby /> },
   { path: "webSocket", element: <WebSocket /> },
   { path: "register", element: <Register /> },
