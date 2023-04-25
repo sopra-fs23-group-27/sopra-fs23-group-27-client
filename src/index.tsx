@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import { StompSessionProvider } from "react-stomp-hooks";
+import { mainURL } from "./helpers/httpService";
 
 import "./index.css";
 import { ErrorPage } from "./views/ErrorPage";
@@ -17,6 +18,7 @@ import { Login } from "./views/Login";
 import { ScanQRCode } from "./views/ScanQRCode";
 import { GameIdInput } from "./views/EnterGameId";
 import { GameLobby } from "./views/GameLobby";
+import { GameRound } from "./views/GameRound";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +37,7 @@ const router = createBrowserRouter([
   { path: "scanQRCode", element: <ScanQRCode /> },
   { path: "enterGameId", element: <GameIdInput /> },
   { path: "lobbies/:lobbyId", element: <GameLobby /> },
+  { path: "gameRound", element: <GameRound /> },
 ]);
 
 const root = ReactDOM.createRoot(
@@ -44,7 +47,7 @@ root.render(
   <React.StrictMode>
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <StompSessionProvider
-        url={"http://localhost:8080/ws"}
+        url={mainURL + "/ws"}
         //All options supported by @stomp/stompjs can be used here
       >
         <RouterProvider router={router} />

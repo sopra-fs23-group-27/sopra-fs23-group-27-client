@@ -186,7 +186,7 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={5}
                 max={30}
-                value={numSeconds}
+                value={roundDuration}
                 setNewValue={setRoundDuration}
               />
             </div>
@@ -201,7 +201,7 @@ export const ConfigureGame = () => {
             Private
           </Button>
         </div>
-        <StartButton onClick={() => createLobby()}>START</StartButton>
+        <StartButton onClick={() => createLobby()}>OPEN</StartButton>
       </Application>
     </Container>
   );
