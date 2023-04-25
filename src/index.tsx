@@ -14,8 +14,8 @@ import { HomePage } from "./views/HomePage";
 import { WebSocket } from "./components/WebSocket";
 import { Register } from "./views/Register";
 import { Login } from "./views/Login";
-
 import { ScanQRCode } from "./views/ScanQRCode";
+import { GameIdInput } from "./views/EnterGameId";
 import { GameLobby } from "./views/GameLobby";
 
 const router = createBrowserRouter([
@@ -33,6 +33,8 @@ const router = createBrowserRouter([
   { path: "newGameLogin", element: <NewGameLogin /> },
   { path: "websocket", element: <WebSocket /> },
   { path: "scanQRCode", element: <ScanQRCode /> },
+  { path: "enterGameId", element: <GameIdInput /> },
+  { path: "lobbies/:lobbyId", element: <GameLobby /> },
 ]);
 
 const root = ReactDOM.createRoot(

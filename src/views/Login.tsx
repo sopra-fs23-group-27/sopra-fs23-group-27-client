@@ -48,7 +48,7 @@ export const Login = () => {
     const res = await httpPost("/login", {
       playername: nameInput,
       password: passwordInput,
-    });
+    }, {headers: {}});
     console.log(res);
   };
 

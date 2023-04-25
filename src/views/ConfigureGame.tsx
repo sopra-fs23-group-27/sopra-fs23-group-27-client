@@ -3,7 +3,8 @@ import { useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
-import { httpPost } from "../helpers/httpService";
+import { handleError, httpPost } from "../helpers/httpService";
+import Lobby from "../models/Lobby";
 
 const Container = styled.div`
   display: flex;
@@ -69,8 +70,8 @@ export const ConfigureGame = () => {
   const [roundDuration, setRoundDuration] = useState(10);
   const [isPublic, setIsPublic] = useState(false);
 
-  const createGame = async () => {
-    const endpoint = isAdvanced ? "/advanced" : "basic";
+  const createLobby = async () => {
+    const mode = isAdvanced ? "advanced" : "basic";
 
     const body: PostBody = {
       isPublic,
@@ -86,7 +87,29 @@ export const ConfigureGame = () => {
       body.numOptions = numOptions;
     }
 
-    const res = await httpPost("/lobbies" + endpoint, body);
+    try {
+      // get token of current player from local storage
+      const headers = { Authorization: localStorage.getItem("token") };
+
+      const response = await httpPost("/lobbies/" + mode, body, { headers });
+      console.log(response.data);
+
+      // Create a new Lobby instance from the JSON data in the response
+      const lobby = new Lobby(response.data);
+
+      // Store the token into the local storage.
+      localStorage.setItem("privateLobbyKey", lobby.privateLobbyKey);
+
+      // Store the ID of the current game in localstorage
+      localStorage.setItem("lobbyId", lobby.lobbyId.toString());
+
+      // navigate to lobby
+      navigate("/lobbies/" + lobby.lobbyId);
+
+      // catch errors
+    } catch (error: any) {
+      alert(`Something went wrong: \n${handleError(error)}`);
+    }
   };
 
   return (
@@ -163,7 +186,7 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={5}
                 max={30}
-                value={roundDuration}
+                value={numSeconds}
                 setNewValue={setRoundDuration}
               />
             </div>
@@ -178,8 +201,7 @@ export const ConfigureGame = () => {
             Private
           </Button>
         </div>
-
-        <StartButton onClick={() => createGame()}>START</StartButton>
+        <StartButton onClick={() => createLobby()}>START</StartButton>
       </Application>
     </Container>
   );
