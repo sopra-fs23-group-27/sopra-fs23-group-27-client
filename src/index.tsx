@@ -2,15 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
-import { StompSessionProvider, useSubscription } from "react-stomp-hooks";
+import { StompSessionProvider } from "react-stomp-hooks";
 
 import "./index.css";
 import { ErrorPage } from "./views/ErrorPage";
 import reportWebVitals from "./reportWebVitals";
 import { ActiveGameOverview } from "./views/ActiveGamesOverview";
 import { ConfigureGame } from "./views/ConfigureGame";
-import { NewGame } from "./views/NewGame";
-import { HomePage } from "./components/HomePage";
+import { NewGameLogin } from "./views/NewGameLogin";
+import { HomePage } from "./views/HomePage";
 import { WebSocket } from "./components/WebSocket";
 import { Register } from "./views/Register";
 import { Login } from "./views/Login";
@@ -25,13 +25,13 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   { path: "publicGames", element: <ActiveGameOverview /> },
-  { path: "configureGame", element: <ConfigureGame /> },
-  { path: "newGame", element: <NewGame /> },
+  { path: "newGame", element: <ConfigureGame /> },
+  { path: "lobby", element: <GameLobby /> },
   { path: "webSocket", element: <WebSocket /> },
   { path: "register", element: <Register /> },
   { path: "login", element: <Login /> },
+  { path: "newGameLogin", element: <NewGameLogin /> },
   { path: "websocket", element: <WebSocket /> },
-  { path: "newGame", element: <NewGame /> },
   { path: "scanQRCode", element: <ScanQRCode /> },
   { path: "enterGameId", element: <GameIdInput /> },
   { path: "lobbies/:lobbyId", element: <GameLobby /> },

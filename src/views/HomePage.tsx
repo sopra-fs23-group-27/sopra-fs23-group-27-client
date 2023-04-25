@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
-import { FloatingTextInput } from "./FloatingTextInput";
+import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useState } from "react";
 import { handleError, httpPost } from "../helpers/httpService";
 import Player from "../models/Player";
@@ -44,7 +44,7 @@ const GreenButton = styled.button`
   font-weight: bold;
   cursor: pointer;
 `;
-  
+
 export const HomePage = () => {
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
@@ -52,10 +52,14 @@ export const HomePage = () => {
   const handleUserJoin = async (link: string) => {
     const password = "1234";
     try {
-      const response = await httpPost('/players', {
-        playerName: playerName,
-        password: password,
-      }, {headers: {}});
+      const response = await httpPost(
+        "/players",
+        {
+          playerName: playerName,
+          password: password,
+        },
+        { headers: {} }
+      );
       console.log(response.data);
 
       // Create a new Player instance from the JSON data in the response
@@ -63,13 +67,13 @@ export const HomePage = () => {
       console.log(player);
 
       // Store the token into the local storage.
-      localStorage.setItem('token', response.headers.authorization);
+      localStorage.setItem("token", response.headers.authorization);
 
       // Store the ID of the currently logged-in user in localstorage
-      localStorage.setItem('currentPlayerId', player.id.toString());
+      localStorage.setItem("currentPlayerId", player.id.toString());
 
       // Store the Name of the currently logged-in user in localstorage
-      localStorage.setItem('currentPlayer', player.playerName);
+      localStorage.setItem("currentPlayer", player.playerName);
 
       // navigate to respective view
       navigate(link);
@@ -79,24 +83,32 @@ export const HomePage = () => {
       alert(`Something went wrong: \n${handleError(error)}`);
     }
   };
-
   return (
     <Container>
       <h1>FlagMania</h1>
       <p>Play the game and learn about the flags of the world!</p>
       <FloatingTextInput
-          label="Name"
-          onChange={(newVal: string) => setPlayerName(newVal)}
-          value={playerName}
+        label="Name"
+        onChange={(newVal: string) => setPlayerName(newVal)}
+        value={playerName}
       />
       <ButtonContainer>
-        <OrangeButton disabled={!playerName} onClick={() => handleUserJoin("/publicGames")}>
+        <OrangeButton
+          disabled={!playerName}
+          onClick={() => handleUserJoin("/publicGames")}
+        >
           Join Public Game
         </OrangeButton>
-        <GreenButton disabled={!playerName} onClick={() => handleUserJoin("/enterGameId")}>
+        <GreenButton
+          disabled={!playerName}
+          onClick={() => handleUserJoin("/enterGameId")}
+        >
           Join Private Game
         </GreenButton>
-        <OrangeButton disabled={!playerName} onClick={() => handleUserJoin("/configureGame")}>
+        <OrangeButton
+          disabled={!playerName}
+          onClick={() => handleUserJoin("/configureGame")}
+        >
           Create New Game
         </OrangeButton>
       </ButtonContainer>

@@ -19,7 +19,10 @@ export const WebSocket = () => {
   const [currentMessage, setCurrentMessage] = useState<string>("");
 
   useSubscription("/topic/messages", (message: any) => {
-    const newMessage = JSON.parse(message.body).message;
+    const newMessage = JSON.parse(message.body).message as string;
+    if (newMessage.includes("Hello, world!")) {
+      return;
+    }
     setMessages([...messages, newMessage]);
   });
   const stompClient = useStompClient();

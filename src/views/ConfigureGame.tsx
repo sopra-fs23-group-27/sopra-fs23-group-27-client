@@ -2,9 +2,9 @@ import styled from "styled-components";
 import { useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
+import { useNavigate } from "react-router-dom";
 import { handleError, httpPost } from "../helpers/httpService";
 import Lobby from "../models/Lobby";
-import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -39,51 +39,72 @@ const StartButton = styled.button`
   margin: 64px 0;
 `;
 
-export const ConfigureGame = () => {
-  //Field states
-  const [lobbyName, setGameName] = useState("");
-  const [isAdvanced, setIsAdvanced] = useState<boolean>(false);
-  //ADVANCED
-  const [numSecondsUntilHint, setHintsDelay] = useState(10);
-  const [hintInterval, setHintsInterval] = useState(5);
-  const [roundTimeLimit, setRoundTimeLimit] = useState(10);
-  const [maxNumGuesses, setGuessingLimit] = useState(1);
-  //BASIC
-  const [numberOfOptions, setNumberOfOptions] = useState(3);
-  const [numSeconds, setRoundDuration] = useState(10);
-  const [isPublic, setIsPublic] = useState(false);
+interface PostBody {
+  //commmon fields
+  isPublic: boolean;
+  numSeconds: number;
+  lobbyName: string;
 
-  // navigation
+  //only for BASCIC games
+  numOptions?: number;
+
+  //only for ADVANCED games
+  numSecondsUntilHint?: number;
+  hintInterval?: number;
+  maxNumGuesses?: number;
+}
+
+export const ConfigureGame = () => {
   const navigate = useNavigate();
 
+  //Field states
+  const [lobbyName, setLobbyName] = useState("");
+  const [isAdvanced, setIsAdvanced] = useState<boolean>(false);
+  //ADVANCED
+  const [numSecondsUntilHint, setNumSecondsUntilHint] = useState(10);
+  const [hintInterval, setHintInterval] = useState(5);
+  const [numSeconds, setNumSeconds] = useState(10);
+  const [maxNumGuesses, setMaxNumGuesses] = useState(1);
+  //BASIC
+  const [numOptions, setNumOptions] = useState(3);
+  const [roundDuration, setRoundDuration] = useState(10);
+  const [isPublic, setIsPublic] = useState(false);
+
   const createLobby = async () => {
-    const mode = "advanced";
+    const mode = isAdvanced ? "advanced" : "basic";
+
+    const body: PostBody = {
+      isPublic,
+      numSeconds,
+      lobbyName,
+    };
+
+    if (isAdvanced) {
+      body.numSecondsUntilHint = numSecondsUntilHint;
+      body.hintInterval = hintInterval;
+      body.maxNumGuesses = maxNumGuesses;
+    } else {
+      body.numOptions = numOptions;
+    }
 
     try {
       // get token of current player from local storage
-      const headers = {"Authorization": localStorage.getItem('token')}
+      const headers = { Authorization: localStorage.getItem("token") };
 
-      const response = await httpPost('/lobbies/' + mode, {
-        isPublic: isPublic, 
-        numSeconds: numSeconds,
-        numSecondsUntilHint: numSecondsUntilHint,
-        hintInterval: hintInterval,
-        maxNumGuesses: maxNumGuesses,
-        lobbyName: lobbyName
-      }, {headers});
+      const response = await httpPost("/lobbies/" + mode, body, { headers });
       console.log(response.data);
 
       // Create a new Lobby instance from the JSON data in the response
       const lobby = new Lobby(response.data);
 
       // Store the token into the local storage.
-      localStorage.setItem('privateLobbyKey', lobby.privateLobbyKey);
+      localStorage.setItem("privateLobbyKey", lobby.privateLobbyKey);
 
       // Store the ID of the current game in localstorage
-      localStorage.setItem('lobbyId', lobby.lobbyId.toString());
+      localStorage.setItem("lobbyId", lobby.lobbyId.toString());
 
       // navigate to lobby
-      navigate("/lobbies/" + lobby.lobbyId)
+      navigate("/lobbies/" + lobby.lobbyId);
 
       // catch errors
     } catch (error: any) {
@@ -98,7 +119,7 @@ export const ConfigureGame = () => {
         <FloatingTextInput
           label="Name"
           value={lobbyName}
-          onChange={(newVal: string) => setGameName(newVal)}
+          onChange={(newVal: string) => setLobbyName(newVal)}
         />
         <div>
           <Button onClick={() => setIsAdvanced(false)} isActive={!isAdvanced}>
@@ -117,7 +138,7 @@ export const ConfigureGame = () => {
                 min={10}
                 max={30}
                 value={numSecondsUntilHint}
-                setNewValue={setHintsDelay}
+                setNewValue={setNumSecondsUntilHint}
               />
             </div>
             <div>
@@ -126,7 +147,7 @@ export const ConfigureGame = () => {
                 min={5}
                 max={20}
                 value={hintInterval}
-                setNewValue={setHintsInterval}
+                setNewValue={setHintInterval}
               />
             </div>
             <div>
@@ -134,8 +155,8 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={10}
                 max={120}
-                value={roundTimeLimit}
-                setNewValue={setRoundTimeLimit}
+                value={numSeconds}
+                setNewValue={setNumSeconds}
               />
             </div>
             <div>
@@ -144,7 +165,7 @@ export const ConfigureGame = () => {
                 min={1}
                 max={10}
                 value={maxNumGuesses}
-                setNewValue={setGuessingLimit}
+                setNewValue={setMaxNumGuesses}
               />
             </div>
           </div>
@@ -155,8 +176,8 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={2}
                 max={6}
-                value={numberOfOptions}
-                setNewValue={setNumberOfOptions}
+                value={numOptions}
+                setNewValue={setNumOptions}
               />
             </div>
 
