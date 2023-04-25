@@ -18,8 +18,8 @@ export const GameLobby = () => {
   useSubscription(
     `/user/queue/lobby/${lobbyId}/lobby-settings`,
     (message: any) => {
-      const parsedMessage = JSON.parse(message.body).message as string;
-      console.log("Message from server: ", parsedMessage);
+      const lobbyId = JSON.parse(message.body).lobbyId as string;
+      console.log("Message from server: ", lobbyId);
     }
   );
 
