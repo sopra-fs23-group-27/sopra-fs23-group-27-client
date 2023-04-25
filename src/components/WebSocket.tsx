@@ -1,9 +1,6 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
-
-import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
 
 const Container = styled.div`
   display: flex;
@@ -27,6 +24,10 @@ export const WebSocket = () => {
   });
   const stompClient = useStompClient();
 
+  // include playerToken in the body for first publication request
+  // publish auf app/authentication --> to join
+
+  // then publish to user/queue/lobby/:lobby-id/lobby-settings
   const sendMessage = () => {
     if (stompClient) {
       //Send Message
