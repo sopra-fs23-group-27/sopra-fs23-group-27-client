@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
+import { useNavigate } from "react-router-dom";
+import { httpPost } from "../helpers/httpService";
 
 const Container = styled.div`
   display: flex;
@@ -36,19 +38,56 @@ const StartButton = styled.button`
   margin: 64px 0;
 `;
 
+interface PostBody {
+  //commmon fields
+  isPublic: boolean;
+  numSeconds: number;
+  lobbyName: string;
+
+  //only for BASCIC games
+  numOptions?: number;
+
+  //only for ADVANCED games
+  numSecondsUntilHint?: number;
+  hintInterval?: number;
+  maxNumGuesses?: number;
+}
+
 export const ConfigureGame = () => {
+  const navigate = useNavigate();
+
   //Field states
-  const [gameName, setGameName] = useState("");
+  const [lobbyName, setLobbyName] = useState("");
   const [isAdvanced, setIsAdvanced] = useState<boolean>(false);
   //ADVANCED
-  const [hintsDelay, setHintsDelay] = useState(10);
-  const [hintsInterval, setHintsInterval] = useState(5);
-  const [roundTimeLimit, setRoundTimeLimit] = useState(10);
-  const [guessingLimit, setGuessingLimit] = useState(1);
+  const [numSecondsUntilHint, setNumSecondsUntilHint] = useState(10);
+  const [hintInterval, setHintInterval] = useState(5);
+  const [numSeconds, setNumSeconds] = useState(10);
+  const [maxNumGuesses, setMaxNumGuesses] = useState(1);
   //BASIC
-  const [numberOfOptions, setNumberOfOptions] = useState(3);
+  const [numOptions, setNumOptions] = useState(3);
   const [roundDuration, setRoundDuration] = useState(10);
   const [isPublic, setIsPublic] = useState(false);
+
+  const createGame = async () => {
+    const endpoint = isAdvanced ? "/advanced" : "basic";
+
+    const body: PostBody = {
+      isPublic,
+      numSeconds,
+      lobbyName,
+    };
+
+    if (isAdvanced) {
+      body.numSecondsUntilHint = numSecondsUntilHint;
+      body.hintInterval = hintInterval;
+      body.maxNumGuesses = maxNumGuesses;
+    } else {
+      body.numOptions = numOptions;
+    }
+
+    const res = await httpPost("/lobbies" + endpoint, body);
+  };
 
   return (
     <Container>
@@ -56,8 +95,8 @@ export const ConfigureGame = () => {
         <h1>Configure your Game</h1>
         <FloatingTextInput
           label="Name"
-          value={gameName}
-          onChange={(newVal: string) => setGameName(newVal)}
+          value={lobbyName}
+          onChange={(newVal: string) => setLobbyName(newVal)}
         />
         <div>
           <Button onClick={() => setIsAdvanced(false)} isActive={!isAdvanced}>
@@ -75,8 +114,8 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={10}
                 max={30}
-                value={hintsDelay}
-                setNewValue={setHintsDelay}
+                value={numSecondsUntilHint}
+                setNewValue={setNumSecondsUntilHint}
               />
             </div>
             <div>
@@ -84,8 +123,8 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={5}
                 max={20}
-                value={hintsInterval}
-                setNewValue={setHintsInterval}
+                value={hintInterval}
+                setNewValue={setHintInterval}
               />
             </div>
             <div>
@@ -93,8 +132,8 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={10}
                 max={120}
-                value={roundTimeLimit}
-                setNewValue={setRoundTimeLimit}
+                value={numSeconds}
+                setNewValue={setNumSeconds}
               />
             </div>
             <div>
@@ -102,8 +141,8 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={1}
                 max={10}
-                value={guessingLimit}
-                setNewValue={setGuessingLimit}
+                value={maxNumGuesses}
+                setNewValue={setMaxNumGuesses}
               />
             </div>
           </div>
@@ -114,8 +153,8 @@ export const ConfigureGame = () => {
               <RangeInput
                 min={2}
                 max={6}
-                value={numberOfOptions}
-                setNewValue={setNumberOfOptions}
+                value={numOptions}
+                setNewValue={setNumOptions}
               />
             </div>
 
@@ -139,7 +178,8 @@ export const ConfigureGame = () => {
             Private
           </Button>
         </div>
-        <StartButton>START</StartButton>
+
+        <StartButton onClick={() => createGame()}>START</StartButton>
       </Application>
     </Container>
   );

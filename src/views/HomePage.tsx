@@ -40,22 +40,22 @@ const GreenButton = styled.button`
   font-weight: bold;
   cursor: pointer;
 `;
-  
-export const HomePage = () => {  
+
+export const HomePage = () => {
   return (
     <Container>
       <h1>FlagMania</h1>
       <p>Play the game and learn about the flags of the world!</p>
       <ButtonContainer>
-        <Link to="/publicGames"><OrangeButton>
-          Join Public Game
-        </OrangeButton></Link>
-        <Link to="/scanQRCode"><GreenButton>
-          Join Private Game
-        </GreenButton></Link>
-        <Link to="/newGame"><OrangeButton>
-          Create New Game
-        </OrangeButton></Link>
+        <Link to="/publicGames">
+          <OrangeButton>Join Public Game</OrangeButton>
+        </Link>
+        <Link to="/scanQRCode">
+          <GreenButton>Join Private Game</GreenButton>
+        </Link>
+        <Link to="/newGame">
+          <OrangeButton>Create New Game</OrangeButton>
+        </Link>
       </ButtonContainer>
     </Container>
   );
