@@ -87,7 +87,7 @@ export const GameLobby = () => {
         <UsersRolesTable data={playerNames} />
       </UserContainer>
 
-      <Link to={`/gameRound`}>
+      <Link to={"/game/" + lobbyId}>
         <GreenButton>Start Game</GreenButton>
       </Link>
     </div>
