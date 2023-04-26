@@ -37,7 +37,6 @@ const router = createBrowserRouter([
   { path: "scanQRCode", element: <ScanQRCode /> },
   { path: "enterGameId", element: <GameIdInput /> },
   { path: "lobbies/:lobbyId", element: <GameLobby /> },
-  { path: "lobbies/:lobbyId/game", element: <GameRound /> },
   { path: "game/:lobbyId", element: <GameRound /> },
 ]);
 
