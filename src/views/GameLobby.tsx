@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
+import { useEffectOnce } from "../customHooks/useEffectOnce";
 
 export const GameLobby = () => {
   const { lobbyId } = useParams();
@@ -8,8 +8,8 @@ export const GameLobby = () => {
 
   const playerToken = localStorage.getItem("token");
   console.log("player token: ", playerToken);
-  
-  useEffect(() => {
+
+  useEffectOnce(() => {
     const authenticate = () => {
       if (stompClient) {
         stompClient.publish({
@@ -21,8 +21,8 @@ export const GameLobby = () => {
       }
     };
     authenticate();
-  }, []);
-    
+  });
+
   useSubscription(
     `/user/queue/lobby/${lobbyId}/lobby-settings`,
     (message: any) => {
