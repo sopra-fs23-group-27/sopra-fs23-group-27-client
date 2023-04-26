@@ -8,6 +8,7 @@ export const GameLobby = () => {
 
   const playerToken = localStorage.getItem("token");
   console.log("player token: ", playerToken);
+  
   useEffect(() => {
     const authenticate = () => {
       if (stompClient) {
@@ -21,7 +22,7 @@ export const GameLobby = () => {
     };
     authenticate();
   }, []);
-
+    
   useSubscription(
     `/user/queue/lobby/${lobbyId}/lobby-settings`,
     (message: any) => {
