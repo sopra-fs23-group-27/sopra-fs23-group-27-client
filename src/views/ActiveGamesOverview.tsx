@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { httpGet } from "../helpers/httpService";
+import { useEffectOnce } from "../customHooks/useEffectOnce";
+import { useNavigate } from "react-router-dom";
 
 const GameContainer = styled.li`
   display: flex;
@@ -34,15 +36,18 @@ const JoinButton = styled.button`
   }
 `;
 const PublicGame = (props: { game: game }) => {
-  const { name, joinedPlayers, gameMode } = props.game;
+  const navigate = useNavigate();
+  const { lobbyName, joinedPlayerNames, mode, lobbyId } = props.game;
 
   return (
     <GameContainer>
-      <GameItem>{name}</GameItem>
-      <GameItem>{joinedPlayers}/20</GameItem>
-      <GameItem>{gameMode}</GameItem>
+      <GameItem>{lobbyName}</GameItem>
+      <GameItem>{joinedPlayerNames.length}/20</GameItem>
+      <GameItem>{mode}</GameItem>
       <GameItem>
-        <JoinButton>Join</JoinButton>
+        <JoinButton onClick={() => navigate("/lobbies/" + lobbyId)}>
+          Join
+        </JoinButton>
       </GameItem>
     </GameContainer>
   );
@@ -61,10 +66,9 @@ export const ActiveGameOverview = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [games, setGames] = useState<game[]>([]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     const getLobbies = async () => {
       const playerToken = localStorage.getItem("token") as string;
-      console.log("token: ", playerToken);
       try {
         const games = (await httpGet("/lobbies", playerToken))
           .data as unknown as game[];
@@ -76,7 +80,7 @@ export const ActiveGameOverview = () => {
     };
 
     getLobbies();
-  }, []);
+  });
 
   useEffect(() => {
     setTimeout(() => {

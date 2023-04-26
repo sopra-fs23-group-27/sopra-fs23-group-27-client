@@ -1,7 +1,14 @@
 export type game = {
-  id: string;
-  name: string;
-  joinedPlayers: number;
-  gameMode: "ADVANCED" | "BASIC";
-  joinLink: string;
+  lobbyId: number;
+  lobbyName: string;
+  mode: "BASIC" | "ADVANCED";
+  isPublic: boolean;
+  numOptions: number;
+  numSeconds: number;
+  numSecondsUntilHint: number;
+  hintInterval: number;
+  maxNumGuesses: number;
+  joinedPlayerNames: Array<string>;
+  lobbyCreatorPlayerToken: string;
+  //privateLobbyKey: type?,
 };
