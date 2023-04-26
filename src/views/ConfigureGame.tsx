@@ -97,7 +97,10 @@ export const ConfigureGame = () => {
       // Create a new Lobby instance from the JSON data in the response
       const lobby = new Lobby(response.data);
 
-      // Store the token into the local storage.
+      // Store the name of the lobby into the local storage.
+      localStorage.setItem("lobbyName", lobby.lobbyName);
+
+      // Store the private key of the lobby into the local storage.
       localStorage.setItem("privateLobbyKey", lobby.privateLobbyKey);
 
       // Store the ID of the current game in localstorage
