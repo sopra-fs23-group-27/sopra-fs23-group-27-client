@@ -10,17 +10,14 @@ export const GameLobby = () => {
   console.log("player token: ", playerToken);
 
   useEffectOnce(() => {
-    const authenticate = () => {
-      if (stompClient) {
-        stompClient.publish({
-          destination: "/app/authentication",
-          body: JSON.stringify({ playerToken }),
-        });
-      } else {
-        console.error("Error: Could not send message");
-      }
-    };
-    authenticate();
+    if (stompClient) {
+      stompClient.publish({
+        destination: "/app/authentication",
+        body: JSON.stringify({ playerToken }),
+      });
+    } else {
+      console.error("Error: Could not send message");
+    }
   });
 
   useSubscription(
