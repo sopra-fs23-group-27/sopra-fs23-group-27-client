@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
+import { useEffectOnce } from "../customHooks/useEffectOnce";
 
 export const GameLobby = () => {
   const { lobbyId } = useParams();
@@ -8,21 +8,18 @@ export const GameLobby = () => {
 
   const playerToken = localStorage.getItem("token");
   console.log("player token: ", playerToken);
-  
-  useEffect(() => {
-    const authenticate = () => {
-      if (stompClient) {
-        stompClient.publish({
-          destination: "/app/authentication",
-          body: JSON.stringify({ playerToken }),
-        });
-      } else {
-        console.error("Error: Could not send message");
-      }
-    };
-    authenticate();
-  }, []);
-    
+
+  useEffectOnce(() => {
+    if (stompClient) {
+      stompClient.publish({
+        destination: "/app/authentication",
+        body: JSON.stringify({ playerToken }),
+      });
+    } else {
+      console.error("Error: Could not send message");
+    }
+  });
+
   useSubscription(
     `/user/queue/lobby/${lobbyId}/lobby-settings`,
     (message: any) => {
