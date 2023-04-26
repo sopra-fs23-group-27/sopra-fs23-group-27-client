@@ -37,7 +37,7 @@ const router = createBrowserRouter([
   { path: "scanQRCode", element: <ScanQRCode /> },
   { path: "enterGameId", element: <GameIdInput /> },
   { path: "lobbies/:lobbyId", element: <GameLobby /> },
-  { path: "gameRound", element: <GameRound /> },
+  { path: "game/:lobbyId", element: <GameRound /> },
 ]);
 
 const root = ReactDOM.createRoot(

@@ -50,7 +50,7 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   const handleUserJoin = async (link: string) => {
-    const password = "1234";
+    const password = "";
     try {
       const response = await httpPost(
         "/players",
