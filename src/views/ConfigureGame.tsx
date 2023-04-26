@@ -68,7 +68,7 @@ export const ConfigureGame = () => {
   //BASIC
   const [numOptions, setNumOptions] = useState(3);
   const [roundDuration, setRoundDuration] = useState(10);
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
 
   const createLobby = async () => {
     const mode = isAdvanced ? "advanced" : "basic";
