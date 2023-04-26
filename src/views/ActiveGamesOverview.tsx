@@ -59,14 +59,24 @@ const GameList = styled.ul`
 `;
 export const ActiveGameOverview = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [games, setGames] = useState<game[]>([emptyGame]);
+  const [games, setGames] = useState<game[]>([]);
 
-  /*
   useEffect(() => {
-    const games = httpGet("/lobbies") as unknown as game[];
-    setGames(games);
+    const getLobbies = async () => {
+      const playerToken = localStorage.getItem("token") as string;
+      console.log("token: ", playerToken);
+      try {
+        const games = (await httpGet("/lobbies", playerToken))
+          .data as unknown as game[];
+        console.log(games);
+        setGames(games);
+      } catch (e: any) {
+        console.error(e);
+      }
+    };
+
+    getLobbies();
   }, []);
-  */
 
   useEffect(() => {
     setTimeout(() => {
@@ -81,6 +91,7 @@ export const ActiveGameOverview = () => {
       ) : (
         <>
           <h1>Public Games</h1>
+          {!games[0] && <p>Currently, No public games are open to join</p>}
           <GameList>
             {games.map((g, ind) => (
               <PublicGame key={ind} game={g} />
