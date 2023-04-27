@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import styled from "styled-components";
 import { RainbowLoader } from "../components/RainbowLoader";
-import { httpGet } from "../helpers/httpService";
+import { httpGet, httpPut } from "../helpers/httpService";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +27,7 @@ const JoinButton = styled.button`
   text-align: center;
   text-decoration: none;
   padding: 10px 18px;
+  cursor: pointer;
 
   &:hover {
     background-color: lightgray;
@@ -35,9 +36,31 @@ const JoinButton = styled.button`
     border: 3px solid #19376d;
   }
 `;
-const PublicGame = (props: { game: game }) => {
+
+export const PublicGame = (props: { game: game }) => {
   const navigate = useNavigate();
   const { lobbyName, joinedPlayerNames, mode, lobbyId } = props.game;
+
+  const joinGame = async (lobbyId: number) => {
+    const lobby = await httpGet("/lobbies/" + lobbyId, {});
+    if (lobby.status === 200) {
+      if (lobby.data.joinedPlayerNames.length >= lobby.data.maxNumPlayers) {
+        throw new Error("Game is full");
+      } else {
+        const headers = { Authorization: localStorage.getItem("token") };
+        const body = {};
+        const response = await httpPut("/lobbies/" + lobbyId + "/join", body, { headers });
+        if (response.status === 204) {
+          navigate("/lobbies/" + lobbyId);
+        } else {
+          alert(response.status)
+          throw new Error("Error joining game");
+        }
+      }
+    } else {
+      throw new Error("Error joining game");
+    }
+  };
 
   return (
     <GameContainer>
@@ -45,7 +68,7 @@ const PublicGame = (props: { game: game }) => {
       <GameItem>{joinedPlayerNames.length}/20</GameItem>
       <GameItem>{mode}</GameItem>
       <GameItem>
-        <JoinButton onClick={() => navigate("/lobbies/" + lobbyId)}>
+        <JoinButton onClick={() => joinGame(lobbyId)}>
           Join
         </JoinButton>
       </GameItem>

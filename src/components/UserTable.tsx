@@ -23,11 +23,11 @@ export function UsersRolesTable({ data }: UsersTableProps) {
         <Select data={rolesData} defaultValue={item.role} variant="unstyled" />
       </td>
       <td>
-        {Math.random() > 0.5 ? (
-          <Badge fullWidth>Active</Badge>
+        {1 ? (
+          <Badge fullWidth>Joined</Badge>
         ) : (
           <Badge color="gray" fullWidth>
-            Disabled
+            Offline
           </Badge>
         )}
       </td>
@@ -39,7 +39,7 @@ export function UsersRolesTable({ data }: UsersTableProps) {
       <Table miw={800} verticalSpacing="sm">
         <thead>
           <tr>
-            <th>Joined</th>
+            <th>Name</th>
             <th>Role</th>
             <th>Status</th>
           </tr>
