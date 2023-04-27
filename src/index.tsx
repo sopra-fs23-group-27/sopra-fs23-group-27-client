@@ -34,7 +34,7 @@ const router = createBrowserRouter([
   { path: "login", element: <Login /> },
   { path: "newGameLogin", element: <NewGameLogin /> },
   { path: "websocket", element: <WebSocket /> },
-  { path: "scanQRCode", element: <ScanQRCode /> },
+  { path: "scanQRCode/:lobbyId", element: <ScanQRCode /> },
   { path: "enterGameId", element: <GameIdInput /> },
   { path: "lobbies/:lobbyId", element: <GameLobby /> },
   { path: "game/:lobbyId", element: <GameRound /> },

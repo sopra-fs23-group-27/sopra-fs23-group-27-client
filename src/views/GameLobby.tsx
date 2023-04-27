@@ -1,9 +1,15 @@
+<<<<<<< HEAD
 import { Link, useNavigate, useParams } from "react-router-dom";
+=======
+import { Link, useParams, useNavigate } from "react-router-dom";
+>>>>>>> 7535ecbed64f3da8417688ae92089dde6af5401f
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useState } from "react";
 import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
+import { httpPut } from "../helpers/httpService";
+import { RainbowLoader } from "../components/RainbowLoader";
 
 const UserContainer = styled.div`
   display: flex;
@@ -25,6 +31,34 @@ const GreenButton = styled.button`
   cursor: pointer;
 `;
 
+const QRCodeButton = styled.img`
+  width: 75px;
+  height: 75px;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 50px;
+  right: 50px;
+`;
+
+const P = styled.p`
+  padding: 0;
+  margin: 0;
+`;
+
+const AdditionalBoxes = styled.div`
+  padding: 8px 16px;
+  border: 2px solid rgb(216, 216, 216);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50px;
+`;
+
 export const GameLobby = () => {
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
@@ -33,6 +67,8 @@ export const GameLobby = () => {
   // get the lobby name from local storage
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   // get the player token from local storage
   const playerToken = localStorage.getItem("token");
@@ -45,6 +81,7 @@ export const GameLobby = () => {
   console.log("player token: ", playerToken);
 
   useEffectOnce(() => {
+    console.log("lobbyId: ", lobbyId);
     if (stompClient) {
       stompClient.publish({
         destination: "/app/authentication",
@@ -58,6 +95,7 @@ export const GameLobby = () => {
   useSubscription(
     `/user/queue/lobby/${lobbyId}/lobby-settings`,
     (message: any) => {
+      setIsLoading(false);
       const lobbyName = JSON.parse(message.body).lobbyName as string;
       const joinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
@@ -68,10 +106,26 @@ export const GameLobby = () => {
     }
   );
 
+<<<<<<< HEAD
   useSubscription(`user/queue/lobby/${lobbyId}/game-start`, (message: any) => {
     console.log("gameStartMessage: ", message);
     navigate("game/" + lobbyId);
   });
+=======
+  const startGame = async () => {
+    console.log("PlayerToken: ", playerToken);
+    try {
+      const headers = { Authorization: localStorage.getItem("token") };
+      const body = {};
+      const response = await httpPut("/lobbies/" + lobbyId + "/start", body, {
+        headers,
+      });
+      navigate("/game/" + lobbyId);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+>>>>>>> 7535ecbed64f3da8417688ae92089dde6af5401f
 
   return (
     <div
@@ -84,20 +138,32 @@ export const GameLobby = () => {
         alignItems: "center",
       }}
     >
+<<<<<<< HEAD
       <h1>
         Game Lobby {lobbyId}: {lobbyName}
       </h1>
       <h2>Waiting for players to join...</h2>
+=======
+      {isLoading ? (
+        <RainbowLoader />
+      ) : (
+        <>
+          <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton>
+          <h1>
+            Game Lobby {lobbyId}: {lobbyName}
+          </h1>
+          <h2>Waiting for players to join...</h2>
+>>>>>>> 7535ecbed64f3da8417688ae92089dde6af5401f
 
-      <h3>Players in lobby:</h3>
+          <h3>Players in lobby:</h3>
 
-      <UserContainer>
-        <UsersRolesTable data={playerNames} />
-      </UserContainer>
+          <UserContainer>
+            <UsersRolesTable data={playerNames} />
+          </UserContainer>
 
-      <Link to={"/game/" + lobbyId}>
-        <GreenButton>Start Game</GreenButton>
-      </Link>
+          <GreenButton onClick={() => startGame()}>Start Game</GreenButton>
+        </>
+      )}
     </div>
   );
 };

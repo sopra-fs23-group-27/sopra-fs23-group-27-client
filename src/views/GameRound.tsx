@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useParams } from "react-router-dom";
+<<<<<<< HEAD
+=======
+import { RainbowLoader } from "../components/RainbowLoader";
+>>>>>>> 7535ecbed64f3da8417688ae92089dde6af5401f
 
 const P = styled.p`
   padding: 0;
@@ -78,7 +82,16 @@ const GuessButton = styled.button`
 `;
 
 export const GameRound = () => {
+<<<<<<< HEAD
   const { lobbyId } = useParams();
+=======
+  // where to get Game id??
+  const { lobbyId } = useParams();
+  console.log("lobbyId: ", lobbyId);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+>>>>>>> 7535ecbed64f3da8417688ae92089dde6af5401f
   const [currentRound, setCurrentRound] = useState(1);
   const [roundAmount, setRoundAmount] = useState(3);
   const [timeLeft, setTimeLeft] = useState(10);
@@ -92,6 +105,7 @@ export const GameRound = () => {
   const [gameRoundEnd, setGameRoundEnd] = useState(false);
 
   const stompClient = useStompClient();
+<<<<<<< HEAD
   /*
   const playerToken = localStorage.getItem("token");
   if (stompClient) {
@@ -105,11 +119,16 @@ export const GameRound = () => {
   */
 
   useSubscription(`/topic/games/${lobbyId}/timer`, (message: any) => {
+=======
+
+  useSubscription(`/topic/games/${lobbyId}/timer `, (message: any) => {
+>>>>>>> 7535ecbed64f3da8417688ae92089dde6af5401f
     const timeLeft = JSON.parse(message.body).time as number;
     console.log("seconds left until round finishes: ", timeLeft);
     setTimeLeft(timeLeft);
   });
 
+<<<<<<< HEAD
   useSubscription(
     `/user/queue/games/${lobbyId}/flag-in-round`,
     (message: any) => {
@@ -118,6 +137,13 @@ export const GameRound = () => {
       setFlagURL(flagURL);
     }
   );
+=======
+  useSubscription(`/topic/games/${lobbyId}/flag-in-round`, (message: any) => {
+    const flagURL = JSON.parse(message.body).url as string;
+    console.log("Flag URL: ", flagURL);
+    setFlagURL(flagURL);
+  });
+>>>>>>> 7535ecbed64f3da8417688ae92089dde6af5401f
   useSubscription(
     `/topic/games/${lobbyId}/guesses-in-round`,
     (message: any) => {
@@ -127,6 +153,7 @@ export const GameRound = () => {
       setLatestGlobalGuess(latestGlobalGuess);
     }
   );
+<<<<<<< HEAD
 
   useSubscription(
     `/user/queue/games/${lobbyId}/hints-in-round`,
@@ -138,6 +165,14 @@ export const GameRound = () => {
     }
   );
 
+=======
+  useSubscription(`/topic/games/${lobbyId}/hints-in-round`, (message: any) => {
+    const latestHint = JSON.parse(message.body).hint as string;
+    console.log("latest Hint: ", latestHint);
+    setLatestHint(latestHint);
+  });
+
+>>>>>>> 7535ecbed64f3da8417688ae92089dde6af5401f
   useSubscription(`/topic/games/${lobbyId}/round-end`, (message: any) => {
     const roundScores = JSON.parse(message.body).scores;
     const correspondingPlayers = JSON.parse(message.body).players;
@@ -150,49 +185,58 @@ export const GameRound = () => {
     if (!gameRoundEnd) {
       return;
     }
-
     setCurrentRound((c) => c + 1);
     setGameRoundEnd(false);
   }, [gameRoundEnd]);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
 
   const submitGuess = () => {
-    // where do we submit the guesses?
-    /*
+    const playerName = localStorage.getItem("currentPlayer");
     if (stompClient) {
       stompClient.publish({
-        destination: "",
-        body: JSON.stringify({}),
+        destination: `app/games/${lobbyId}/guess`,
+        body: JSON.stringify({ guess: guessInput, playerName }),
       });
+      setGuessInput("");
     } else {
       console.error("Error: could not send message");
     }
-    */
   };
 
   return (
     <Application>
-      <Points>
-        <P>{points}</P>
-      </Points>
-      <Time>
-        <P>{timeLeft}</P>
-      </Time>
-      <GlobalGuess>
-        <P>Latest Guess:</P>
-        <P>{latestGlobalGuess}</P>
-      </GlobalGuess>
-      <Main>
-        <Flag src={flagURL} />
-        <Hint>{latestHint}</Hint>
-        <GuessBox>
-          <FloatingTextInput
-            label="Your Guess"
-            value={guessInput}
-            onChange={setGuessInput}
-          />
-          <GuessButton onClick={() => submitGuess()}>Guess</GuessButton>
-        </GuessBox>
-      </Main>
+      {isLoading ? (
+        <RainbowLoader />
+      ) : (
+        <>
+          <Points>
+            <P>{points}</P>
+          </Points>
+          <Time>
+            <P>{timeLeft}</P>
+          </Time>
+          <GlobalGuess>
+            <P>Latest Guess:</P>
+            <P>{latestGlobalGuess}</P>
+          </GlobalGuess>
+          <Main>
+            <Flag src={flagURL} />
+            <Hint>{latestHint}</Hint>
+            <GuessBox>
+              <FloatingTextInput
+                label="Your Guess"
+                value={guessInput}
+                onChange={setGuessInput}
+              />
+              <GuessButton onClick={() => submitGuess()}>Guess</GuessButton>
+            </GuessBox>
+          </Main>
+        </>
+      )}
     </Application>
   );
 };
