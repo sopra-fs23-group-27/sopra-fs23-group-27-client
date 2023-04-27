@@ -27,6 +27,34 @@ const GreenButton = styled.button`
   cursor: pointer;
 `;
 
+const QRCodeButton = styled.img`
+  width: 75px;
+  height: 75px;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 50px;
+  right: 50px;
+`;
+
+const P = styled.p`
+  padding: 0;
+  margin: 0;
+`;
+
+const AdditionalBoxes = styled.div`
+  padding: 8px 16px;
+  border: 2px solid rgb(216, 216, 216);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50px;
+`;
+
 export const GameLobby = () => {
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
@@ -103,6 +131,7 @@ export const GameLobby = () => {
         <RainbowLoader />
       ) : (
         <>
+          <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton>
           <h1>
             Game Lobby {lobbyId}: {lobbyName}
           </h1>
