@@ -116,9 +116,6 @@ export const ConfigureGame = () => {
       // Store the name of the lobby into the local storage.
       localStorage.setItem("lobbyName", lobby.lobbyName);
 
-      // Store the private key of the lobby into the local storage.
-      localStorage.setItem("privateLobbyKey", lobby.privateLobbyKey);
-
       // Store the ID of the current game in localstorage
       localStorage.setItem("lobbyId", lobby.lobbyId.toString());
 
