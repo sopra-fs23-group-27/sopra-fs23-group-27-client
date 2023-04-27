@@ -1,9 +1,10 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useState } from "react";
 import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
+import { httpPut } from "../helpers/httpService";
 
 const UserContainer = styled.div`
   display: flex;
@@ -28,6 +29,7 @@ const GreenButton = styled.button`
 export const GameLobby = () => {
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
+  const navigate = useNavigate();
 
   // get the lobby name from local storage
   const [lobbyName, setLobbyname] = useState("");
@@ -40,11 +42,11 @@ export const GameLobby = () => {
   const playerNames = joinedPlayerNames.map((playerName: string) => {
     return { name: playerName, role: "player" };
   });
-  
 
   console.log("player token: ", playerToken);
 
   useEffectOnce(() => {
+    console.log("lobbyId: ", lobbyId);
     if (stompClient) {
       stompClient.publish({
         destination: "/app/authentication",
@@ -59,13 +61,23 @@ export const GameLobby = () => {
     `/user/queue/lobby/${lobbyId}/lobby-settings`,
     (message: any) => {
       const lobbyName = JSON.parse(message.body).lobbyName as string;
-      const joinedPlayerNames = JSON.parse(message.body).joinedPlayerNames as string[];
+      const joinedPlayerNames = JSON.parse(message.body)
+        .joinedPlayerNames as string[];
       console.log("Message from server: ", lobbyName);
       console.log("Message from server: ", joinedPlayerNames);
       setLobbyname(lobbyName);
       setJoinedPlayerNames(joinedPlayerNames);
     }
   );
+
+  const startGame = async () => {
+    try {
+      await httpPut(`/lobbies/${lobbyId}/start`, {}, { playerToken });
+      navigate("/game/" + lobbyId);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div
@@ -78,7 +90,9 @@ export const GameLobby = () => {
         alignItems: "center",
       }}
     >
-      <h1>Game Lobby {lobbyId}: {lobbyName}</h1>
+      <h1>
+        Game Lobby {lobbyId}: {lobbyName}
+      </h1>
       <h2>Waiting for players to join...</h2>
 
       <h3>Players in lobby:</h3>
@@ -87,9 +101,7 @@ export const GameLobby = () => {
         <UsersRolesTable data={playerNames} />
       </UserContainer>
 
-      <Link to={"/game/" + lobbyId}>
-        <GreenButton>Start Game</GreenButton>
-      </Link>
+      <GreenButton onClick={() => startGame()}>Start Game</GreenButton>
     </div>
   );
 };

@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { Slider } from "@mantine/core";
+import { useHover } from "@mantine/hooks";
 
 const Container = styled.div`
   display: flex;
@@ -31,21 +33,28 @@ type PropsType = {
   setNewValue: Function;
 };
 export const RangeInput = (props: PropsType) => {
+  const { hovered, ref } = useHover();
   const { value, setNewValue, min, max } = props;
 
   return (
     <Container>
-      <Main>
-        <SmallP style={{ position: "relative", left: "1px" }}>{min}</SmallP>
-        <MainInput
-          type="range"
-          value={value}
-          min={min}
-          max={max}
-          onChange={(e) => setNewValue(e.currentTarget.value)}
-        />
-        <SmallP style={{ position: "relative", right: "1px" }}>{max}</SmallP>
-      </Main>
+      <Slider
+        value={value}
+        min={min}
+        max={max}
+        onChange={(newVal) => setNewValue(newVal)}
+        styles={{
+          thumb: {
+            transition: "opacity 150ms ease",
+            opacity: hovered ? 1 : 0,
+          },
+
+          dragging: {
+            opacity: 1,
+          },
+        }}
+        style={{ width: "230px" }}
+      />
 
       <Value>
         <p>{value}</p>

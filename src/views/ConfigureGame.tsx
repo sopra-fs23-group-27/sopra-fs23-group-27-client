@@ -10,33 +10,49 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 100px;
 `;
 const Application = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 400px;
+  width: 464px;
   font-size: 20px;
+  border: 2px solid rgb(216, 216, 216);
+  border-radius: 10px;
+  padding: 16px 32px;
+`;
+
+const RangeOptions = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 type props = {
   isActive: boolean;
 };
 const Button = styled.button<props>`
-  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
+  cursor: pointer;
   background-color: ${(props) => (props.isActive ? "lightgray" : "white")};
   text-align: center;
   border: 3px solid lightgray;
   padding: 8px 16px;
 `;
-const StartButton = styled.button`
-  cursor: pointer;
-  background-color: lightgray;
+
+type StartButtonProps = {
+  isActive: boolean;
+};
+const StartButton = styled.button<StartButtonProps>`
+  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
+  background-color: "lightgray";
   text-align: center;
   border: none;
   font-size: 32px;
   padding: 16px 32px;
   margin: 64px 0;
+  color: ${(props) => (props.isActive ? "black" : "gray")};
 `;
 
 interface PostBody {
@@ -134,7 +150,7 @@ export const ConfigureGame = () => {
         </div>
 
         {isAdvanced ? (
-          <div>
+          <RangeOptions>
             <div>
               <h2>Show first hint after</h2>
               <RangeInput
@@ -171,9 +187,9 @@ export const ConfigureGame = () => {
                 setNewValue={setMaxNumGuesses}
               />
             </div>
-          </div>
+          </RangeOptions>
         ) : (
-          <div>
+          <RangeOptions>
             <div>
               <h2>Number of Options</h2>
               <RangeInput
@@ -193,10 +209,10 @@ export const ConfigureGame = () => {
                 setNewValue={setRoundDuration}
               />
             </div>
-          </div>
+          </RangeOptions>
         )}
 
-        <div>
+        <div style={{ marginTop: "36px" }}>
           <Button onClick={() => setIsPublic(true)} isActive={isPublic}>
             Public
           </Button>
@@ -204,7 +220,9 @@ export const ConfigureGame = () => {
             Private
           </Button>
         </div>
-        <StartButton onClick={() => createLobby()}>OPEN</StartButton>
+        <StartButton isActive={!!lobbyName} onClick={() => createLobby()}>
+          OPEN
+        </StartButton>
       </Application>
     </Container>
   );
