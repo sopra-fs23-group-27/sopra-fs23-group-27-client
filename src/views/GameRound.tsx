@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { FloatingTextInput } from "../components/FloatingTextInput";
+import { useParams } from "react-router-dom";
 
 const P = styled.p`
   padding: 0;
@@ -77,9 +78,7 @@ const GuessButton = styled.button`
 `;
 
 export const GameRound = () => {
-  // where to get Game id??
-  const gameId = 12;
-
+  const { lobbyId } = useParams();
   const [currentRound, setCurrentRound] = useState(1);
   const [roundAmount, setRoundAmount] = useState(3);
   const [timeLeft, setTimeLeft] = useState(10);
@@ -93,6 +92,7 @@ export const GameRound = () => {
   const [gameRoundEnd, setGameRoundEnd] = useState(false);
 
   const stompClient = useStompClient();
+  /*
   const playerToken = localStorage.getItem("token");
   if (stompClient) {
     stompClient.publish({
@@ -102,31 +102,43 @@ export const GameRound = () => {
   } else {
     console.error("Error: Could not send message");
   }
+  */
 
-  useSubscription(`/topic/games/${gameId}/timer `, (message: any) => {
+  useSubscription(`/topic/games/${lobbyId}/timer`, (message: any) => {
     const timeLeft = JSON.parse(message.body).time as number;
     console.log("seconds left until round finishes: ", timeLeft);
     setTimeLeft(timeLeft);
   });
 
-  useSubscription(`/topic/games/${gameId}/flag-in-round`, (message: any) => {
-    const flagURL = JSON.parse(message.body).url as string;
-    console.log("Flag URL: ", flagURL);
-    setFlagURL(flagURL);
-  });
-  useSubscription(`/topic/games/${gameId}/guesses-in-round`, (message: any) => {
-    const latestGlobalGuess = JSON.parse(message.body).guess as string;
-    // const latestGlobalGuessOrigin = JSON.parse(message.body).playername as string;
-    console.log("latest Global Guess: ", latestGlobalGuess);
-    setLatestGlobalGuess(latestGlobalGuess);
-  });
-  useSubscription(`/topic/games/${gameId}/hints-in-round`, (message: any) => {
-    const latestHint = JSON.parse(message.body).hint as string;
-    console.log("latest Hint: ", latestHint);
-    setLatestHint(latestHint);
-  });
+  useSubscription(
+    `/user/queue/games/${lobbyId}/flag-in-round`,
+    (message: any) => {
+      const flagURL = JSON.parse(message.body).url as string;
+      console.log("Flag URL: ", flagURL);
+      setFlagURL(flagURL);
+    }
+  );
+  useSubscription(
+    `/topic/games/${lobbyId}/guesses-in-round`,
+    (message: any) => {
+      const latestGlobalGuess = JSON.parse(message.body).guess as string;
+      // const latestGlobalGuessOrigin = JSON.parse(message.body).playername as string;
+      console.log("latest Global Guess: ", latestGlobalGuess);
+      setLatestGlobalGuess(latestGlobalGuess);
+    }
+  );
 
-  useSubscription(`/topic/games/${gameId}/round-end`, (message: any) => {
+  useSubscription(
+    `/user/queue/games/${lobbyId}/hints-in-round`,
+    (message: any) => {
+      console.log(message);
+      const latestHint = JSON.parse(message.body).hint as string;
+      console.log("latest Hint: ", latestHint);
+      setLatestHint(latestHint);
+    }
+  );
+
+  useSubscription(`/topic/games/${lobbyId}/round-end`, (message: any) => {
     const roundScores = JSON.parse(message.body).scores;
     const correspondingPlayers = JSON.parse(message.body).players;
     console.log("players: ", correspondingPlayers);

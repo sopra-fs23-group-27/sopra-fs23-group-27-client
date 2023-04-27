@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useState } from "react";
@@ -28,6 +28,7 @@ const GreenButton = styled.button`
 export const GameLobby = () => {
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
+  const navigate = useNavigate();
 
   // get the lobby name from local storage
   const [lobbyName, setLobbyname] = useState("");
@@ -40,7 +41,6 @@ export const GameLobby = () => {
   const playerNames = joinedPlayerNames.map((playerName: string) => {
     return { name: playerName, role: "player" };
   });
-  
 
   console.log("player token: ", playerToken);
 
@@ -59,13 +59,19 @@ export const GameLobby = () => {
     `/user/queue/lobby/${lobbyId}/lobby-settings`,
     (message: any) => {
       const lobbyName = JSON.parse(message.body).lobbyName as string;
-      const joinedPlayerNames = JSON.parse(message.body).joinedPlayerNames as string[];
+      const joinedPlayerNames = JSON.parse(message.body)
+        .joinedPlayerNames as string[];
       console.log("Message from server: ", lobbyName);
       console.log("Message from server: ", joinedPlayerNames);
       setLobbyname(lobbyName);
       setJoinedPlayerNames(joinedPlayerNames);
     }
   );
+
+  useSubscription(`user/queue/lobby/${lobbyId}/game-start`, (message: any) => {
+    console.log("gameStartMessage: ", message);
+    navigate("game/" + lobbyId);
+  });
 
   return (
     <div
@@ -78,7 +84,9 @@ export const GameLobby = () => {
         alignItems: "center",
       }}
     >
-      <h1>Game Lobby {lobbyId}: {lobbyName}</h1>
+      <h1>
+        Game Lobby {lobbyId}: {lobbyName}
+      </h1>
       <h2>Waiting for players to join...</h2>
 
       <h3>Players in lobby:</h3>
