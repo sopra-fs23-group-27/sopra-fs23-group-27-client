@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useParams } from "react-router-dom";
+import { RainbowLoader } from "../components/RainbowLoader";
 
 const P = styled.p`
   padding: 0;
@@ -82,6 +83,8 @@ export const GameRound = () => {
   const { lobbyId } = useParams();
   console.log("lobbyId: ", lobbyId);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [currentRound, setCurrentRound] = useState(1);
   const [roundAmount, setRoundAmount] = useState(3);
   const [timeLeft, setTimeLeft] = useState(10);
@@ -137,13 +140,18 @@ export const GameRound = () => {
     setCurrentRound((c) => c + 1);
     setGameRoundEnd(false);
   }, [gameRoundEnd]);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
 
   const submitGuess = () => {
+    const playerName = localStorage.getItem("currentPlayer");
     if (stompClient) {
       stompClient.publish({
         destination: `app/games/${lobbyId}/guess`,
-        //how to get Playername????? -------------------------------------------
-        body: JSON.stringify({ guess: guessInput, playerName: "" }),
+        body: JSON.stringify({ guess: guessInput, playerName }),
       });
       setGuessInput("");
     } else {
@@ -153,28 +161,34 @@ export const GameRound = () => {
 
   return (
     <Application>
-      <Points>
-        <P>{points}</P>
-      </Points>
-      <Time>
-        <P>{timeLeft}</P>
-      </Time>
-      <GlobalGuess>
-        <P>Latest Guess:</P>
-        <P>{latestGlobalGuess}</P>
-      </GlobalGuess>
-      <Main>
-        <Flag src={flagURL} />
-        <Hint>{latestHint}</Hint>
-        <GuessBox>
-          <FloatingTextInput
-            label="Your Guess"
-            value={guessInput}
-            onChange={setGuessInput}
-          />
-          <GuessButton onClick={() => submitGuess()}>Guess</GuessButton>
-        </GuessBox>
-      </Main>
+      {isLoading ? (
+        <RainbowLoader />
+      ) : (
+        <>
+          <Points>
+            <P>{points}</P>
+          </Points>
+          <Time>
+            <P>{timeLeft}</P>
+          </Time>
+          <GlobalGuess>
+            <P>Latest Guess:</P>
+            <P>{latestGlobalGuess}</P>
+          </GlobalGuess>
+          <Main>
+            <Flag src={flagURL} />
+            <Hint>{latestHint}</Hint>
+            <GuessBox>
+              <FloatingTextInput
+                label="Your Guess"
+                value={guessInput}
+                onChange={setGuessInput}
+              />
+              <GuessButton onClick={() => submitGuess()}>Guess</GuessButton>
+            </GuessBox>
+          </Main>
+        </>
+      )}
     </Application>
   );
 };
