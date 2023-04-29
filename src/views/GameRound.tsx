@@ -150,7 +150,7 @@ export const GameRound = () => {
     const playerName = localStorage.getItem("currentPlayer");
     if (stompClient) {
       stompClient.publish({
-        destination: `app/games/${lobbyId}/guess`,
+        destination: `/app/games/${lobbyId}/guess`,
         body: JSON.stringify({ guess: guessInput, playerName }),
       });
       setGuessInput("");

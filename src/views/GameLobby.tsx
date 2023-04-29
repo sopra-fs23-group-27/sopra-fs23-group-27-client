@@ -85,11 +85,14 @@ export const GameLobby = () => {
       });
     } else {
       console.error("Error: Could not send message");
+      // reconnect the websocket
+      // stompClient.reconnect_delay = 5000;
     }
   });
+      
 
   useSubscription(
-    `/user/queue/lobby/${lobbyId}/lobby-settings`,
+    `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
       setIsLoading(false);
       const lobbyName = JSON.parse(message.body).lobbyName as string;

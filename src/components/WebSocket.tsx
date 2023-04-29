@@ -27,7 +27,7 @@ export const WebSocket = () => {
   // include playerToken in the body for first publication request
   // publish auf app/authentication --> to join
 
-  // then publish to user/queue/lobby/:lobby-id/lobby-settings
+  // then publish to user/queue/lobbies/:lobby-id/lobby-settings
   const sendMessage = () => {
     if (stompClient) {
       //Send Message

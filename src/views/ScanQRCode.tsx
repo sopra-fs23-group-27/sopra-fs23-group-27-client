@@ -1,6 +1,6 @@
 import QRCode from "react-qr-code";
 import { httpGet } from "../helpers/httpService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 
@@ -13,12 +13,14 @@ export const ScanQRCode = () => {
   useEffectOnce(() => {
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
-        setPrivateUrl("www.google.com/" + response.data.lobbyId);
+        setPrivateUrl("localhost:3000/lobbies/" + lobbyId + "/join");
       })
       .catch((error) => {
         console.error(error);
       });
   });
+
+  
 
   return (
     <div
@@ -33,7 +35,6 @@ export const ScanQRCode = () => {
     >
       <h1>Scan the following QR code to join the game</h1>
 
-      {/* TODO: replace with dynamic URL */}
       <p><QRCode value={privateUrl} /></p>
 
 

@@ -108,6 +108,7 @@ export const ConfigureGame = () => {
       const headers = { Authorization: localStorage.getItem("token") };
 
       const response = await httpPost("/lobbies/" + mode, body, { headers });
+      console.log("Lobby created successfully!")
       console.log(response.data);
 
       // Create a new Lobby instance from the JSON data in the response
