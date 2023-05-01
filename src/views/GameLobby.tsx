@@ -46,10 +46,25 @@ const AdditionalBoxes = styled.div`
 
 export const GameLobby = () => {
   const { lobbyId } = useParams();
+  const navigate = useNavigate();
+
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/lobby-settings`,
+    (message: any) => {
+      setIsLoading(false);
+      const lobbyName = JSON.parse(message.body).lobbyName as string;
+      const joinedPlayerNames = JSON.parse(message.body)
+        .joinedPlayerNames as string[];
+      console.log("Message from server: ", lobbyName);
+      console.log("Message from server: ", joinedPlayerNames);
+      setLobbyname(lobbyName);
+      setJoinedPlayerNames(joinedPlayerNames);
+    }
+  );
+
   const stompClient = useStompClient();
   // log the connection status
   console.log(stompClient ? "Connected" : "Not Connected");
-  const navigate = useNavigate();
 
   // get the lobby name from local storage
   const [lobbyName, setLobbyname] = useState("");
@@ -76,6 +91,7 @@ export const GameLobby = () => {
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
         setPrivateUrl("localhost:3000/lobbies/" + lobbyId + "/join");
+        // setJoinedPlayerNames(response.data.joinedPlayerNames);
       })
       .catch((error) => {
         console.error(error);
@@ -94,19 +110,7 @@ export const GameLobby = () => {
   });
       
 
-  useSubscription(
-    `/user/queue/lobbies/${lobbyId}/lobby-settings`,
-    (message: any) => {
-      setIsLoading(false);
-      const lobbyName = JSON.parse(message.body).lobbyName as string;
-      const joinedPlayerNames = JSON.parse(message.body)
-        .joinedPlayerNames as string[];
-      console.log("Message from server: ", lobbyName);
-      console.log("Message from server: ", joinedPlayerNames);
-      setLobbyname(lobbyName);
-      setJoinedPlayerNames(joinedPlayerNames);
-    }
-  );
+  
 
   const startGame = async () => {
     console.log("PlayerToken: ", playerToken);

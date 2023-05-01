@@ -35,6 +35,7 @@ export const WebSocket = () => {
         destination: "/app/chat",
         body: JSON.stringify({ message: currentMessage }),
       });
+      console.log("Message sent: ", currentMessage)
       setCurrentMessage("");
     } else {
       console.error("Error: Could not send message");
