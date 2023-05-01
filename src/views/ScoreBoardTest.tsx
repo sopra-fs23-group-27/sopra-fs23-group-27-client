@@ -35,6 +35,18 @@ export const ScoreBoardTest = () => {
     // get the player name from local storage
     const playerName = localStorage.getItem("playerName");
 
+    // define data for leaderboard
+    const data = [
+        {
+            playerScores: playerScores,
+            winner: winner,
+            winnerScore: winnerScore,
+            loser: loser,
+            loserScore: loserScore,
+            tie: tie,
+        }
+    ];
+
     useEffectOnce(() => {
         if (stompClient) {
             stompClient.publish({
@@ -88,13 +100,8 @@ export const ScoreBoardTest = () => {
 
     return (
         <div>
-            <LeaderBoard 
-                playerScores={playerScores}
-                winner={winner}
-                winnerScore={winnerScore}
-                loser={loser}
-                loserScore={loserScore}
-                tie={tie}
+            <LeaderBoard
+                data={data}
             />
             <LeaderBoardContainer>
                 <h1>ScoreBoardTest</h1>

@@ -1,27 +1,89 @@
-import { Container, Grid, SimpleGrid, Skeleton, useMantineTheme, rem } from '@mantine/core';
+import { createStyles, Table, Progress, Anchor, Text, Group, ScrollArea, rem } from '@mantine/core';
 
-const PRIMARY_COL_HEIGHT = rem(300);
+const useStyles = createStyles((theme) => ({
+  progressBar: {
+    '&:not(:first-of-type)': {
+      borderLeft: `${rem(3)} solid ${
+        theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white
+      }`,
+    },
+  },
+}));
 
-export function LeaderBoard(LeaderBoard: any, winner: any, winnerScore: any, loser: any, loserScore: any, tie: any) {
-  const theme = useMantineTheme();
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - ${theme.spacing.md} / 2)`;
+interface TableReviewsProps {
+  data: {
+    playerScores: any,
+    winner: any,
+    winnerScore: any,
+    loser: any,
+    loserScore: any,
+    tie: any,
+  }[];
+}
+
+export function LeaderBoard({ data }: TableReviewsProps) {
+  const { classes, theme } = useStyles();
+
+  const rows = data.map((row) => {
+    const totalScore = row.playerScores;
+    // const positiveReviews = (row.reviews.positive / totalReviews) * 100;
+    // const negativeReviews = (row.reviews.negative / totalReviews) * 100;
+
+    return (
+      <tr key={row.winner}>
+        <td>
+          <Anchor component="button" fz="sm">
+            {row.winner}
+          </Anchor>
+        </td>
+        <td>{row.winnerScore}</td>
+        <td>
+          <Anchor component="button" fz="sm">
+            {row.loser}
+          </Anchor>
+        </td>
+        <td>{Intl.NumberFormat().format(totalScore)}</td>
+        <td>
+          <Group position="apart">
+            <Text fz="xs" c="teal" weight={700}>
+              {row.winnerScore.toFixed(0)}%
+            </Text>
+            <Text fz="xs" c="red" weight={700}>
+              {row.loserScore.toFixed(0)}%
+            </Text>
+          </Group>
+          <Progress
+            classNames={{ bar: classes.progressBar }}
+            sections={[
+              {
+                value: row.winnerScore,
+                color: theme.colorScheme === 'dark' ? theme.colors.teal[9] : theme.colors.teal[6],
+              },
+              {
+                value: row.loserScore,
+                color: theme.colorScheme === 'dark' ? theme.colors.red[9] : theme.colors.red[6],
+              },
+            ]}
+          />
+        </td>
+      </tr>
+    );
+  });
 
   return (
-    <Container my="md">
-      <SimpleGrid cols={2} spacing="md" breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
-        <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} />
-        <Grid gutter="md">
-          <Grid.Col>
-            <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />
-          </Grid.Col>
-        </Grid>
-      </SimpleGrid>
-    </Container>
+    <ScrollArea>
+      <Table sx={{ minWidth: 800 }} verticalSpacing="xs">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Points</th>
+            <th>Time per Answer</th>
+            <th>Reviews distribution</th>
+          </tr>
+        </thead>
+        <tbody>{rows}</tbody>
+      </Table>
+    </ScrollArea>
   );
 }
