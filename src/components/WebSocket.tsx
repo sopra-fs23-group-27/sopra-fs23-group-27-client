@@ -8,7 +8,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 80vh;
-
   font-size: 38px;
 `;
 export const WebSocket = () => {
