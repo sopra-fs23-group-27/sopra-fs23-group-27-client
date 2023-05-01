@@ -1,6 +1,6 @@
 import QRCode from "react-qr-code";
 import { httpGet } from "../helpers/httpService";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 
@@ -18,9 +18,7 @@ export const ScanQRCode = () => {
       .catch((error) => {
         console.error(error);
       });
-  });
-
-  
+  }); 
 
   return (
     <div

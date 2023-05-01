@@ -1,10 +1,11 @@
+import QRCode from "react-qr-code";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useState } from "react";
 import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
-import { httpPut } from "../helpers/httpService";
+import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 
 const UserContainer = styled.div`
@@ -25,18 +26,6 @@ const GreenButton = styled.button`
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-`;
-
-const QRCodeButton = styled.img`
-  width: 75px;
-  height: 75px;
-  border-radius: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  position: absolute;
-  top: 50px;
-  right: 50px;
 `;
 
 const P = styled.p`
@@ -66,6 +55,10 @@ export const GameLobby = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  // private URL for the QR code
+  const headers = { Authorization: localStorage.getItem("token") };
+  const [privateUrl, setPrivateUrl] = useState("");
+
   // get the player token from local storage
   const playerToken = localStorage.getItem("token");
 
@@ -78,6 +71,13 @@ export const GameLobby = () => {
 
   useEffectOnce(() => {
     console.log("lobbyId: ", lobbyId);
+    httpGet("/lobbies/" + lobbyId, { headers })
+      .then((response) => {
+        setPrivateUrl("localhost:3000/lobbies/" + lobbyId + "/join");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     if (stompClient) {
       stompClient.publish({
         destination: "/app/authentication",
@@ -134,7 +134,8 @@ export const GameLobby = () => {
         <RainbowLoader />
       ) : (
         <>
-          <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton>
+          {/* <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton> */}
+          <QRCode value={privateUrl} onClick={() => navigate("/scanQRCode" + "/" + lobbyId)} style={{cursor: "pointer", right: "50px", position: "absolute", top: "0", width: "100px"}}/>
           <h1>
             Game Lobby {lobbyId}: {lobbyName}
           </h1>
