@@ -47,13 +47,15 @@ const AdditionalBoxes = styled.div`
 export const GameLobby = () => {
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
+  // log the connection status
+  console.log(stompClient ? "Connected" : "Not Connected");
   const navigate = useNavigate();
 
   // get the lobby name from local storage
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // private URL for the QR code
   const headers = { Authorization: localStorage.getItem("token") };
@@ -78,6 +80,7 @@ export const GameLobby = () => {
       .catch((error) => {
         console.error(error);
       });
+    console.log("StompClient Status: ", stompClient);
     if (stompClient) {
       stompClient.publish({
         destination: "/app/authentication",

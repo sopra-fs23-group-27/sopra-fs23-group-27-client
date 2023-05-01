@@ -3,6 +3,7 @@ import { httpGet } from "../helpers/httpService";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
+import { ButtonCopy } from "../components/ClipboardButton";
 
 export const ScanQRCode = () => {
 
@@ -36,9 +37,8 @@ export const ScanQRCode = () => {
       <p><QRCode value={privateUrl} /></p>
 
 
-      {/* <ButtonCopy url={url} /> */}
-        
-
+      <p><ButtonCopy url={privateUrl} /></p>
+      
     </div>
   );
 };
