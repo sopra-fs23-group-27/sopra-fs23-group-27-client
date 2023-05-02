@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
 import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
+import { Button } from "@mantine/core";
 
 const UserContainer = styled.div`
   display: flex;
@@ -154,7 +155,8 @@ export const GameLobby = () => {
             <UsersRolesTable data={playerNames} />
           </UserContainer>
 
-          <GreenButton onClick={() => startGame()}>Start Game</GreenButton>
+          {/* <GreenButton onClick={() => startGame()}>Start Game</GreenButton> */}
+          <Button onClick={() => startGame()}>Start Game</Button>
         </>
       )}
     </div>
