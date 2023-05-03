@@ -25,6 +25,8 @@ export function LeaderBoard({ data }: TableReviewsProps) {
   const { classes, theme } = useStyles();
 
   const rows = data.map((row) => {
+    // TODO: get data by subscribing to endpoint
+    const rank = 0; // TODO: calculate rank and answer distribution
     const totalScore = row.playerScores;
     // const positiveReviews = (row.reviews.positive / totalReviews) * 100;
     // const negativeReviews = (row.reviews.negative / totalReviews) * 100;
