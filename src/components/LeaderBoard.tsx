@@ -73,22 +73,19 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
   });
 
   // calculate answer distribution
-  const totalCorrectGuesses = playerData.reduce((acc, row) => {
-    return acc + (row.correctGuesses === "yes" ? 1 : 0);
-  }, 0);
-  const totalWrongGuesses = playerData.reduce((acc, row) => {
-    return acc + (row.correctGuesses === "no" ? 1 : 0);
-  }, 0);
-  const totalGuesses = totalCorrectGuesses + totalWrongGuesses;
-  // const correctGuessDistribution = (totalCorrectGuesses / totalGuesses) * 100;
-  // const wrongGuessDistribution = (totalWrongGuesses / totalGuesses) * 100;
-  const correctGuessDistribution = 50;
-  const wrongGuessDistribution = 50;
+  const answerDistribution = playerData.map((row) => {
+    const correctGuesses = parseInt(row.correctGuesses);
+    const wrongGuesses = parseInt(row.wrongGuesses);
+    const totalGuesses = correctGuesses + wrongGuesses;
+    const correctGuessesPercentage = (correctGuesses / totalGuesses) * 100;
+    const wrongGuessesPercentage = (wrongGuesses / totalGuesses) * 100;
+    return [correctGuessesPercentage, wrongGuessesPercentage, totalGuesses];
+  });
 
   // calculate time per answer
   const timePerAnswer = playerData.map((row) => {
     const totalTime = row.timeUntilCorrectGuess as unknown as number;
-    const timeUntilCorrectGuess = totalTime / 100; // update with totalGuesses
+    const timeUntilCorrectGuess = totalTime / parseInt(row.correctGuesses);
     return timeUntilCorrectGuess;
   });
 
@@ -100,9 +97,9 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
               <th>Rank</th>
               <th>Player</th>
               <th>Score</th>
-              <th>Correct Guess</th>
+              <th>Correct Guesses</th>
               <th>Time Until Correct Guess</th>
-              <th>Answer Distribution</th>
+              <th>Answer Distribution (Correct/Wrong)</th>
             </tr>
           </thead>
           <tbody>
@@ -121,21 +118,21 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
                   <td>
                     <Group position="apart">
                       <Text fz="xs" c="teal" weight={700}>
-                        {correctGuessDistribution.toFixed(0)}%
+                        {answerDistribution[index][0].toFixed(0)}%
                       </Text>
                       <Text fz="xs" c="red" weight={700}>
-                        {wrongGuessDistribution.toFixed(0)}%
+                        {answerDistribution[index][1].toFixed(0)}%
                       </Text>
                     </Group>
                     <Progress
                       classNames={{ bar: classes.progressBar }}
                       sections={[
                         {
-                          value: correctGuessDistribution,
+                          value: answerDistribution[index][0],
                           color: theme.colorScheme === 'dark' ? theme.colors.teal[9] : theme.colors.teal[6],
                         },
                         {
-                          value: wrongGuessDistribution,
+                          value: answerDistribution[index][1],
                           color: theme.colorScheme === 'dark' ? theme.colors.red[9] : theme.colors.red[6],
                         },
                       ]}

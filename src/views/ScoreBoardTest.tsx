@@ -14,7 +14,7 @@ const LeaderBoardContainer = styled.div`
   font-size: 38px;
 `;
 
-export const ScoreBoard = () => {
+export const ScoreBoardTest = () => {
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
   const navigate = useNavigate();
