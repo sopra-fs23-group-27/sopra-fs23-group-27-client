@@ -12,6 +12,11 @@ const LeaderBoardContainer = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 38px;
 `;
 
 export const ScoreBoardTest = () => {
@@ -45,6 +50,16 @@ export const ScoreBoardTest = () => {
   //     }
   // ];
 
+  useEffectOnce(() => {
+    if (stompClient) {
+      stompClient.publish({
+        destination: "/app/authentication",
+        body: JSON.stringify({ playerToken }),
+      });
+    } else {
+      console.error("Error: Could not send message");
+    }
+  });
   useEffectOnce(() => {
     if (stompClient) {
       stompClient.publish({
