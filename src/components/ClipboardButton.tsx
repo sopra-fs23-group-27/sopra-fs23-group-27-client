@@ -2,7 +2,7 @@ import { Button, rem, Tooltip } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { IconCopy, IconCheck } from '@tabler/icons-react';
 
-export function ButtonCopy(url: string) {
+export function ButtonCopy(props : {url: string}) {
   const clipboard = useClipboard();
   return (
     <Tooltip
@@ -28,7 +28,7 @@ export function ButtonCopy(url: string) {
           root: { paddingRight: rem(14), height: rem(48) },
           rightIcon: { marginLeft: rem(22) },
         }}
-        onClick={() => clipboard.copy(url)}
+        onClick={() => clipboard.copy(props.url)}
       >
         Copy link to clipboard
       </Button>
