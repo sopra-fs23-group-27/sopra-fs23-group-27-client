@@ -67,7 +67,6 @@ const GuessBox = styled.div`
   margin-top: 36px;
   align-items: center;
 `;
-const Input = styled.input``;
 
 const GuessButton = styled.button`
   cursor: pointer;
@@ -79,14 +78,8 @@ const GuessButton = styled.button`
 `;
 
 export const GameRound = () => {
-  // where to get Game id??
   const { lobbyId } = useParams();
-  console.log("lobbyId: ", lobbyId);
-
   const [isLoading, setIsLoading] = useState(true);
-
-  const [currentRound, setCurrentRound] = useState(1);
-  const [roundAmount, setRoundAmount] = useState(3);
   const [timeLeft, setTimeLeft] = useState(10);
   const [points, setPoints] = useState(700);
   const [flagURL, setFlagURL] = useState(
@@ -95,51 +88,62 @@ export const GameRound = () => {
   const [guessInput, setGuessInput] = useState("");
   const [latestGlobalGuess, setLatestGlobalGuess] = useState("Austria");
   const [latestHint, setLatestHint] = useState("Capital: Berlin");
-  const [gameRoundEnd, setGameRoundEnd] = useState(false);
 
   const stompClient = useStompClient();
 
-  useSubscription(`/topic/games/${lobbyId}/timer `, (message: any) => {
-    const timeLeft = JSON.parse(message.body).time as number;
-    console.log("seconds left until round finishes: ", timeLeft);
-    setTimeLeft(timeLeft);
-  });
-
-  useSubscription(`/topic/games/${lobbyId}/flag-in-round`, (message: any) => {
-    const flagURL = JSON.parse(message.body).url as string;
-    console.log("Flag URL: ", flagURL);
-    setFlagURL(flagURL);
-  });
   useSubscription(
-    `/topic/games/${lobbyId}/guesses-in-round`,
+    `/user/queue/lobbies/${lobbyId}/round-start`,
     (message: any) => {
-      const latestGlobalGuess = JSON.parse(message.body).guess as string;
-      // const latestGlobalGuessOrigin = JSON.parse(message.body).playername as string;
-      console.log("latest Global Guess: ", latestGlobalGuess);
-      setLatestGlobalGuess(latestGlobalGuess);
+      console.log("round has started");
+      setLatestGlobalGuess("");
+      setLatestHint("");
+      setGuessInput("");
     }
   );
-  useSubscription(`/topic/games/${lobbyId}/hints-in-round`, (message: any) => {
-    const latestHint = JSON.parse(message.body).hint as string;
-    console.log("latest Hint: ", latestHint);
-    setLatestHint(latestHint);
-  });
-
-  useSubscription(`/topic/games/${lobbyId}/round-end`, (message: any) => {
-    const roundScores = JSON.parse(message.body).scores;
-    const correspondingPlayers = JSON.parse(message.body).players;
-    console.log("players: ", correspondingPlayers);
-    console.log("roundScores: ", roundScores);
-    setGameRoundEnd(true);
-  });
-
-  useEffect(() => {
-    if (!gameRoundEnd) {
-      return;
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/round-end`,
+    (message: any) => {
+      console.log("round has ended");
     }
-    setCurrentRound((c) => c + 1);
-    setGameRoundEnd(false);
-  }, [gameRoundEnd]);
+  );
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/hints-in-round`,
+    (message: any) => {
+      let latestHint = JSON.parse(message.body).hint as string;
+      latestHint = latestHint.replace("=", ": ");
+      console.log(latestHint);
+      setLatestHint(latestHint);
+    }
+  );
+
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/flag-in-round`,
+    (message: any) => {
+      const attributeURL = JSON.parse(message.body).url;
+      const flagURL = attributeURL.split("=")[1] as string;
+      console.log("flag URL: ", flagURL);
+      setFlagURL(flagURL);
+    }
+  );
+  useSubscription(`/user/queue/lobbies/${lobbyId}/guesses`, (message: any) => {
+    const latestGlobalGuess = JSON.parse(message.body).guess as string;
+    const latestGlobalGuessOrigin = JSON.parse(message.body)
+      .playerName as string;
+    console.log(
+      "latest Global Guess: ",
+      latestGlobalGuess,
+      " from: ",
+      latestGlobalGuessOrigin
+    );
+    setLatestGlobalGuess(latestGlobalGuess);
+  });
+
+  useSubscription(`/user/queue/lobbies/${lobbyId}/timer`, (message: any) => {
+    const time = JSON.parse(message.body).time as number;
+    console.log(time);
+    setTimeLeft(time);
+  });
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -153,6 +157,7 @@ export const GameRound = () => {
         destination: `/app/games/${lobbyId}/guess`,
         body: JSON.stringify({ guess: guessInput, playerName }),
       });
+      console.log("guess was sent");
       setGuessInput("");
     } else {
       console.error("Error: could not send message");

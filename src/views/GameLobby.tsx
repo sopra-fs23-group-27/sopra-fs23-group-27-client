@@ -78,6 +78,7 @@ export const GameLobby = () => {
 
   useEffectOnce(() => {
     console.log("lobbyId: ", lobbyId);
+    console.log(stompClient);
     if (stompClient) {
       stompClient.publish({
         destination: "/app/authentication",
@@ -89,7 +90,6 @@ export const GameLobby = () => {
       // stompClient.reconnect_delay = 5000;
     }
   });
-      
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
@@ -134,7 +134,10 @@ export const GameLobby = () => {
         <RainbowLoader />
       ) : (
         <>
-          <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton>
+          <QRCodeButton
+            src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png"
+            onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}
+          ></QRCodeButton>
           <h1>
             Game Lobby {lobbyId}: {lobbyName}
           </h1>
