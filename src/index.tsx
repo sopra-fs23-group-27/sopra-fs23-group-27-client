@@ -42,10 +42,8 @@ const router = createBrowserRouter([
   { path: "lobbies/:lobbyId", element: <GameLobby /> },
   { path: "game/:lobbyId", element: <GameRound /> },
   { path: "lobbies/:lobbyId/join", element: <ExternalGameJoin /> },
-  { path: "game/:lobbyId/scoreBoard", element: <ScoreBoard /> },
+  { path: "game/:lobbyId/leaderBoard", element: <ScoreBoard /> },
   { path: "leaderBoard", element: <ScoreBoardTest /> },
-
-
 ]);
 
 const root = ReactDOM.createRoot(

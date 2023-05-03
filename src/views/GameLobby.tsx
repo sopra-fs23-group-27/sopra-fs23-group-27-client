@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
 import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
+import { Button } from "@mantine/core";
 
 const UserContainer = styled.div`
   display: flex;
@@ -59,6 +60,13 @@ export const GameLobby = () => {
       console.log("Message from server: ", joinedPlayerNames);
       setLobbyname(lobbyName);
       setJoinedPlayerNames(joinedPlayerNames);
+    }
+  );
+
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/game-start`,
+    (message: any) => {
+      navigate("/game/" + lobbyId);
     }
   );
 
@@ -154,7 +162,8 @@ export const GameLobby = () => {
             <UsersRolesTable data={playerNames} />
           </UserContainer>
 
-          <GreenButton onClick={() => startGame()}>Start Game</GreenButton>
+          {/* <GreenButton onClick={() => startGame()}>Start Game</GreenButton> */}
+          <Button onClick={() => startGame()}>Start Game</Button>
         </>
       )}
     </div>

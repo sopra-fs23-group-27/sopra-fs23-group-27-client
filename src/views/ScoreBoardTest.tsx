@@ -12,6 +12,11 @@ const LeaderBoardContainer = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 38px;
 `;
 
 export const ScoreBoardTest = () => {
@@ -19,15 +24,14 @@ export const ScoreBoardTest = () => {
   const stompClient = useStompClient();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [playerScores, setPlayerScores] = useState([]);
+  const [playerNames, setPlayerNames] = useState<string[]>([]);
+  const [playerScores, setPlayerScores] = useState<number[]>([]);
+  const [correctGuesses, setCorrectGuesses] = useState<number[]>([]);
+  const [timeUntilCorrectGuess, setTimeUntilCorrectGuess] = useState<number[]>(
+    []
+  );
+  const [wrongGuesses, setWrongGuesses] = useState<number[]>([]);
   const [winner, setWinner] = useState("");
-  const [winnerScore, setWinnerScore] = useState(0);
-  const [isWinner, setIsWinner] = useState(false);
-  const [isTie, setIsTie] = useState(false);
-  const [isLoser, setIsLoser] = useState(false);
-  const [loser, setLoser] = useState("");
-  const [loserScore, setLoserScore] = useState(0);
-  const [tie, setTie] = useState("");
 
   // get the player token from local storage
   const playerToken = localStorage.getItem("token");
@@ -35,18 +39,27 @@ export const ScoreBoardTest = () => {
   // get the player name from local storage
   const playerName = localStorage.getItem("playerName");
 
-  // define data for leaderboard
-  const data = [
-    {
-      playerScores: playerScores,
-      winner: winner,
-      winnerScore: winnerScore,
-      loser: loser,
-      loserScore: loserScore,
-      tie: tie,
-    },
-  ];
+  // // define data for leaderboard
+  // const data = [
+  //     {
+  //         playerNames: playerNames,
+  //         playerScores: playerScores,
+  //         correctGuesses: correctGuesses,
+  //         timeUntilCorrectGuess: timeUntilCorrectGuess,
+  //         wrongGuesses: wrongGuesses
+  //     }
+  // ];
 
+  useEffectOnce(() => {
+    if (stompClient) {
+      stompClient.publish({
+        destination: "/app/authentication",
+        body: JSON.stringify({ playerToken }),
+      });
+    } else {
+      console.error("Error: Could not send message");
+    }
+  });
   useEffectOnce(() => {
     if (stompClient) {
       stompClient.publish({
@@ -59,34 +72,28 @@ export const ScoreBoardTest = () => {
   });
 
   useSubscription(
-    `/user/queue/lobbies/${lobbyId}/scoreboard`,
+    `/user/queue/lobbies/${lobbyId}/score-board`,
     (message: any) => {
       setIsLoading(false);
-      const playerScores = JSON.parse(message.body).playerScores as never[];
-      const winner = JSON.parse(message.body).winner as string;
-      const winnerScore = JSON.parse(message.body).winnerScore as number;
-      const loser = JSON.parse(message.body).loser as string;
-      const loserScore = JSON.parse(message.body).loserScore as number;
-      const tie = JSON.parse(message.body).tie as string;
-      console.log("Message from server: ", playerScores);
-      console.log("Message from server: ", winner);
-      console.log("Message from server: ", winnerScore);
-      console.log("Message from server: ", loser);
-      console.log("Message from server: ", loserScore);
-      console.log("Message from server: ", tie);
-      setPlayerScores(playerScores);
-      setWinner(winner);
-      setWinnerScore(winnerScore);
-      setLoser(loser);
-      setLoserScore(loserScore);
-      setTie(tie);
-      if (playerName === winner) {
-        setIsWinner(true);
-      } else if (playerName === loser) {
-        setIsLoser(true);
-      } else if (playerName === tie) {
-        setIsTie(true);
-      }
+      const playerNames = JSON.parse(message.body).playerNames as string[];
+      const totalGameScores = JSON.parse(message.body)
+        .totalGameScores as number[];
+      const totalCorrectGuesses = JSON.parse(message.body)
+        .totalCorrectGuesses as number[];
+      const totalTimeUntilCorrectGuess = JSON.parse(message.body)
+        .totalTimeUntilCorrectGuess as number[];
+      const totalWrongGuesses = JSON.parse(message.body)
+        .totalWrongGuesses as number[];
+      console.log("Message from server: ", playerNames);
+      console.log("Message from server: ", totalGameScores);
+      console.log("Message from server: ", totalCorrectGuesses);
+      console.log("Message from server: ", totalTimeUntilCorrectGuess);
+      console.log("Message from server: ", totalWrongGuesses);
+      setPlayerNames(playerNames);
+      setPlayerScores(totalGameScores);
+      setCorrectGuesses(totalCorrectGuesses);
+      setTimeUntilCorrectGuess(totalTimeUntilCorrectGuess);
+      setWrongGuesses(totalWrongGuesses);
     }
   );
 
@@ -98,16 +105,62 @@ export const ScoreBoardTest = () => {
     navigate("/lobbies/" + lobbyId);
   };
 
+  interface PlayerData {
+    playerName: string;
+    playerScore: string;
+    correctGuesses: string;
+    timeUntilCorrectGuess: string;
+    wrongGuesses: string;
+  }
+
+  interface GameData {
+    playerNames: string[];
+    playerScores: string[];
+    correctGuesses: string[];
+    timeUntilCorrectGuess: string[];
+    wrongGuesses: string[];
+  }
+
+  const data: GameData[] = [
+    {
+      playerNames: ["Alice", "Bob", "Charlie"],
+      playerScores: ["10", "20", "30"],
+      correctGuesses: ["1", "2", "3"],
+      timeUntilCorrectGuess: ["10", "20", "30"],
+      wrongGuesses: ["5", "3", "2"],
+    },
+    {
+      playerNames: ["David", "Eve", "Frank"],
+      playerScores: ["30", "20", "10"],
+      correctGuesses: ["3", "2", "1"],
+      timeUntilCorrectGuess: ["15", "25", "35"],
+      wrongGuesses: ["4", "6", "8"],
+    },
+  ];
+
+  const playerData: PlayerData[] = data.flatMap((game) => {
+    return game.playerNames.map((name, index) => {
+      return {
+        playerName: name,
+        playerScore: game.playerScores[index],
+        correctGuesses: game.correctGuesses[index],
+        timeUntilCorrectGuess: game.timeUntilCorrectGuess[index],
+        wrongGuesses: game.wrongGuesses[index],
+      };
+    });
+  });
+
+  interface LeaderBoardProps {
+    playerData: PlayerData[];
+  }
+
   return (
     <div>
       <LeaderBoardContainer>
         <h1>ScoreBoardTest</h1>
-      </LeaderBoardContainer>
-
-      <LeaderBoard data={data} />
-      <LeaderBoardContainer>
+        <LeaderBoard playerData={playerData} />
         <Button onClick={goToLobby}>Go to Lobby</Button>
-        <Button onClick={anotherGame}>Another Game</Button>
+        {/* <Button onClick={anotherGame}>Another Game</Button> */}
       </LeaderBoardContainer>
     </div>
   );
