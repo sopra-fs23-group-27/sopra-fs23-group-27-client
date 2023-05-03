@@ -8,7 +8,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 80vh;
-
   font-size: 38px;
 `;
 export const WebSocket = () => {
@@ -27,7 +26,7 @@ export const WebSocket = () => {
   // include playerToken in the body for first publication request
   // publish auf app/authentication --> to join
 
-  // then publish to user/queue/lobby/:lobby-id/lobby-settings
+  // then publish to user/queue/lobbies/:lobby-id/lobby-settings
   const sendMessage = () => {
     if (stompClient) {
       //Send Message
@@ -35,6 +34,7 @@ export const WebSocket = () => {
         destination: "/app/chat",
         body: JSON.stringify({ message: currentMessage }),
       });
+      console.log("Message sent: ", currentMessage)
       setCurrentMessage("");
     } else {
       console.error("Error: Could not send message");
