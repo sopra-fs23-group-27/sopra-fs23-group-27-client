@@ -79,8 +79,8 @@ export const ConfigureGame = () => {
   //ADVANCED
   const [numSecondsUntilHint, setNumSecondsUntilHint] = useState(10);
   const [hintInterval, setHintInterval] = useState(5);
-  const [numSeconds, setNumSeconds] = useState(10);
-  const [maxNumGuesses, setMaxNumGuesses] = useState(1);
+  const [numSeconds, setNumSeconds] = useState(45);
+  const [maxNumGuesses, setMaxNumGuesses] = useState(2);
   //BASIC
   const [numOptions, setNumOptions] = useState(3);
   const [roundDuration, setRoundDuration] = useState(10);
@@ -108,7 +108,7 @@ export const ConfigureGame = () => {
       const headers = { Authorization: localStorage.getItem("token") };
 
       const response = await httpPost("/lobbies/" + mode, body, { headers });
-      console.log("Lobby created successfully!")
+      console.log("Lobby created successfully!");
       console.log(response.data);
 
       // Create a new Lobby instance from the JSON data in the response
@@ -152,7 +152,7 @@ export const ConfigureGame = () => {
             <div>
               <h2>Show first hint after</h2>
               <RangeInput
-                min={10}
+                min={0}
                 max={30}
                 value={numSecondsUntilHint}
                 setNewValue={setNumSecondsUntilHint}
@@ -161,8 +161,8 @@ export const ConfigureGame = () => {
             <div>
               <h2>Hints interval</h2>
               <RangeInput
-                min={5}
-                max={20}
+                min={3}
+                max={10}
                 value={hintInterval}
                 setNewValue={setHintInterval}
               />

@@ -49,6 +49,40 @@ export const GameLobby = () => {
   const { lobbyId } = useParams();
   const navigate = useNavigate();
 
+<<<<<<< HEAD
+  // get the lobby name from local storage
+  const [lobbyName, setLobbyname] = useState("");
+  const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  // get the player token from local storage
+  const playerToken = localStorage.getItem("token");
+
+  // map playername to name and role
+  const playerNames = joinedPlayerNames.map((playerName: string) => {
+    return { name: playerName, role: "player" };
+  });
+
+  console.log("player token: ", playerToken);
+
+  useEffectOnce(() => {
+    console.log("lobbyId: ", lobbyId);
+    console.log(stompClient);
+    if (stompClient) {
+      stompClient.publish({
+        destination: "/app/authentication",
+        body: JSON.stringify({ playerToken }),
+      });
+    } else {
+      console.error("Error: Could not send message");
+      // reconnect the websocket
+      // stompClient.reconnect_delay = 5000;
+    }
+  });
+
+=======
+>>>>>>> 2cda116c04020f268b07fb83fe91bc358075167d
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
@@ -149,8 +183,15 @@ export const GameLobby = () => {
         <RainbowLoader />
       ) : (
         <>
+<<<<<<< HEAD
+          <QRCodeButton
+            src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png"
+            onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}
+          ></QRCodeButton>
+=======
           {/* <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton> */}
           <QRCode value={privateUrl} onClick={() => navigate("/scanQRCode" + "/" + lobbyId)} style={{cursor: "pointer", right: "50px", position: "absolute", top: "0", width: "100px"}}/>
+>>>>>>> 2cda116c04020f268b07fb83fe91bc358075167d
           <h1>
             Game Lobby {lobbyId}: {lobbyName}
           </h1>
