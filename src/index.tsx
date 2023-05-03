@@ -20,7 +20,7 @@ import { GameIdInput } from "./views/EnterGameId";
 import { GameLobby } from "./views/GameLobby";
 import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/PrivateGameJoin";
-import { ScoreBoard } from "./views/ScoreBoard";
+import { ScoreBoard } from "./views/Scoreboard";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
 
 const router = createBrowserRouter([
