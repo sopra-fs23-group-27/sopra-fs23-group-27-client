@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { FloatingTextInput } from "../components/FloatingTextInput";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 
 const P = styled.p`
@@ -79,6 +79,7 @@ const GuessButton = styled.button`
 
 export const GameRound = () => {
   const { lobbyId } = useParams();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(10);
   const [points, setPoints] = useState(700);
@@ -143,6 +144,14 @@ export const GameRound = () => {
     console.log(time);
     setTimeLeft(time);
   });
+
+  useSubscription(`/user/queue/lobbies/${lobbyId}/round-end`, (message: any) => {
+    console.log("time is up");
+    navigate(`/game/${lobbyId}/leaderBoard`);
+    }
+  );
+
+  // TODO: final leaderboard once game is over
 
   useEffect(() => {
     setTimeout(() => {

@@ -14,7 +14,7 @@ export const ScanQRCode = () => {
   useEffectOnce(() => {
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
-        setPrivateUrl(mainURL + lobbyId + "/join");
+        setPrivateUrl(mainURL + "/" + lobbyId + "/join");
       })
       .catch((error) => {
         console.error(error);
