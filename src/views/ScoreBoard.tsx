@@ -34,17 +34,6 @@ export const ScoreBoard = () => {
   // get the player name from local storage
   const playerName = localStorage.getItem("playerName");
 
-  // // define data for leaderboard
-  // const data = [
-  //     {
-  //         playerNames: playerNames,
-  //         playerScores: playerScores,
-  //         correctGuesses: correctGuesses,
-  //         timeUntilCorrectGuess: timeUntilCorrectGuess,
-  //         wrongGuesses: wrongGuesses
-  //     }
-  // ];
-
   useEffectOnce(() => {
     if (stompClient) {
       stompClient.publish({
@@ -82,6 +71,11 @@ export const ScoreBoard = () => {
     }
   );
 
+  useSubscription(`/user/queue/lobbies/${lobbyId}/round-start`, (message: any) => {
+    console.log("round start");
+    navigate(`/game/${lobbyId}`);
+  });
+
   const goToLobby = () => {
     navigate("/lobbies/" + lobbyId);
   };
@@ -92,34 +86,28 @@ export const ScoreBoard = () => {
 
   interface PlayerData {
     playerName: string;
-    playerScore: string;
-    correctGuesses: string;
-    timeUntilCorrectGuess: string;
-    wrongGuesses: string;
+    playerScore: number;
+    correctGuesses: number;
+    timeUntilCorrectGuess: number;
+    wrongGuesses: number;
   }
 
   interface GameData {
     playerNames: string[];
-    playerScores: string[];
-    correctGuesses: string[];
-    timeUntilCorrectGuess: string[];
-    wrongGuesses: string[];
+    playerScores: number[];
+    correctGuesses: number[];
+    timeUntilCorrectGuess: number[];
+    wrongGuesses: number[];
   }
 
+  // define data for leaderboard
   const data: GameData[] = [
     {
-      playerNames: ["Alice", "Bob", "Charlie"],
-      playerScores: ["10", "20", "30"],
-      correctGuesses: ["1", "2", "3"],
-      timeUntilCorrectGuess: ["10", "20", "30"],
-      wrongGuesses: ["5", "3", "2"],
-    },
-    {
-      playerNames: ["David", "Eve", "Frank"],
-      playerScores: ["30", "20", "10"],
-      correctGuesses: ["3", "2", "1"],
-      timeUntilCorrectGuess: ["15", "25", "35"],
-      wrongGuesses: ["4", "6", "8"],
+      playerNames: playerNames,
+      playerScores: playerScores,
+      correctGuesses: correctGuesses,
+      timeUntilCorrectGuess: timeUntilCorrectGuess,
+      wrongGuesses: wrongGuesses,
     },
   ];
 
@@ -134,10 +122,6 @@ export const ScoreBoard = () => {
       };
     });
   });
-
-  interface LeaderBoardProps {
-    playerData: PlayerData[];
-  }
 
   return (
     <div>

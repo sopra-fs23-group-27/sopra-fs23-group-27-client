@@ -19,7 +19,7 @@ import { ScanQRCode } from "./views/ScanQRCode";
 import { GameIdInput } from "./views/EnterGameId";
 import { GameLobby } from "./views/GameLobby";
 import { GameRound } from "./views/GameRound";
-import { ExternalGameJoin } from "./views/PrivateGameJoin";
+import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { ScoreBoard } from "./views/ScoreBoard";
 

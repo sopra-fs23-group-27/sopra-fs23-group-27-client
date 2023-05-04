@@ -5,6 +5,7 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useState } from "react";
 import { handleError, httpGet, httpPost, httpPut } from "../helpers/httpService";
 import Player from "../models/Player";
+import { Button } from "@mantine/core";
 
 const Container = styled.div`
   display: flex;
@@ -113,12 +114,12 @@ export const ExternalGameJoin = () => {
         value={playerName}
       />
       <ButtonContainer>
-        <GreenButton
+        <Button
           disabled={!playerName}
           onClick={() => handleUserJoin("/lobbies/" + lobbyId)}
         >
-          Join Private Game
-        </GreenButton>
+          Join Game
+        </Button>
       </ButtonContainer>
     </Container>
   );

@@ -5,7 +5,7 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useState } from "react";
 import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
-import { httpGet, httpPut } from "../helpers/httpService";
+import { httpGet, httpPut, mainURL } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Button } from "@mantine/core";
 
@@ -114,7 +114,7 @@ export const GameLobby = () => {
     console.log("lobbyId: ", lobbyId);
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
-        setPrivateUrl("localhost:3000/lobbies/" + lobbyId + "/join");
+        setPrivateUrl(mainURL + "/" + lobbyId + "/join");
         // setJoinedPlayerNames(response.data.joinedPlayerNames);
       })
       .catch((error) => {
