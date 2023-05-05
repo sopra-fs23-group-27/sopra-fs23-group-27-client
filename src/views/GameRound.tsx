@@ -81,14 +81,12 @@ export const GameRound = () => {
   const { lobbyId } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(10);
-  const [points, setPoints] = useState(700);
-  const [flagURL, setFlagURL] = useState(
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Flag_of_Germany.svg/2560px-Flag_of_Germany.svg.png"
-  );
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [flagURL, setFlagURL] = useState("");
   const [guessInput, setGuessInput] = useState("");
-  const [latestGlobalGuess, setLatestGlobalGuess] = useState("Austria");
-  const [latestHint, setLatestHint] = useState("Capital: Berlin");
+  const [latestGlobalGuess, setLatestGlobalGuess] = useState("");
+  const [latestHint, setLatestHint] = useState("");
 
   const stompClient = useStompClient();
 
@@ -145,9 +143,11 @@ export const GameRound = () => {
     setTimeLeft(time);
   });
 
-  useSubscription(`/user/queue/lobbies/${lobbyId}/round-end`, (message: any) => {
-    console.log("time is up");
-    navigate(`/game/${lobbyId}/leaderBoard`);
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/round-end`,
+    (message: any) => {
+      console.log("time is up");
+      navigate(`/game/${lobbyId}/leaderBoard`);
     }
   );
 
@@ -156,7 +156,7 @@ export const GameRound = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 2500);
   }, []);
 
   const submitGuess = () => {
