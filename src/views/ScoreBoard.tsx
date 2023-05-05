@@ -76,12 +76,16 @@ export const ScoreBoard = () => {
     navigate(`/game/${lobbyId}`);
   });
 
-  const goToLobby = () => {
-    navigate("/lobbies/" + lobbyId);
-  };
-
-  const anotherGame = () => {
-    navigate("/lobbies/" + lobbyId);
+  // publish message to start next round
+  const startNextRound = () => {
+    if (stompClient) {
+      stompClient.publish({
+        destination: `/app/games/{lobbyId}/game-ready `,
+        body: JSON.stringify({ playerToken }),
+      });
+    } else {
+      console.error("Error: Could not send message");
+    }
   };
 
   interface PlayerData {
@@ -126,9 +130,9 @@ export const ScoreBoard = () => {
   return (
     <div>
       <LeaderBoardContainer>
-        <h1>ScoreBoardTest</h1>
+        <h1>ScoreBoard</h1>
         <LeaderBoard playerData={playerData} />
-        <Button onClick={goToLobby}>Go to Lobby</Button>
+        <Button onClick={startNextRound}>Start Next Round</Button>
         {/* <Button onClick={anotherGame}>Another Game</Button> */}
       </LeaderBoardContainer>
     </div>

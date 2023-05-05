@@ -147,6 +147,19 @@ export const GameLobby = () => {
     }
   };
 
+  // resend lobby settings
+  const resendLobbySettings = () => {
+    if (stompClient) {
+      stompClient.publish({
+        destination: `/app/games/${lobbyId}/send-lobby-settings`,
+        body: JSON.stringify({ playerToken }),
+      });
+      console.log("Lobby settings were sent again");
+    } else {
+      console.error("Error: Could not send message");
+    }
+  };
+
   return (
     <div
       style={{
@@ -187,6 +200,7 @@ export const GameLobby = () => {
 
           {/* <GreenButton onClick={() => startGame()}>Start Game</GreenButton> */}
           <Button onClick={() => startGame()}>Start Game</Button>
+          <Button onClick={() => resendLobbySettings()}>Resend Lobby Settings</Button>
         </>
       )}
     </div>

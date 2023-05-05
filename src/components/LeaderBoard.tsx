@@ -40,14 +40,16 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
     const correctGuesses = row.correctGuesses;
     const wrongGuesses = row.wrongGuesses;
     const totalGuesses = correctGuesses + wrongGuesses;
+    if (correctGuesses === 0) return [0, 100, totalGuesses];
     const correctGuessesPercentage = (correctGuesses / totalGuesses) * 100;
-    const wrongGuessesPercentage = (wrongGuesses / totalGuesses) * 100;
+    const wrongGuessesPercentage = (wrongGuesses / totalGuesses) * 100;         
     return [correctGuessesPercentage, wrongGuessesPercentage, totalGuesses];
   });
 
   // calculate time per answer
   const timePerAnswer = playerData.map((row) => {
     const totalTime = row.timeUntilCorrectGuess as unknown as number;
+    if (row.correctGuesses === 0) return totalTime;
     const timeUntilCorrectGuess = totalTime / row.correctGuesses;
     return timeUntilCorrectGuess;
   });
