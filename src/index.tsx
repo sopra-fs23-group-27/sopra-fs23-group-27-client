@@ -19,9 +19,9 @@ import { ScanQRCode } from "./views/ScanQRCode";
 import { GameIdInput } from "./views/EnterGameId";
 import { GameLobby } from "./views/GameLobby";
 import { GameRound } from "./views/GameRound";
-import { ExternalGameJoin } from "./views/PrivateGameJoin";
-import { ScoreBoard } from "./views/ScoreBoard";
+import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
+import { ScoreBoard } from "./views/ScoreBoard";
 
 const router = createBrowserRouter([
   {
@@ -42,10 +42,8 @@ const router = createBrowserRouter([
   { path: "lobbies/:lobbyId", element: <GameLobby /> },
   { path: "game/:lobbyId", element: <GameRound /> },
   { path: "lobbies/:lobbyId/join", element: <ExternalGameJoin /> },
-  { path: "game/:lobbyId/scoreBoard", element: <ScoreBoard /> },
+  { path: "game/:lobbyId/leaderBoard", element: <ScoreBoard /> },
   { path: "leaderBoard", element: <ScoreBoardTest /> },
-
-
 ]);
 
 const root = ReactDOM.createRoot(

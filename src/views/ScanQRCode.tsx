@@ -1,5 +1,5 @@
 import QRCode from "react-qr-code";
-import { httpGet } from "../helpers/httpService";
+import { httpGet, mainURL } from "../helpers/httpService";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
@@ -14,7 +14,7 @@ export const ScanQRCode = () => {
   useEffectOnce(() => {
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
-        setPrivateUrl("localhost:3000/lobbies/" + lobbyId + "/join");
+        setPrivateUrl(mainURL + "/" + lobbyId + "/join");
       })
       .catch((error) => {
         console.error(error);
