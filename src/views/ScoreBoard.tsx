@@ -80,7 +80,7 @@ export const ScoreBoard = () => {
   const startNextRound = () => {
     if (stompClient) {
       stompClient.publish({
-        destination: `/app/games/{lobbyId}/game-ready `,
+        destination: `/app/games/${lobbyId}/game-ready`,
         body: JSON.stringify({ playerToken }),
       });
     } else {
