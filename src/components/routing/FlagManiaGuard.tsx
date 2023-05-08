@@ -1,5 +1,4 @@
 import { notifications } from "@mantine/notifications";
-import { red } from "@mui/material/colors";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
