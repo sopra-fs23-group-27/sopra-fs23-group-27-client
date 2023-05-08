@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import "./App.css";
 import { Link } from "react-router-dom";
+import {Notifications} from "@mantine/notifications";
+import { MantineProvider } from "@mantine/core";
 
 const Container = styled.div`
   display: flex;
@@ -14,19 +16,15 @@ const Ul = styled.ul`
   list-style-type: none;
   padding-inline-start: 0;
 `;
-const SamplePlayers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export const App = () => {
   return (
-    <Container>
-      <h1>Hello World!</h1>
-      <Ul>
-        {SamplePlayers.map((id) => (
-          <li>
-            <Link to={`/players/${id}`}>Player {id}</Link>
-          </li>
-        ))}
-      </Ul>
-    </Container>
+    <MantineProvider withNormalizeCSS withGlobalStyles>
+      <Notifications>
+        <Container>
+          <h1>Flags of the World</h1>
+        </Container>
+      </Notifications>
+    </MantineProvider>
   );
 };

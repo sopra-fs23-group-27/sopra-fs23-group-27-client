@@ -22,6 +22,7 @@ import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { ScoreBoard } from "./views/ScoreBoard";
+import { App } from "./App";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,7 @@ root.render(
         //All options supported by @stomp/stompjs can be used here
       >
         <RouterProvider router={router} />
+        <App />
       </StompSessionProvider>
     </MantineProvider>
   </React.StrictMode>
