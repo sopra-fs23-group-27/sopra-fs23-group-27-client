@@ -5,6 +5,7 @@ import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
 import { handleError, httpPost } from "../helpers/httpService";
 import Lobby from "../models/Lobby";
+import { notifications } from "@mantine/notifications";
 
 const Container = styled.div`
   display: flex;
@@ -105,7 +106,7 @@ export const ConfigureGame = () => {
 
     try {
       // get token of current player from local storage
-      const headers = { Authorization: localStorage.getItem("token") };
+      const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
 
       const response = await httpPost("/lobbies/" + mode, body, { headers });
       console.log("Lobby created successfully!");
@@ -115,17 +116,21 @@ export const ConfigureGame = () => {
       const lobby = new Lobby(response.data);
 
       // Store the name of the lobby into the local storage.
-      localStorage.setItem("lobbyName", lobby.lobbyName);
+      sessionStorage.setItem("lobbyName", lobby.lobbyName);
 
-      // Store the ID of the current game in localstorage
-      localStorage.setItem("lobbyId", lobby.lobbyId.toString());
+      // Store the ID of the current game in sessionStorage
+      sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
 
       // navigate to lobby
       navigate("/lobbies/" + lobby.lobbyId);
 
       // catch errors
     } catch (error: any) {
-      alert(`Something went wrong: \n${handleError(error)}`);
+      notifications.show({
+        title: "Something went wrong",
+        message: error.response.data.message,
+        color: "red",
+      });
     }
   };
 

@@ -1,7 +1,7 @@
 import { Client } from "@stomp/stompjs";
 
 export const authenticate = (stompClient: Client) => {
-  const playerToken = localStorage.getItem("token");
+  const playerToken = sessionStorage.getItem("FlagManiaToken");
   console.log("player token: ", playerToken);
 
   if (stompClient) {

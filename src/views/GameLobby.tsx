@@ -8,6 +8,7 @@ import { UsersRolesTable } from "../components/UserTable";
 import { httpGet, httpPut, mainURL } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Button } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 
 const UserContainer = styled.div`
   display: flex;
@@ -50,7 +51,7 @@ export const GameLobby = () => {
   const navigate = useNavigate();
 
   // get the player token from local storage
-  const playerToken = localStorage.getItem("token");
+  const playerToken = sessionStorage.getItem("FlagManiaToken");
 
   const stompClient = useStompClient();
   // log the connection status
@@ -67,7 +68,7 @@ export const GameLobby = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // private URL for the QR code
-  const headers = { Authorization: localStorage.getItem("token") };
+  const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
   const [GameUrl, setGameUrl] = useState("");
 
   console.log("player token: ", playerToken);
@@ -76,13 +77,48 @@ export const GameLobby = () => {
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
       setIsLoading(false);
-      const lobbyName = JSON.parse(message.body).lobbyName as string;
-      const joinedPlayerNames = JSON.parse(message.body)
+      const newLobbyName = JSON.parse(message.body).lobbyName as string;
+      const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
       console.log("Message from server: ", lobbyName);
       console.log("Message from server: ", joinedPlayerNames);
-      setLobbyname(lobbyName);
-      setJoinedPlayerNames(joinedPlayerNames);
+      // find players that joined the lobby recently
+      const newPlayerNames = newJoinedPlayerNames.filter(
+        (playerName: string) => !joinedPlayerNames.includes(playerName)
+      );
+      
+      // find players that left the lobby recently
+      const leftPlayerNames = joinedPlayerNames.filter(
+        (playerName: string) => !newJoinedPlayerNames.includes(playerName)
+      );
+
+
+      if (newPlayerNames.length > 0) {
+        // show notification for each player that joined
+        newPlayerNames.forEach((playerName: string) => {
+          notifications.show({
+            title: "Player joined",
+            message: playerName,
+            color: "green",
+          });
+        });
+      }
+
+      // show notification for each player that left
+      if (leftPlayerNames.length > 0) {
+        // show notification for each player that joined
+        leftPlayerNames.forEach((playerName: string) => {
+          notifications.show({
+            title: "Player left",
+            message: playerName,
+            color: "red",
+          });
+        });
+      }
+      // update the lobby name and joined player names
+      setLobbyname(newLobbyName);
+      setJoinedPlayerNames(newJoinedPlayerNames);
+    
     }
   );
 
@@ -126,14 +162,18 @@ export const GameLobby = () => {
   const startGame = async () => {
     console.log("PlayerToken: ", playerToken);
     try {
-      const headers = { Authorization: localStorage.getItem("token") };
+      const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
       const body = {};
       const response = await httpPut("/lobbies/" + lobbyId + "/start", body, {
         headers,
       });
       navigate("/game/" + lobbyId);
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      notifications.show({
+        title: "Error",
+        message: e.response.data.message,
+        color: "red",
+      });
     }
   };
 

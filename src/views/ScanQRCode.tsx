@@ -10,7 +10,7 @@ export const ScanQRCode = () => {
 
   const [GameURL, setGameUrl] = useState("");
   const { lobbyId } = useParams();
-  const headers = { Authorization: localStorage.getItem("token") }
+  const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") }
 
   useEffectOnce(() => {
     httpGet("/lobbies/" + lobbyId, { headers })

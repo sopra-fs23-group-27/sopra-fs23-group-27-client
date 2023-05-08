@@ -7,6 +7,7 @@ import { RainbowLoader } from "../components/RainbowLoader";
 import { httpGet, httpPut } from "../helpers/httpService";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useNavigate } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
 
 const GameContainer = styled.li`
   display: flex;
@@ -47,13 +48,17 @@ export const PublicGame = (props: { game: game }) => {
       if (lobby.data.joinedPlayerNames.length >= lobby.data.maxNumPlayers) {
         throw new Error("Game is full");
       } else {
-        const headers = { Authorization: localStorage.getItem("token") };
+        const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
         const body = {};
         const response = await httpPut("/lobbies/" + lobbyId + "/join", body, { headers });
         if (response.status === 204) {
           navigate("/lobbies/" + lobbyId);
         } else {
-          alert(response.status)
+          notifications.show({
+            title: "Error",
+            message: response.status,
+            color: "red",
+          });
           throw new Error("Error joining game");
         }
       }
@@ -91,7 +96,7 @@ export const ActiveGameOverview = () => {
 
   useEffectOnce(() => {
     const getLobbies = async () => {
-      const playerToken = localStorage.getItem("token") as string;
+      const playerToken = sessionStorage.getItem("FlagManiaToken") as string;
       try {
         const games = (await httpGet("/lobbies", playerToken))
           .data as unknown as game[];

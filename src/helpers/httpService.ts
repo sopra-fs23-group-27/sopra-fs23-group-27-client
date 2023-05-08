@@ -1,3 +1,4 @@
+import { notifications } from "@mantine/notifications";
 import axios from "axios";
 
 const localURL = "http://localhost:8080";
@@ -43,7 +44,11 @@ export const handleError = (error: { response: any; message: string }) => {
     return info;
   } else {
     if (error.message.match(/Network Error/)) {
-      alert("The server cannot be reached.\nDid you start it?");
+      notifications.show({
+        title: "The server cannot be reached.",
+        message: "Did you start it?",
+        color: "red",
+      });
     }
 
     console.log("Something else happened.", error);

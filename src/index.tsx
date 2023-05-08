@@ -23,6 +23,7 @@ import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { ScoreBoard } from "./views/ScoreBoard";
 import { App } from "./App";
+import { FlagManiaGuard } from "./components/routing/FlagManiaGuard";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,14 @@ const router = createBrowserRouter([
     element: <HomePage />,
     errorElement: <ErrorPage />,
   },
-  { path: "publicGames", element: <ActiveGameOverview /> },
+  {
+    path: "publicGames",
+    element: (
+      <FlagManiaGuard shouldPreventReload={true}>
+        <ActiveGameOverview />
+      </FlagManiaGuard>
+    ),
+  },
   { path: "configureGame", element: <ConfigureGame /> },
   { path: "lobby", element: <GameLobby /> },
   { path: "webSocket", element: <WebSocket /> },
@@ -40,10 +48,31 @@ const router = createBrowserRouter([
   { path: "websocket", element: <WebSocket /> },
   { path: "scanQRCode/:lobbyId", element: <ScanQRCode /> },
   { path: "enterGameId", element: <GameIdInput /> },
-  { path: "lobbies/:lobbyId", element: <GameLobby /> },
-  { path: "game/:lobbyId", element: <GameRound /> },
+  {
+    path: "lobbies/:lobbyId",
+    element: (
+      <FlagManiaGuard shouldPreventReload={true}>
+        <GameLobby />
+      </FlagManiaGuard>
+    ),
+  },
+  {
+    path: "game/:lobbyId",
+    element: (
+      <FlagManiaGuard shouldPreventReload={true}>
+        <GameRound />
+      </FlagManiaGuard>
+    ),
+  },
   { path: "lobbies/:lobbyId/join", element: <ExternalGameJoin /> },
-  { path: "game/:lobbyId/leaderBoard", element: <ScoreBoard /> },
+  {
+    path: "game/:lobbyId/leaderBoard",
+    element: (
+      <FlagManiaGuard shouldPreventReload={true}>
+        <ScoreBoard />
+      </FlagManiaGuard>
+    ),
+  },
   { path: "leaderBoard", element: <ScoreBoardTest /> },
 ]);
 
