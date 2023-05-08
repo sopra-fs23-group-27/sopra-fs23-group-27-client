@@ -8,6 +8,7 @@ import { UsersRolesTable } from "../components/UserTable";
 import { httpGet, httpPut, mainURL } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Button } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 
 const UserContainer = styled.div`
   display: flex;
@@ -50,7 +51,7 @@ export const GameLobby = () => {
   const navigate = useNavigate();
 
   // get the player token from local storage
-  const playerToken = localStorage.getItem("token");
+  const playerToken = sessionStorage.getItem("FlagManiaToken");
 
   const stompClient = useStompClient();
   // log the connection status
@@ -67,37 +68,57 @@ export const GameLobby = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // private URL for the QR code
-  const headers = { Authorization: localStorage.getItem("token") };
-  const [privateUrl, setPrivateUrl] = useState("");
+  const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
+  const [GameUrl, setGameUrl] = useState("");
 
   console.log("player token: ", playerToken);
-
-  useEffectOnce(() => {
-    console.log("lobbyId: ", lobbyId);
-    console.log(stompClient);
-    if (stompClient) {
-      stompClient.publish({
-        destination: "/app/authentication",
-        body: JSON.stringify({ playerToken }),
-      });
-    } else {
-      console.error("Error: Could not send message");
-      // reconnect the websocket
-      // stompClient.reconnect_delay = 5000;
-    }
-  });
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
       setIsLoading(false);
-      const lobbyName = JSON.parse(message.body).lobbyName as string;
-      const joinedPlayerNames = JSON.parse(message.body)
+      const newLobbyName = JSON.parse(message.body).lobbyName as string;
+      const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
       console.log("Message from server: ", lobbyName);
       console.log("Message from server: ", joinedPlayerNames);
-      setLobbyname(lobbyName);
-      setJoinedPlayerNames(joinedPlayerNames);
+      // find players that joined the lobby recently
+      const newPlayerNames = newJoinedPlayerNames.filter(
+        (playerName: string) => !joinedPlayerNames.includes(playerName)
+      );
+      
+      // find players that left the lobby recently
+      const leftPlayerNames = joinedPlayerNames.filter(
+        (playerName: string) => !newJoinedPlayerNames.includes(playerName)
+      );
+
+
+      if (newPlayerNames.length > 0) {
+        // show notification for each player that joined
+        newPlayerNames.forEach((playerName: string) => {
+          notifications.show({
+            title: "Player joined",
+            message: playerName,
+            color: "green",
+          });
+        });
+      }
+
+      // show notification for each player that left
+      if (leftPlayerNames.length > 0) {
+        // show notification for each player that joined
+        leftPlayerNames.forEach((playerName: string) => {
+          notifications.show({
+            title: "Player left",
+            message: playerName,
+            color: "red",
+          });
+        });
+      }
+      // update the lobby name and joined player names
+      setLobbyname(newLobbyName);
+      setJoinedPlayerNames(newJoinedPlayerNames);
+    
     }
   );
 
@@ -114,8 +135,13 @@ export const GameLobby = () => {
     console.log("lobbyId: ", lobbyId);
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
-        setPrivateUrl(mainURL + "/" + lobbyId + "/join");
-        // setJoinedPlayerNames(response.data.joinedPlayerNames);
+        const privateLobbyKey = response.data.privateLobbyKey;
+        if (privateLobbyKey === null) {
+          console.log("Public lobby");
+          setGameUrl(mainURL + "/" + lobbyId + "/join");
+        } else {
+          setGameUrl(mainURL + "/" + lobbyId + "/join/?key=" + privateLobbyKey);      
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -136,14 +162,31 @@ export const GameLobby = () => {
   const startGame = async () => {
     console.log("PlayerToken: ", playerToken);
     try {
-      const headers = { Authorization: localStorage.getItem("token") };
+      const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
       const body = {};
       const response = await httpPut("/lobbies/" + lobbyId + "/start", body, {
         headers,
       });
       navigate("/game/" + lobbyId);
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      notifications.show({
+        title: "Error",
+        message: e.response.data.message,
+        color: "red",
+      });
+    }
+  };
+
+  // resend lobby settings
+  const resendLobbySettings = () => {
+    if (stompClient) {
+      stompClient.publish({
+        destination: `/app/games/${lobbyId}/send-lobby-settings`,
+        body: JSON.stringify({ playerToken }),
+      });
+      console.log("Lobby settings were sent again");
+    } else {
+      console.error("Error: Could not send message");
     }
   };
 
@@ -164,7 +207,7 @@ export const GameLobby = () => {
         <>
           {/* <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton> */}
           <QRCode
-            value={privateUrl}
+            value={GameUrl}
             onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}
             style={{
               cursor: "pointer",
@@ -187,6 +230,7 @@ export const GameLobby = () => {
 
           {/* <GreenButton onClick={() => startGame()}>Start Game</GreenButton> */}
           <Button onClick={() => startGame()}>Start Game</Button>
+          <Button onClick={() => resendLobbySettings()}>Resend Lobby Settings</Button>
         </>
       )}
     </div>

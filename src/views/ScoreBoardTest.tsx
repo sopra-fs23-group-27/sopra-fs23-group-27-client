@@ -34,21 +34,11 @@ export const ScoreBoardTest = () => {
   const [winner, setWinner] = useState("");
 
   // get the player token from local storage
-  const playerToken = localStorage.getItem("token");
+  const playerToken = sessionStorage.getItem("FlagManiaToken");
 
   // get the player name from local storage
-  const playerName = localStorage.getItem("playerName");
+  const playerName = sessionStorage.getItem("playerName");
 
-  useEffectOnce(() => {
-    if (stompClient) {
-      stompClient.publish({
-        destination: "/app/authentication",
-        body: JSON.stringify({ playerToken }),
-      });
-    } else {
-      console.error("Error: Could not send message");
-    }
-  });
   useEffectOnce(() => {
     if (stompClient) {
       stompClient.publish({

@@ -5,6 +5,8 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useState } from "react";
 import { handleError, httpPost } from "../helpers/httpService";
 import Player from "../models/Player";
+import { notifications } from "@mantine/notifications";
+import { Button } from "@mantine/core";
 
 const Container = styled.div`
   display: flex;
@@ -23,28 +25,6 @@ const ButtonContainer = styled.div`
   height: 40vh;
 `;
 
-const OrangeButton = styled.button`
-  width: 200px;
-  height: 50px;
-  background-color: #ffa500;
-  border: 1px solid #000;
-  border-radius: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
-const GreenButton = styled.button`
-  width: 200px;
-  height: 50px;
-  background-color: #90ee90;
-  border: 1px solid #000;
-  border-radius: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
 export const HomePage = () => {
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
@@ -60,27 +40,32 @@ export const HomePage = () => {
         },
         { headers: {} }
       );
+
       console.log(response.data);
 
       // Create a new Player instance from the JSON data in the response
       const player = new Player(response.data);
       console.log(player);
 
-      // Store the token into the local storage.
-      localStorage.setItem("token", response.headers.authorization);
+      // Store the token into the session storage.
+      sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
 
-      // Store the ID of the currently logged-in user in localstorage
-      localStorage.setItem("currentPlayerId", player.id.toString());
+      // Store the ID of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayerId", player.id.toString());
 
-      // Store the Name of the currently logged-in user in localstorage
-      localStorage.setItem("currentPlayer", player.playerName);
+      // Store the Name of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayer", player.playerName);
 
       // navigate to respective view
       navigate(link);
 
       // catch errors
-    } catch (error: any) {
-      alert(`Something went wrong: \n${handleError(error)}`);
+    } catch (error: any) {      
+      notifications.show({
+        title: "Something went wrong",
+        message: error.response.data.message,
+        color: "red",
+      });
     }
   };
   return (
@@ -93,24 +78,24 @@ export const HomePage = () => {
         value={playerName}
       />
       <ButtonContainer>
-        <OrangeButton
+        <Button
           disabled={!playerName}
           onClick={() => handleUserJoin("/publicGames")}
         >
           Join Public Game
-        </OrangeButton>
-        <GreenButton
+        </Button>
+        <Button
           disabled={!playerName}
           onClick={() => handleUserJoin("/enterGameId")}
         >
           Join Private Game
-        </GreenButton>
-        <OrangeButton
+        </Button>
+        <Button
           disabled={!playerName}
           onClick={() => handleUserJoin("/configureGame")}
         >
           Create New Game
-        </OrangeButton>
+        </Button>
       </ButtonContainer>
     </Container>
   );

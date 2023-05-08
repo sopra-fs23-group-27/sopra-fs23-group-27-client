@@ -6,6 +6,7 @@ import { useState } from "react";
 import { handleError, httpGet, httpPost, httpPut } from "../helpers/httpService";
 import Player from "../models/Player";
 import { Button } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 
 const Container = styled.div`
   display: flex;
@@ -68,17 +69,17 @@ export const ExternalGameJoin = () => {
       const player = new Player(response.data);
       console.log(player);
 
-      // Store the token into the local storage.
-      localStorage.setItem("token", response.headers.authorization);
+      // Store the token into the session storage.
+      sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
 
-      // Store the ID of the currently logged-in user in localstorage
-      localStorage.setItem("currentPlayerId", player.id.toString());
+      // Store the ID of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayerId", player.id.toString());
 
-      // Store the Name of the currently logged-in user in localstorage
-      localStorage.setItem("currentPlayer", player.playerName);
+      // Store the Name of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayer", player.playerName);
 
       // define header and body
-      const headers = { Authorization: localStorage.getItem("token") };
+      const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
 
       // get lobby
       const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
@@ -88,18 +89,26 @@ export const ExternalGameJoin = () => {
 
       // catch errors
     } catch (error: any) {
-      alert(`Something went wrong: \n${handleError(error)}`);
+      notifications.show({
+        title: "Something went wrong",
+        message: error.response.data.message,
+        color: "red",
+      });
     }
   };
 
   async function joinGame(privateLobbyKey: string) {
-    const headers = { Authorization: localStorage.getItem("token") };
+    const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
     const body = {};
     const response = await httpPut("/lobbies/" + lobbyId + "/join?privateLobbyKey=" + privateLobbyKey, body, { headers });
     if (response.status === 204) {
       navigate("/lobbies/" + lobbyId);
     } else {
-      alert(response.status)
+      notifications.show({
+        title: "Error",
+        message: response.status,
+        color: "red",
+      });
       throw new Error("Error joining game");
     }
   }

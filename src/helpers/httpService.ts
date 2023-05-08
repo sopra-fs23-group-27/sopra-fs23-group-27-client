@@ -1,8 +1,9 @@
+import { notifications } from "@mantine/notifications";
 import axios from "axios";
 
 const localURL = "http://localhost:8080";
 const onlineURL = "https://sopra-fs23-group-27-server.oa.r.appspot.com";
-export const mainURL = onlineURL;
+export const mainURL = localURL;
 
 export const httpGet = (endpoint: string, headers: Object) => {
   return axios.get(mainURL + endpoint, headers);
@@ -43,7 +44,11 @@ export const handleError = (error: { response: any; message: string }) => {
     return info;
   } else {
     if (error.message.match(/Network Error/)) {
-      alert("The server cannot be reached.\nDid you start it?");
+      notifications.show({
+        title: "The server cannot be reached.",
+        message: "Did you start it?",
+        color: "red",
+      });
     }
 
     console.log("Something else happened.", error);
