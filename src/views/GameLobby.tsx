@@ -68,24 +68,9 @@ export const GameLobby = () => {
 
   // private URL for the QR code
   const headers = { Authorization: localStorage.getItem("token") };
-  const [privateUrl, setPrivateUrl] = useState("");
+  const [GameUrl, setGameUrl] = useState("");
 
   console.log("player token: ", playerToken);
-
-  useEffectOnce(() => {
-    console.log("lobbyId: ", lobbyId);
-    console.log(stompClient);
-    if (stompClient) {
-      stompClient.publish({
-        destination: "/app/authentication",
-        body: JSON.stringify({ playerToken }),
-      });
-    } else {
-      console.error("Error: Could not send message");
-      // reconnect the websocket
-      // stompClient.reconnect_delay = 5000;
-    }
-  });
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
@@ -114,8 +99,13 @@ export const GameLobby = () => {
     console.log("lobbyId: ", lobbyId);
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
-        setPrivateUrl(mainURL + "/" + lobbyId + "/join");
-        // setJoinedPlayerNames(response.data.joinedPlayerNames);
+        const privateLobbyKey = response.data.privateLobbyKey;
+        if (privateLobbyKey === null) {
+          console.log("Public lobby");
+          setGameUrl(mainURL + "/" + lobbyId + "/join");
+        } else {
+          setGameUrl(mainURL + "/" + lobbyId + "/join/?key=" + privateLobbyKey);      
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -177,7 +167,7 @@ export const GameLobby = () => {
         <>
           {/* <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton> */}
           <QRCode
-            value={privateUrl}
+            value={GameUrl}
             onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}
             style={{
               cursor: "pointer",
