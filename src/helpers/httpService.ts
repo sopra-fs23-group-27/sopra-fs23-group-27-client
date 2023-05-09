@@ -1,10 +1,10 @@
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
-import { isProduction } from "./isProduction";
+import { config } from "./config";
 
-const localURL = "http://localhost:8080";
-const onlineURL = "https://sopra-fs23-group-27-server.oa.r.appspot.com";
-export const mainURL = isProduction() ? onlineURL : localURL;
+// const localURL = "http://localhost:8080";
+// const onlineURL = "https://sopra-fs23-group-27-server.oa.r.appspot.com";
+export const mainURL = config.apiUrl;
 
 export const httpGet = (endpoint: string, headers: Object) => {
   return axios.get(mainURL + endpoint, headers);
