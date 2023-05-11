@@ -4,6 +4,7 @@ import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
+import { notifications } from "@mantine/notifications";
 
 const P = styled.p`
   padding: 0;
@@ -121,6 +122,7 @@ export const GameRound = () => {
       const attributeURL = JSON.parse(message.body).url;
       const flagURL = attributeURL.split("=")[1] as string;
       console.log("flag URL: ", flagURL);
+      setIsLoading(false);
       setFlagURL(flagURL);
     }
   );
@@ -151,13 +153,31 @@ export const GameRound = () => {
     }
   );
 
-  // TODO: final leaderboard once game is over
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/guess-evaluation`,
+    (message: any) => {
+      const parsedMessage = JSON.parse(message.body);
+      if (!parsedMessage.isCorrect) {
+        notifications.show({
+          withCloseButton: true,
+          autoClose: 3000,
+          title: "Try again",
+          message: "Your guess was wrong",
+          color: "red",
+        });
+      } else {
+        notifications.show({
+          withCloseButton: true,
+          autoClose: 2000,
+          title: "Nice",
+          message: "Your guess was correct",
+          color: "green",
+        });
+      }
+    }
+  );
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
-  }, []);
+  // TODO: final leaderboard once game is over
 
   const submitGuess = () => {
     const playerName = sessionStorage.getItem("currentPlayer");
