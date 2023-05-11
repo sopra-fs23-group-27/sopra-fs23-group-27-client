@@ -86,12 +86,11 @@ export const GameLobby = () => {
       const newPlayerNames = newJoinedPlayerNames.filter(
         (playerName: string) => !joinedPlayerNames.includes(playerName)
       );
-      
+
       // find players that left the lobby recently
       const leftPlayerNames = joinedPlayerNames.filter(
         (playerName: string) => !newJoinedPlayerNames.includes(playerName)
       );
-
 
       if (newPlayerNames.length > 0) {
         // show notification for each player that joined
@@ -118,7 +117,6 @@ export const GameLobby = () => {
       // update the lobby name and joined player names
       setLobbyname(newLobbyName);
       setJoinedPlayerNames(newJoinedPlayerNames);
-    
     }
   );
 
@@ -140,7 +138,7 @@ export const GameLobby = () => {
           console.log("Public lobby");
           setGameUrl(mainURL + "/" + lobbyId + "/join");
         } else {
-          setGameUrl(mainURL + "/" + lobbyId + "/join/?key=" + privateLobbyKey);      
+          setGameUrl(mainURL + "/" + lobbyId + "/join/?key=" + privateLobbyKey);
         }
       })
       .catch((error) => {
@@ -162,7 +160,9 @@ export const GameLobby = () => {
   const startGame = async () => {
     console.log("PlayerToken: ", playerToken);
     try {
-      const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
+      const headers = {
+        Authorization: sessionStorage.getItem("FlagManiaToken"),
+      };
       const body = {};
       const response = await httpPut("/lobbies/" + lobbyId + "/start", body, {
         headers,
@@ -230,7 +230,9 @@ export const GameLobby = () => {
 
           {/* <GreenButton onClick={() => startGame()}>Start Game</GreenButton> */}
           <Button onClick={() => startGame()}>Start Game</Button>
-          <Button onClick={() => resendLobbySettings()}>Resend Lobby Settings</Button>
+          <Button onClick={() => resendLobbySettings()}>
+            Resend Lobby Settings
+          </Button>
         </>
       )}
     </div>
