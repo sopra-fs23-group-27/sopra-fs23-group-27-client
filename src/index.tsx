@@ -24,11 +24,18 @@ import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { ScoreBoard } from "./views/ScoreBoard";
 import { App } from "./App";
 import { FlagManiaGuard } from "./components/routing/FlagManiaGuard";
+import { UserDashboard } from "./views/UserDashboard";
+import { GameEnd } from "./views/GameEnd";
+import { LoginGuard } from "./components/routing/LoginGuard";
+import { PlayerGuard } from "./components/routing/PlayerGuard";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: 
+      <PlayerGuard>
+        <HomePage />
+      </PlayerGuard>,
     errorElement: <ErrorPage />,
   },
   {
@@ -42,8 +49,16 @@ const router = createBrowserRouter([
   { path: "configureGame", element: <ConfigureGame /> },
   { path: "lobby", element: <GameLobby /> },
   { path: "webSocket", element: <WebSocket /> },
-  { path: "register", element: <Register /> },
-  { path: "login", element: <Login /> },
+  { path: "register", element: 
+    <LoginGuard>
+      <Register />
+    </LoginGuard> 
+  },
+  { path: "login", element:
+    <LoginGuard>
+      <Login />
+    </LoginGuard>
+  },
   { path: "newGameLogin", element: <NewGameLogin /> },
   { path: "websocket", element: <WebSocket /> },
   { path: "scanQRCode/:lobbyId", element: <ScanQRCode /> },
@@ -74,6 +89,8 @@ const router = createBrowserRouter([
     ),
   },
   { path: "leaderBoard", element: <ScoreBoardTest /> },
+  { path: "dashboard", element: <UserDashboard /> },
+  { path: "gameEnd", element: <GameEnd /> },
 ]);
 
 const root = ReactDOM.createRoot(

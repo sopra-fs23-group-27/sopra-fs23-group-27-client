@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
+import { httpPost } from "../helpers/httpService";
+import { notifications } from "@mantine/notifications";
+import { useNavigate } from "react-router-dom";
 
 const Application = styled.div`
   display: flex;
@@ -30,6 +33,7 @@ export const Register = () => {
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const formCheck = () => {
@@ -53,6 +57,36 @@ export const Register = () => {
 
     setIsFormFilledOut(formCheck());
   }, [nameInput, mailInput, passwordInput, passwordRepetitionInput]);
+
+  const registerUser = async () => {
+    try {
+      const res = await httpPost("/registration", {
+        playerName: nameInput,
+        password: passwordInput,
+      }, {headers: {}});
+
+      // set the session storage
+      sessionStorage.setItem("currentPlayerId", res.data.id);
+      sessionStorage.setItem("currentPlayer", res.data.playerName);
+      sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
+      sessionStorage.setItem("loggedIn", "true");
+
+      // show notification that player has been registered
+      notifications.show({
+        title: "Success",
+        message: "Welcome to the party, " + res.data.playerName + "!",
+        color: "green",
+      });
+      navigate("/login")
+    } catch (err: any) {
+      notifications.show({
+        title: "Error",
+        message: err.message,
+        color: "red",
+      });
+    }
+  };
+
   return (
     <Application>
       <Container>
@@ -68,7 +102,7 @@ export const Register = () => {
           onChange={setMailInput}
         />
         <p>
-          Minimum password lenght: <br />6 characters
+          Minimum password length: <br />6 characters
         </p>
         <FloatingTextInput
           label="Password"
@@ -80,7 +114,7 @@ export const Register = () => {
           value={passwordRepetitionInput}
           onChange={setPasswordRepetitionInput}
         />
-        <Button isActive={isFormFilledOut} disabled={!isFormFilledOut}>
+        <Button isActive={isFormFilledOut} disabled={!isFormFilledOut} onClick={registerUser}>
           Register
         </Button>
       </Container>

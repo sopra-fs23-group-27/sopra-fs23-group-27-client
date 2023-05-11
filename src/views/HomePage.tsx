@@ -56,6 +56,9 @@ export const HomePage = () => {
       // Store the Name of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayer", player.playerName);
 
+      // Store login status of the current user
+      sessionStorage.setItem("loggedIn", "false");
+
       // navigate to respective view
       navigate(link);
 
@@ -68,8 +71,32 @@ export const HomePage = () => {
       });
     }
   };
+
+  const UserButton = ({ isLoggedIn, username }: any) => (
+    <Button
+      style={{
+        position: "fixed",
+        top: "10px",
+        right: "10px",
+        padding: "10px",
+      }}
+      onClick={() => {
+        if (isLoggedIn) {
+          navigate("/profile");
+          
+        } else {
+          navigate("/login");
+        }
+      }}
+    >
+  
+      {isLoggedIn ? `Welcome ${username}` : "Login"}
+    </Button>
+  );
+
   return (
     <Container>
+      <UserButton isLoggedIn={false} username={""} />
       <h1>FlagMania</h1>
       <p>Play the game and learn about the flags of the world!</p>
       <FloatingTextInput
