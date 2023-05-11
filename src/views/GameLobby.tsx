@@ -46,6 +46,7 @@ const AdditionalBoxes = styled.div`
   top: 50px;
 `;
 
+
 // define GameUrl as a constant
 export let GameUrl = "";
 
@@ -58,6 +59,7 @@ export const getGameUrl = () => {
 };
 
 export const GameLobby = () => {
+
   const { lobbyId } = useParams();
   const navigate = useNavigate();
 
