@@ -46,7 +46,10 @@ const AdditionalBoxes = styled.div`
   top: 50px;
 `;
 
+
+
 export const GameLobby = () => {
+
   const { lobbyId } = useParams();
   const navigate = useNavigate();
 

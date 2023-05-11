@@ -2,7 +2,7 @@ import styled from "styled-components";
 import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
 import { FloatingTextInput } from "../components/FloatingTextInput";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { handleError, httpPost } from "../helpers/httpService";
 import Player from "../models/Player";
 import { notifications } from "@mantine/notifications";
@@ -25,7 +25,14 @@ const ButtonContainer = styled.div`
   height: 40vh;
 `;
 
-export const HomePage = () => {
+type PropsType = {
+  player: Player | undefined;
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+};
+
+export const HomePage = (/*props: PropsType */) => {
+  //const { player, setPlayer } = props;
+
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
 
@@ -45,6 +52,8 @@ export const HomePage = () => {
 
       // Create a new Player instance from the JSON data in the response
       const player = new Player(response.data);
+      //setPlayer(player);
+
       console.log(player);
 
       // Store the token into the session storage.
@@ -60,7 +69,7 @@ export const HomePage = () => {
       navigate(link);
 
       // catch errors
-    } catch (error: any) {      
+    } catch (error: any) {
       notifications.show({
         title: "Something went wrong",
         message: error.response.data.message,
