@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
+import { notifications } from "@mantine/notifications";
+import { Link } from "react-router-dom";
 
 const Application = styled.div`
   width: 100%;
@@ -45,11 +47,19 @@ export const Login = () => {
   }, [nameInput, passwordInput]);
 
   const loginUser = async () => {
-    const res = await httpPost("/login", {
-      playername: nameInput,
-      password: passwordInput,
-    }, {headers: {}});
-    console.log(res);
+    try {
+      const res = await httpPost("/login", {
+        playername: nameInput,
+        password: passwordInput,
+      }, {headers: {}});
+      console.log(res);
+    } catch (err: any) {
+      notifications.show({
+        title: "Error",
+        message: err.message,
+        color: "red",
+      });
+    }
   };
 
   return (
@@ -73,6 +83,7 @@ export const Login = () => {
         >
           Login
         </Button>
+        <p>Go to registration page: <Link to="/register">Register</Link></p>
       </Container>
     </Application>
   );

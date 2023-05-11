@@ -24,6 +24,7 @@ import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { ScoreBoard } from "./views/ScoreBoard";
 import { App } from "./App";
 import { FlagManiaGuard } from "./components/routing/FlagManiaGuard";
+import { UserDashboard } from "./views/UserDashboard";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
     ),
   },
   { path: "leaderBoard", element: <ScoreBoardTest /> },
+  { path: "profile", element: <UserDashboard /> },
 ]);
 
 const root = ReactDOM.createRoot(

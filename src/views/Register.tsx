@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
+import { httpPost } from "../helpers/httpService";
+import { notifications } from "@mantine/notifications";
 
 const Application = styled.div`
   display: flex;
@@ -53,6 +55,23 @@ export const Register = () => {
 
     setIsFormFilledOut(formCheck());
   }, [nameInput, mailInput, passwordInput, passwordRepetitionInput]);
+
+  const registerUser = async () => {
+    try {
+      const res = await httpPost("/registration", {
+        playername: nameInput,
+        password: passwordInput,
+      }, {headers: {}});
+      console.log(res);
+    } catch (err: any) {
+      notifications.show({
+        title: "Error",
+        message: err.message,
+        color: "red",
+      });
+    }
+  };
+
   return (
     <Application>
       <Container>
@@ -68,7 +87,7 @@ export const Register = () => {
           onChange={setMailInput}
         />
         <p>
-          Minimum password lenght: <br />6 characters
+          Minimum password length: <br />6 characters
         </p>
         <FloatingTextInput
           label="Password"
@@ -80,7 +99,7 @@ export const Register = () => {
           value={passwordRepetitionInput}
           onChange={setPasswordRepetitionInput}
         />
-        <Button isActive={isFormFilledOut} disabled={!isFormFilledOut}>
+        <Button isActive={isFormFilledOut} disabled={!isFormFilledOut} onClick={registerUser}>
           Register
         </Button>
       </Container>
