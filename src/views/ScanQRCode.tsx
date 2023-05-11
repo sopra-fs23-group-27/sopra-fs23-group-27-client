@@ -5,28 +5,12 @@ import { useState } from "react";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { ButtonCopy } from "../components/ClipboardButton";
 import { notifications } from "@mantine/notifications";
+import { getGameUrl } from "./GameLobby";
 
 export const ScanQRCode = () => {
 
-  const [GameURL, setGameUrl] = useState("");
-  const { lobbyId } = useParams();
-  const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") }
-
-  useEffectOnce(() => {
-    httpGet("/lobbies/" + lobbyId, { headers })
-      .then((response) => {
-        const privateLobbyKey = response.data.privateLobbyKey;
-        if (privateLobbyKey === null) {
-          console.log("Public lobby");
-          setGameUrl(mainURL + "/" + lobbyId + "/join");
-        } else {
-          setGameUrl(mainURL + "/" + lobbyId + "/join/?key=" + privateLobbyKey);      
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }); 
+  //TODO: ensure that GameURL is set to CLIENT and not SERVER in production
+  const GameURL = getGameUrl();
 
   return (
     <div
