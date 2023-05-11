@@ -1,19 +1,18 @@
 import { notifications } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons-react";
 import PropTypes from "prop-types";
-import { redirect } from "react-router-dom";
+import { UserDashboard } from "../../views/UserDashboard";
 
 export const PlayerGuard = (props: any) => {
-    if (sessionStorage.getItem("FlagManiaToken")) {
-        return props.children;
-    }
-    notifications.show({
-        title: "Restricted Area",
-        message: "Please enter your username first or log in to your account",
-        color: "red"
-    });
-    return redirect("/");
+  if (
+    sessionStorage.getItem("loggedIn") === "false" ||
+    sessionStorage.getItem("loggedIn") === null
+  ) {
+    return props.children;
+  }
+  return UserDashboard();
 };
 
 PlayerGuard.propTypes = {
-    children: PropTypes.node,
+  children: PropTypes.node,
 };

@@ -15,6 +15,10 @@ import { ScoreBoard } from "./views/ScoreBoard";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { useState } from "react";
 import Player from "./models/Player";
+import { PlayerGuard } from "./components/routing/PlayerGuard";
+import { LoginGuard } from "./components/routing/LoginGuard";
+import { UserDashboard } from "./views/UserDashboard";
+import { GameEnd } from "./views/GameEnd";
 
 export const App = () => {
   const [player, setPlayer] = useState<Player | undefined>();
@@ -24,8 +28,13 @@ export const App = () => {
       <Routes>
         <Route
           path="/"
-          element={<HomePage /* player={player} setPlayer={setPlayer} */ />}
+          element={
+            <PlayerGuard>
+              <HomePage />
+            </PlayerGuard>
+          }
         />
+
         <Route
           path="/publicGames"
           element={
@@ -36,8 +45,22 @@ export const App = () => {
         />
         <Route path="/configureGame" element={<ConfigureGame />} />
         <Route path="/lobby" element={<GameLobby />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/register"
+          element={
+            <LoginGuard>
+              <Register />
+            </LoginGuard>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <LoginGuard>
+              <Login />
+            </LoginGuard>
+          }
+        />
         <Route path="/newGameLogin" element={<NewGameLogin />} />
         <Route path="/scanQRCode/:lobbyId" element={<ScanQRCode />} />
         <Route path="/enterGameId" element={<GameIdInput />} />
@@ -68,6 +91,8 @@ export const App = () => {
           }
         />
         <Route path="/leaderBoard" element={<ScoreBoardTest />} />
+        <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="gameEnd" element={<GameEnd />} />
       </Routes>
     </Router>
   );
