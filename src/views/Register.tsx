@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
+import { useNavigate } from "react-router-dom";
 
 const Application = styled.div`
   display: flex;
@@ -32,6 +33,7 @@ export const Register = () => {
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const formCheck = () => {
@@ -59,10 +61,23 @@ export const Register = () => {
   const registerUser = async () => {
     try {
       const res = await httpPost("/registration", {
-        playername: nameInput,
+        playerName: nameInput,
         password: passwordInput,
       }, {headers: {}});
-      console.log(res);
+
+      // set the session storage
+      sessionStorage.setItem("currentPlayerId", res.data.id);
+      sessionStorage.setItem("currentPlayer", res.data.playerName);
+      sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
+      sessionStorage.setItem("loggedIn", "true");
+
+      // show notification that player has been registered
+      notifications.show({
+        title: "Success",
+        message: "Welcome to the party, " + res.data.playerName + "!",
+        color: "green",
+      });
+      navigate("/login")
     } catch (err: any) {
       notifications.show({
         title: "Error",

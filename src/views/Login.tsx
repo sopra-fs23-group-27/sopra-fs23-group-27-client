@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Application = styled.div`
   width: 100%;
@@ -32,6 +32,7 @@ export const Login = () => {
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const formCheck = () => {
@@ -49,10 +50,23 @@ export const Login = () => {
   const loginUser = async () => {
     try {
       const res = await httpPost("/login", {
-        playername: nameInput,
+        playerName: nameInput,
         password: passwordInput,
       }, {headers: {}});
-      console.log(res);
+
+      // set the session storage
+      sessionStorage.setItem("currentPlayerId", res.data.id);
+      sessionStorage.setItem("currentPlayer", res.data.playerName);
+      sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
+      sessionStorage.setItem("loggedIn", "true");
+
+      // show notification that player has succsessfully logged in
+      notifications.show({
+        title: "Success",
+        message: "Welcome back, " + res.data.playerName + "!",
+        color: "green",
+      });
+      navigate("/")
     } catch (err: any) {
       notifications.show({
         title: "Error",
