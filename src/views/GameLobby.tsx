@@ -47,6 +47,16 @@ const AdditionalBoxes = styled.div`
 `;
 
 
+// define GameUrl as a constant
+export let GameUrl = "";
+
+export const setGameUrl = (url: string) => {
+  GameUrl = url;
+};
+
+export const getGameUrl = () => {
+  return GameUrl;
+};
 
 export const GameLobby = () => {
 
@@ -72,8 +82,9 @@ export const GameLobby = () => {
 
   // private URL for the QR code
   const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
-  const [GameUrl, setGameUrl] = useState("");
-
+  // get the current lobby URL
+  const lobbyURL = window.location.href;
+ 
   console.log("player token: ", playerToken);
 
   useSubscription(
@@ -139,9 +150,9 @@ export const GameLobby = () => {
         const privateLobbyKey = response.data.privateLobbyKey;
         if (privateLobbyKey === null) {
           console.log("Public lobby");
-          setGameUrl(mainURL + "/" + lobbyId + "/join");
+          setGameUrl(lobbyURL + "/join");
         } else {
-          setGameUrl(mainURL + "/" + lobbyId + "/join/?key=" + privateLobbyKey);
+          setGameUrl(lobbyURL + "/join/?key=" + privateLobbyKey);      
         }
       })
       .catch((error) => {

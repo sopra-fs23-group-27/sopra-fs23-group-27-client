@@ -5,7 +5,6 @@ import { StompSessionProvider } from "react-stomp-hooks";
 import { mainURL } from "./helpers/httpService";
 
 import { App } from "./App";
-import { Notifications } from "@mantine/notifications";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

@@ -1,11 +1,10 @@
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { UserDashboard } from "../../views/UserDashboard";
 
 export const LoginGuard = (props: any) => {
-    const navigate = useNavigate();
-    if (sessionStorage.getItem("FlagManiaToken") && sessionStorage.getItem("role") === "creator") {
+    if (sessionStorage.getItem("loggedIn") === "false" || sessionStorage.getItem("loggedIn") === null) {
         return props.children;
     }
     notifications.show({
@@ -14,7 +13,7 @@ export const LoginGuard = (props: any) => {
         color: "teal",
         icon: <IconCheck size="1.1rem" />
     });
-    return navigate("/publicGames");
+    return UserDashboard();
 };
 
 LoginGuard.propTypes = {
