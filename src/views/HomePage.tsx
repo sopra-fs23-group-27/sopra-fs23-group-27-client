@@ -30,13 +30,15 @@ type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
 };
 
-export const HomePage = (/*props: PropsType */) => {
-  //const { player, setPlayer } = props;
+export const HomePage = (props: PropsType) => {
+  const { player, setPlayer } = props;
 
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
 
-  const handleUserJoin = async (link: string) => {
+  const handleUserJoin = async (
+    link: "/configureGame" | "/enterGameId" | "/publicGames"
+  ) => {
     const password = "";
     try {
       const response = await httpPost(
@@ -50,11 +52,13 @@ export const HomePage = (/*props: PropsType */) => {
 
       console.log(response.data);
 
+      if (link === "/configureGame") {
+        response.data.isCreator = true;
+      }
+
       // Create a new Player instance from the JSON data in the response
       const player = new Player(response.data);
-      //setPlayer(player);
-
-      console.log(player);
+      setPlayer(player);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
@@ -92,13 +96,11 @@ export const HomePage = (/*props: PropsType */) => {
       onClick={() => {
         if (isLoggedIn) {
           navigate("/profile");
-          
         } else {
           navigate("/login");
         }
       }}
     >
-  
       {isLoggedIn ? `Welcome ${username}` : "Login"}
     </Button>
   );

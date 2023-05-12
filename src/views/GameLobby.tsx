@@ -9,6 +9,7 @@ import { httpGet, httpPut, mainURL } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
+import Player from "../models/Player";
 
 const UserContainer = styled.div`
   display: flex;
@@ -46,7 +47,6 @@ const AdditionalBoxes = styled.div`
   top: 50px;
 `;
 
-
 // define GameUrl as a constant
 export let GameUrl = "";
 
@@ -58,7 +58,11 @@ export const getGameUrl = () => {
   return GameUrl;
 };
 
-export const GameLobby = () => {
+type PropsType = {
+  player: Player | undefined;
+};
+export const GameLobby = (props: PropsType) => {
+  const { player } = props;
 
   const { lobbyId } = useParams();
   const navigate = useNavigate();
@@ -84,7 +88,7 @@ export const GameLobby = () => {
   const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
   // get the current lobby URL
   const lobbyURL = window.location.href;
- 
+
   console.log("player token: ", playerToken);
 
   useSubscription(
@@ -152,7 +156,7 @@ export const GameLobby = () => {
           console.log("Public lobby");
           setGameUrl(lobbyURL + "/join");
         } else {
-          setGameUrl(lobbyURL + "/join/?key=" + privateLobbyKey);      
+          setGameUrl(lobbyURL + "/join/?key=" + privateLobbyKey);
         }
       })
       .catch((error) => {
@@ -242,8 +246,10 @@ export const GameLobby = () => {
             <UsersRolesTable data={playerNames} />
           </UserContainer>
 
-          {/* <GreenButton onClick={() => startGame()}>Start Game</GreenButton> */}
-          <Button onClick={() => startGame()}>Start Game</Button>
+          {player?.isCreator && (
+            <Button onClick={() => startGame()}>Start Game</Button>
+          )}
+
           <Button onClick={() => resendLobbySettings()}>
             Resend Lobby Settings
           </Button>

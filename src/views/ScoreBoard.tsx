@@ -5,6 +5,7 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import styled from "styled-components";
 import { LeaderBoard } from "../components/LeaderBoard";
 import { Button } from "@mantine/core";
+import Player from "../models/Player";
 
 const LeaderBoardContainer = styled.div`
   display: flex;
@@ -14,7 +15,12 @@ const LeaderBoardContainer = styled.div`
   font-size: 38px;
 `;
 
-export const ScoreBoard = () => {
+type PropsType = {
+  player: Player | undefined;
+};
+
+export const ScoreBoard = (props: PropsType) => {
+  const { player } = props;
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
   const navigate = useNavigate();
@@ -71,10 +77,13 @@ export const ScoreBoard = () => {
     }
   );
 
-  useSubscription(`/user/queue/lobbies/${lobbyId}/round-start`, (message: any) => {
-    console.log("round start");
-    navigate(`/game/${lobbyId}`);
-  });
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/round-start`,
+    (message: any) => {
+      console.log("round start");
+      navigate(`/game/${lobbyId}`);
+    }
+  );
 
   // publish message to start next round
   const startNextRound = () => {
@@ -132,7 +141,10 @@ export const ScoreBoard = () => {
       <LeaderBoardContainer>
         <h1>ScoreBoard</h1>
         <LeaderBoard playerData={playerData} />
-        <Button onClick={startNextRound}>Start Next Round</Button>
+        {player?.isCreator && (
+          <Button onClick={startNextRound}>Start Next Round</Button>
+        )}
+
         {/* <Button onClick={anotherGame}>Another Game</Button> */}
       </LeaderBoardContainer>
     </div>
