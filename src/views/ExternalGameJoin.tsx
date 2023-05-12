@@ -3,10 +3,16 @@ import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useState } from "react";
-import { handleError, httpGet, httpPost, httpPut } from "../helpers/httpService";
+import {
+  handleError,
+  httpGet,
+  httpPost,
+  httpPut,
+} from "../helpers/httpService";
 import Player from "../models/Player";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Container = styled.div`
   display: flex;
@@ -79,7 +85,9 @@ export const ExternalGameJoin = () => {
       sessionStorage.setItem("currentPlayer", player.playerName);
 
       // define header and body
-      const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
+      const headers = {
+        Authorization: sessionStorage.getItem("FlagManiaToken"),
+      };
 
       // get lobby
       const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
@@ -100,7 +108,11 @@ export const ExternalGameJoin = () => {
   async function joinGame(privateLobbyKey: string) {
     const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
     const body = {};
-    const response = await httpPut("/lobbies/" + lobbyId + "/join?privateLobbyKey=" + privateLobbyKey, body, { headers });
+    const response = await httpPut(
+      "/lobbies/" + lobbyId + "/join?privateLobbyKey=" + privateLobbyKey,
+      body,
+      { headers }
+    );
     if (response.status === 204) {
       navigate("/lobbies/" + lobbyId);
     } else {
@@ -115,6 +127,20 @@ export const ExternalGameJoin = () => {
 
   return (
     <Container>
+      <img
+        src={Logo}
+        alt="FlagMania Logo"
+        onClick={() => navigate("/")}
+        style={{
+          top: "10px",
+          left: "10px",
+          padding: "10px",
+          width: "5%",
+          height: "auto",
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      />
       <h1>FlagMania</h1>
       <p>Welcome to Flagmania, are you ready to join the game?</p>
       <FloatingTextInput

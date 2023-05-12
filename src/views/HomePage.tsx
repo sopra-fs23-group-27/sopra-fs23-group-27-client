@@ -7,6 +7,7 @@ import { handleError, httpPost } from "../helpers/httpService";
 import Player from "../models/Player";
 import { notifications } from "@mantine/notifications";
 import { Button } from "@mantine/core";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Container = styled.div`
   display: flex;
@@ -20,9 +21,20 @@ const Container = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
   height: 40vh;
+  justify-content: space-between;
+`;
+
+const LoginContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  justify-content: space-between;
 `;
 
 type PropsType = {
@@ -85,29 +97,28 @@ export const HomePage = (props: PropsType) => {
     }
   };
 
-  const UserButton = ({ isLoggedIn, username }: any) => (
-    <Button
-      style={{
-        position: "fixed",
-        top: "10px",
-        right: "10px",
-        padding: "10px",
-      }}
-      onClick={() => {
-        if (isLoggedIn) {
-          navigate("/profile");
-        } else {
-          navigate("/login");
-        }
-      }}
-    >
-      {isLoggedIn ? `Welcome ${username}` : "Login"}
-    </Button>
-  );
-
   return (
     <Container>
-      <UserButton isLoggedIn={false} username={""} />
+      <img
+        src={Logo}
+        alt="FlagMania Logo"
+        onClick={() => navigate("/")}
+        style={{
+          top: "10px",
+          left: "10px",
+          padding: "10px",
+          width: "5%",
+          height: "auto",
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      />
+
+      <LoginContainer>
+        <Button onClick={() => navigate("/login")}>Login</Button>
+        <Button onClick={() => navigate("/register")}>Register</Button>
+      </LoginContainer>
+
       <h1>FlagMania</h1>
       <p>Play the game and learn about the flags of the world!</p>
       <FloatingTextInput

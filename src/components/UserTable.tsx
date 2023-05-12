@@ -1,10 +1,10 @@
-import { Badge, Table, Group, Text, Select, ScrollArea } from '@mantine/core';
+import { Badge, Table, Group, Text, Select, ScrollArea } from "@mantine/core";
 
 interface UsersTableProps {
   data: { name: string; role: string }[];
 }
 
-const rolesData = ['Creator', 'Player'];
+const rolesData = ["Creator", "Player"];
 
 export function UsersRolesTable({ data }: UsersTableProps) {
   const rows = data.map((item) => (
@@ -19,9 +19,16 @@ export function UsersRolesTable({ data }: UsersTableProps) {
         </Group>
       </td>
 
-      <td>
+      {/* <td>
         <Select data={rolesData} defaultValue={item.role} variant="unstyled" />
+      </td> */}
+
+      <td>
+        <Badge color="red" fullWidth>
+          {item.role}
+        </Badge>
       </td>
+
       <td>
         {1 ? (
           <Badge fullWidth>Joined</Badge>

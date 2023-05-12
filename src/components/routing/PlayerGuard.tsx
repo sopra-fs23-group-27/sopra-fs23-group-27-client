@@ -1,16 +1,23 @@
-import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
 import PropTypes from "prop-types";
-import { UserDashboard } from "../../views/UserDashboard";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const PlayerGuard = (props: any) => {
-  if (
-    sessionStorage.getItem("loggedIn") === "false" ||
-    sessionStorage.getItem("loggedIn") === null
-  ) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      !sessionStorage.getItem("loggedIn") ||
+      sessionStorage.getItem("loggedIn") === "false"
+    ) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  if (sessionStorage.getItem("loggedIn") === "true") {
     return props.children;
   }
-  return UserDashboard();
+  return null;
 };
 
 PlayerGuard.propTypes = {

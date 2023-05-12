@@ -8,6 +8,7 @@ import { httpGet, httpPut } from "../helpers/httpService";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const GameContainer = styled.li`
   display: flex;
@@ -48,9 +49,13 @@ export const PublicGame = (props: { game: game }) => {
       if (lobby.data.joinedPlayerNames.length >= lobby.data.maxNumPlayers) {
         throw new Error("Game is full");
       } else {
-        const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
+        const headers = {
+          Authorization: sessionStorage.getItem("FlagManiaToken"),
+        };
         const body = {};
-        const response = await httpPut("/lobbies/" + lobbyId + "/join", body, { headers });
+        const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
+          headers,
+        });
         if (response.status === 204) {
           navigate("/lobbies/" + lobbyId);
         } else {
@@ -73,9 +78,7 @@ export const PublicGame = (props: { game: game }) => {
       <GameItem>{joinedPlayerNames.length}/20</GameItem>
       <GameItem>{mode}</GameItem>
       <GameItem>
-        <JoinButton onClick={() => joinGame(lobbyId)}>
-          Join
-        </JoinButton>
+        <JoinButton onClick={() => joinGame(lobbyId)}>Join</JoinButton>
       </GameItem>
     </GameContainer>
   );
@@ -93,6 +96,7 @@ const GameList = styled.ul`
 export const ActiveGameOverview = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [games, setGames] = useState<game[]>([]);
+  const navigate = useNavigate();
 
   useEffectOnce(() => {
     const getLobbies = async () => {
@@ -122,6 +126,20 @@ export const ActiveGameOverview = () => {
         <RainbowLoader />
       ) : (
         <>
+          <img
+            src={Logo}
+            alt="FlagMania Logo"
+            onClick={() => navigate("/")}
+            style={{
+              top: "10px",
+              left: "10px",
+              padding: "10px",
+              width: "5%",
+              height: "auto",
+              position: "absolute",
+              cursor: "pointer",
+            }}
+          />
           <h1>Public Games</h1>
           {!games[0] && <p>Currently, No public games are open to join</p>}
           <GameList>

@@ -32,9 +32,9 @@ export const App = () => {
         <Route
           path="/"
           element={
-            <PlayerGuard>
+            <LoginGuard>
               <HomePage player={player} setPlayer={setPlayer} />
-            </PlayerGuard>
+            </LoginGuard>
           }
         />
 
@@ -97,7 +97,11 @@ export const App = () => {
           }
         />
         <Route path="/leaderBoard" element={<ScoreBoardTest />} />
-        <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/dashboard" element={
+          <PlayerGuard>
+            <UserDashboard player={player} setPlayer={setPlayer} />
+          </PlayerGuard>
+        } />
         <Route
           path="/game/:lobbyId/gameEnd"
           element={<GameEnd player={player} />}

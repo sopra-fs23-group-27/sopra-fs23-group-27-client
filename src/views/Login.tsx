@@ -4,6 +4,7 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Application = styled.div`
   width: 100%;
@@ -28,6 +29,7 @@ const Button = styled.button<props>`
   border: 3px solid lightgray;
   padding: 8px 16px;
 `;
+
 export const Login = () => {
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
@@ -49,15 +51,25 @@ export const Login = () => {
 
   const loginUser = async () => {
     try {
-      const res = await httpPost("/login", {
-        playerName: nameInput,
-        password: passwordInput,
-      }, {headers: {}});
+      const res = await httpPost(
+        "/login",
+        {
+          playerName: nameInput,
+          password: passwordInput,
+        },
+        { headers: {} }
+      );
 
-      // set the session storage
-      sessionStorage.setItem("currentPlayerId", res.data.id);
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
+      // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
+
+      // Store the ID of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayerId", res.data.playerId);
+
+      // Store the Name of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayer", res.data.playerName);
+
+      // Store login status of the current user
       sessionStorage.setItem("loggedIn", "true");
 
       // show notification that player has succsessfully logged in
@@ -66,7 +78,7 @@ export const Login = () => {
         message: "Welcome back, " + res.data.playerName + "!",
         color: "green",
       });
-      navigate("/")
+      navigate("/");
     } catch (err: any) {
       notifications.show({
         title: "Error",
@@ -79,6 +91,20 @@ export const Login = () => {
   return (
     <Application>
       <Container>
+        <img
+          src={Logo}
+          alt="FlagMania Logo"
+          onClick={() => navigate("/")}
+          style={{
+            top: "10px",
+            left: "10px",
+            padding: "10px",
+            width: "5%",
+            height: "auto",
+            position: "absolute",
+            cursor: "pointer",
+          }}
+        />
         <h1>Login</h1>
         <FloatingTextInput
           label="Name"
@@ -97,7 +123,9 @@ export const Login = () => {
         >
           Login
         </Button>
-        <p>Go to registration page: <Link to="/register">Register</Link></p>
+        <p>
+          Go to registration page: <Link to="/register">Register</Link>
+        </p>
       </Container>
     </Application>
   );

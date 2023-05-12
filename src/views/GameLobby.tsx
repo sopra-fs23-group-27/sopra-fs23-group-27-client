@@ -10,6 +10,7 @@ import { RainbowLoader } from "../components/RainbowLoader";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Player from "../models/Player";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const UserContainer = styled.div`
   display: flex;
@@ -80,7 +81,7 @@ export const GameLobby = (props: PropsType) => {
 
   // map playername to name and role
   const playerNames = joinedPlayerNames.map((playerName: string) => {
-    return { name: playerName, role: "player" };
+    return { name: playerName, role: player?.isCreator ? "Creator" : "Player" };
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -223,6 +224,20 @@ export const GameLobby = (props: PropsType) => {
         <RainbowLoader />
       ) : (
         <>
+          <img
+            src={Logo}
+            alt="FlagMania Logo"
+            onClick={() => navigate("/")}
+            style={{
+              top: "10px",
+              left: "10px",
+              padding: "10px",
+              width: "5%",
+              height: "auto",
+              position: "absolute",
+              cursor: "pointer",
+            }}
+          />
           {/* <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton> */}
           <QRCode
             value={GameUrl}

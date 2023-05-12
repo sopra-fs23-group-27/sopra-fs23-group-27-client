@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
@@ -29,7 +29,6 @@ const Button = styled.button<props>`
 
 export const Register = () => {
   const [nameInput, setNameInput] = useState("");
-  const [mailInput, setMailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
@@ -38,10 +37,6 @@ export const Register = () => {
   useEffect(() => {
     const formCheck = () => {
       if (!nameInput) {
-        return false;
-      }
-
-      if (!mailInput.includes("@") || !mailInput.includes(".")) {
         return false;
       }
 
@@ -56,7 +51,7 @@ export const Register = () => {
     };
 
     setIsFormFilledOut(formCheck());
-  }, [nameInput, mailInput, passwordInput, passwordRepetitionInput]);
+  }, [nameInput, passwordInput, passwordRepetitionInput]);
 
   const registerUser = async () => {
     try {
@@ -65,10 +60,16 @@ export const Register = () => {
         password: passwordInput,
       }, {headers: {}});
 
-      // set the session storage
-      sessionStorage.setItem("currentPlayerId", res.data.id);
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
+      // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
+
+      // Store the ID of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayerId", res.data.playerId);
+
+      // Store the Name of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayer", res.data.playerName);
+
+      // Store login status of the current user
       sessionStorage.setItem("loggedIn", "true");
 
       // show notification that player has been registered
@@ -95,11 +96,6 @@ export const Register = () => {
           label="Name"
           value={nameInput}
           onChange={setNameInput}
-        />
-        <FloatingTextInput
-          label="Email"
-          value={mailInput}
-          onChange={setMailInput}
         />
         <p>
           Minimum password length: <br />6 characters
