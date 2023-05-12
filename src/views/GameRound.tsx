@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { FloatingTextInput } from "../components/FloatingTextInput";
@@ -78,7 +78,13 @@ const GuessButton = styled.button`
   padding: 12px 24px;
 `;
 
-export const GameRound = () => {
+type PropsType = {
+  currentGameRound: number;
+  setCurrentGameRound: Dispatch<SetStateAction<number>>;
+};
+export const GameRound = (props: PropsType) => {
+  const { currentGameRound, setCurrentGameRound } = props;
+
   const { lobbyId } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -124,6 +130,7 @@ export const GameRound = () => {
       console.log("flag URL: ", flagURL);
       setIsLoading(false);
       setFlagURL(flagURL);
+      setCurrentGameRound(currentGameRound + 1);
     }
   );
   useSubscription(`/user/queue/lobbies/${lobbyId}/guesses`, (message: any) => {
@@ -149,7 +156,11 @@ export const GameRound = () => {
     `/user/queue/lobbies/${lobbyId}/round-end`,
     (message: any) => {
       console.log("time is up");
-      navigate(`/game/${lobbyId}/leaderBoard`);
+      if (currentGameRound === 3) {
+        navigate(`/game/${lobbyId}/gameEnd`);
+      } else {
+        navigate(`/game/${lobbyId}/leaderBoard`);
+      }
     }
   );
 

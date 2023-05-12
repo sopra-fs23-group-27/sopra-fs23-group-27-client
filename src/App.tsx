@@ -22,6 +22,9 @@ import { GameEnd } from "./views/GameEnd";
 
 export const App = () => {
   const [player, setPlayer] = useState<Player | undefined>();
+  const [currentGameRound, setCurrentGameRound] = useState(0);
+
+  console.log("currentGameRound: ", currentGameRound);
 
   return (
     <Router>
@@ -30,7 +33,7 @@ export const App = () => {
           path="/"
           element={
             <PlayerGuard>
-              <HomePage />
+              <HomePage player={player} setPlayer={setPlayer} />
             </PlayerGuard>
           }
         />
@@ -44,7 +47,7 @@ export const App = () => {
           }
         />
         <Route path="/configureGame" element={<ConfigureGame />} />
-        <Route path="/lobby" element={<GameLobby />} />
+        <Route path="/lobby" element={<GameLobby player={player} />} />
         <Route
           path="/register"
           element={
@@ -69,7 +72,7 @@ export const App = () => {
           path="/lobbies/:lobbyId"
           element={
             <FlagManiaGuard shouldPreventReload={true}>
-              <GameLobby />
+              <GameLobby player={player} />
             </FlagManiaGuard>
           }
         />
@@ -77,7 +80,10 @@ export const App = () => {
           path="/game/:lobbyId"
           element={
             <FlagManiaGuard shouldPreventReload={true}>
-              <GameRound />
+              <GameRound
+                currentGameRound={currentGameRound}
+                setCurrentGameRound={setCurrentGameRound}
+              />
             </FlagManiaGuard>
           }
         />
@@ -86,13 +92,16 @@ export const App = () => {
           path="/game/:lobbyId/leaderBoard"
           element={
             <FlagManiaGuard shouldPreventReload={true}>
-              <ScoreBoard />
+              <ScoreBoard player={player} />
             </FlagManiaGuard>
           }
         />
         <Route path="/leaderBoard" element={<ScoreBoardTest />} />
         <Route path="/dashboard" element={<UserDashboard />} />
-        <Route path="gameEnd" element={<GameEnd />} />
+        <Route
+          path="/game/:lobbyId/gameEnd"
+          element={<GameEnd player={player} />}
+        />
       </Routes>
     </Router>
   );
