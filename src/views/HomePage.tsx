@@ -76,13 +76,9 @@ export const HomePage = (props: PropsType) => {
         response.data.isCreator = true;
       }
 
-      if (link === "/configureGame") {
-        response.data.isCreator = true;
-      }
-
       // Create a new Player instance from the JSON data in the response
       const player = new Player(response.data);
-      //setPlayer(player);
+      setPlayer(player);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", response.headers.authorization);

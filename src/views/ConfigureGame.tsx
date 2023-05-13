@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
@@ -57,6 +57,10 @@ const StartButton = styled.button<StartButtonProps>`
   padding: 16px 32px;
   margin: 64px 0;
   color: ${(props) => (props.isActive ? "white" : "gray")};
+
+  &:hover {
+    background-color: #1c7ed6;
+  }
 `;
 
 interface PostBody {
@@ -74,7 +78,13 @@ interface PostBody {
   maxNumGuesses?: number;
 }
 
-export const ConfigureGame = () => {
+type PropsType = {
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+};
+
+export const ConfigureGame = (props: PropsType) => {
+  const { setLobby } = props;
+
   const navigate = useNavigate();
 
   //Field states
@@ -120,6 +130,7 @@ export const ConfigureGame = () => {
 
       // Create a new Lobby instance from the JSON data in the response
       const lobby = new Lobby(response.data);
+      setLobby(lobby);
 
       // Store the name of the lobby into the local storage.
       sessionStorage.setItem("lobbyName", lobby.lobbyName);
