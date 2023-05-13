@@ -4,6 +4,7 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
+import { Button as MantineButton } from "@mantine/core";
 
 const Application = styled.div`
   width: 100%;
@@ -11,11 +12,17 @@ const Application = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f5f7f9;
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+
+  border: 2px solid rgb(216, 216, 216);
+  border-radius: 10px;
+  padding: 16px 32px;
 `;
 
 type props = {
@@ -23,10 +30,17 @@ type props = {
 };
 const Button = styled.button<props>`
   cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-  background-color: ${(props) => (props.isActive ? "lightgray" : "white")};
   text-align: center;
-  border: 3px solid lightgray;
-  padding: 8px 16px;
+  border: none;
+  padding: 16px 64px;
+  margin: 32px 0;
+  color: ${(props) => (props.isActive ? "white" : "gray")};
+
+  background-color: ${(props) =>
+    props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
+  &:hover {
+    background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
+  }
 `;
 export const Login = () => {
   const [nameInput, setNameInput] = useState("");
@@ -49,10 +63,14 @@ export const Login = () => {
 
   const loginUser = async () => {
     try {
-      const res = await httpPost("/login", {
-        playerName: nameInput,
-        password: passwordInput,
-      }, {headers: {}});
+      const res = await httpPost(
+        "/login",
+        {
+          playerName: nameInput,
+          password: passwordInput,
+        },
+        { headers: {} }
+      );
 
       // set the session storage
       sessionStorage.setItem("currentPlayerId", res.data.id);
@@ -66,7 +84,7 @@ export const Login = () => {
         message: "Welcome back, " + res.data.playerName + "!",
         color: "green",
       });
-      navigate("/")
+      navigate("/");
     } catch (err: any) {
       notifications.show({
         title: "Error",
@@ -97,7 +115,10 @@ export const Login = () => {
         >
           Login
         </Button>
-        <p>Go to registration page: <Link to="/register">Register</Link></p>
+        <p>Not an account yet?</p>
+        <MantineButton onClick={() => navigate("/register")}>
+          Register
+        </MantineButton>
       </Container>
     </Application>
   );

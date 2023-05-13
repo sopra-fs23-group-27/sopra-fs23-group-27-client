@@ -59,7 +59,7 @@ const StartButton = styled.button<StartButtonProps>`
   color: ${(props) => (props.isActive ? "white" : "gray")};
 
   &:hover {
-    background-color: #1c7ed6;
+    background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
   }
 `;
 
