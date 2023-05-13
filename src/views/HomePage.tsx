@@ -97,19 +97,13 @@ export const HomePage = (props: PropsType) => {
 
       // catch errors
     } catch (error: any) {
-      if (error.response) {
-        notifications.show({
-          title: "Something went wrong",
-          message: error.response.data.message,
-          color: "red",
-        });
-      } else {
-        notifications.show({
-          title: "Something went wrong",
-          message: "Server could not be reached",
-          color: "red",
-        });
-      }
+      notifications.show({
+        title: "Something went wrong",
+        message: error.response
+          ? error.response.data.message
+          : "Server could not be reached",
+        color: "red",
+      });
     }
   };
 

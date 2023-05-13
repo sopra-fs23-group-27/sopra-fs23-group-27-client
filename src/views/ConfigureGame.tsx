@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { handleError, httpPost } from "../helpers/httpService";
 import Lobby from "../models/Lobby";
 import { notifications } from "@mantine/notifications";
+import { Button as MantineButton } from "@mantine/core";
+import { BiSelect } from "../components/BiSelect";
 
 const Container = styled.div`
   display: flex;
@@ -47,13 +49,14 @@ type StartButtonProps = {
 };
 const StartButton = styled.button<StartButtonProps>`
   cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-  background-color: "lightgray";
+  background-color: ${(props) =>
+    props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
   text-align: center;
   border: none;
   font-size: 32px;
   padding: 16px 32px;
   margin: 64px 0;
-  color: ${(props) => (props.isActive ? "black" : "gray")};
+  color: ${(props) => (props.isActive ? "white" : "gray")};
 `;
 
 interface PostBody {
@@ -76,7 +79,8 @@ export const ConfigureGame = () => {
 
   //Field states
   const [lobbyName, setLobbyName] = useState("");
-  const [isAdvanced, setIsAdvanced] = useState<boolean>(false);
+  const [isBasic, setIsBasic] = useState<boolean>(true);
+  const [showSettings, setShowSettings] = useState(false);
   //ADVANCED
   const [numSecondsUntilHint, setNumSecondsUntilHint] = useState(10);
   const [hintInterval, setHintInterval] = useState(5);
@@ -88,7 +92,7 @@ export const ConfigureGame = () => {
   const [isPublic, setIsPublic] = useState(true);
 
   const createLobby = async () => {
-    const mode = isAdvanced ? "advanced" : "basic";
+    const mode = isBasic ? "basic" : "advanced";
 
     const body: PostBody = {
       isPublic,
@@ -96,7 +100,7 @@ export const ConfigureGame = () => {
       lobbyName,
     };
 
-    if (isAdvanced) {
+    if (!isBasic) {
       body.numSecondsUntilHint = numSecondsUntilHint;
       body.hintInterval = hintInterval;
       body.maxNumGuesses = maxNumGuesses;
@@ -106,7 +110,9 @@ export const ConfigureGame = () => {
 
     try {
       // get token of current player from local storage
-      const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
+      const headers = {
+        Authorization: sessionStorage.getItem("FlagManiaToken"),
+      };
 
       const response = await httpPost("/lobbies/" + mode, body, { headers });
       console.log("Lobby created successfully!");
@@ -128,7 +134,9 @@ export const ConfigureGame = () => {
     } catch (error: any) {
       notifications.show({
         title: "Something went wrong",
-        message: error.response.data.message,
+        message: error.response
+          ? error.response.data.message
+          : "Server could not be reached",
         color: "red",
       });
     }
@@ -143,16 +151,21 @@ export const ConfigureGame = () => {
           value={lobbyName}
           onChange={(newVal: string) => setLobbyName(newVal)}
         />
-        <div>
-          <Button onClick={() => setIsAdvanced(false)} isActive={!isAdvanced}>
-            BASIC
-          </Button>
-          <Button onClick={() => setIsAdvanced(true)} isActive={isAdvanced}>
-            ADVANCED
-          </Button>
+        <BiSelect
+          labelA={"BASIC"}
+          labelB={"ADVANCED"}
+          aSelected={isBasic}
+          setASelected={setIsBasic}
+        />
+
+        <div style={{ marginTop: "32px" }}>
+          <MantineButton onClick={() => setShowSettings(!showSettings)}>
+            {showSettings ? "Hide " : "Show "} Settings{"  "}
+            {showSettings ? "▲" : "▼"}
+          </MantineButton>
         </div>
 
-        {isAdvanced ? (
+        {showSettings && !isBasic && (
           <RangeOptions>
             <div>
               <h2>Show first hint after</h2>
@@ -191,7 +204,8 @@ export const ConfigureGame = () => {
               />
             </div>
           </RangeOptions>
-        ) : (
+        )}
+        {showSettings && isBasic && (
           <RangeOptions>
             <div>
               <h2>Number of Options</h2>
@@ -216,14 +230,19 @@ export const ConfigureGame = () => {
         )}
 
         <div style={{ marginTop: "36px" }}>
-          <Button onClick={() => setIsPublic(true)} isActive={isPublic}>
-            Public
-          </Button>
-          <Button onClick={() => setIsPublic(false)} isActive={!isPublic}>
-            Private
-          </Button>
+          <BiSelect
+            labelA="Public"
+            labelB="Private"
+            aSelected={isPublic}
+            setASelected={setIsPublic}
+          />
         </div>
-        <StartButton isActive={!!lobbyName} onClick={() => createLobby()}>
+
+        <StartButton
+          isActive={!!lobbyName}
+          disabled={!lobbyName}
+          onClick={() => createLobby()}
+        >
           OPEN
         </StartButton>
       </Application>
