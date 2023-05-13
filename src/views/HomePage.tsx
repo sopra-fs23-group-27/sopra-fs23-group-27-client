@@ -1,20 +1,38 @@
 import styled from "styled-components";
-import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
-import { FloatingTextInput } from "../components/FloatingTextInput";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { handleError, httpPost } from "../helpers/httpService";
 import Player from "../models/Player";
 import { notifications } from "@mantine/notifications";
-import { Button } from "@mantine/core";
+import { Button, TextInput } from "@mantine/core";
+import { useInputState } from "@mantine/hooks";
 
-const Container = styled.div`
+const Application = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100vh;
   font-size: 38px;
+  color: black;
+  text-align: center;
+  background-color: #f5f7f9;
+`;
+const H1 = styled.h1`
+  margin: 0;
+  margin-bottom: 32px;
+`;
+const P = styled.p`
+  font-size: 18px;
+  margin: 0;
+`;
+const UserContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+`;
+const GuestContainer = styled.div`
+  margin-top: 64px;
 `;
 
 const ButtonContainer = styled.div`
@@ -22,21 +40,23 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 40vh;
+  gap: 24px;
+  margin-top: 32px;
 `;
 
 type PropsType = {
+  isLoggedIn: boolean;
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
 };
 
 export const HomePage = (props: PropsType) => {
-  const { player, setPlayer } = props;
+  const { isLoggedIn, player, setPlayer } = props;
 
-  const [playerName, setPlayerName] = useState("");
+  const [playerName, setPlayerName] = useInputState("");
   const navigate = useNavigate();
 
-  const handleUserJoin = async (
+  const handleGuestJoin = async (
     link: "/configureGame" | "/enterGameId" | "/publicGames"
   ) => {
     const password = "";
@@ -77,64 +97,84 @@ export const HomePage = (props: PropsType) => {
 
       // catch errors
     } catch (error: any) {
-      notifications.show({
-        title: "Something went wrong",
-        message: error.response.data.message,
-        color: "red",
-      });
+      if (error.response) {
+        notifications.show({
+          title: "Something went wrong",
+          message: error.response.data.message,
+          color: "red",
+        });
+      } else {
+        notifications.show({
+          title: "Something went wrong",
+          message: "Server could not be reached",
+          color: "red",
+        });
+      }
     }
   };
 
-  const UserButton = ({ isLoggedIn, username }: any) => (
-    <Button
-      style={{
-        position: "fixed",
-        top: "10px",
-        right: "10px",
-        padding: "10px",
-      }}
-      onClick={() => {
-        if (isLoggedIn) {
-          navigate("/profile");
-        } else {
-          navigate("/login");
-        }
-      }}
-    >
-      {isLoggedIn ? `Welcome ${username}` : "Login"}
-    </Button>
-  );
-
   return (
-    <Container>
-      <UserButton isLoggedIn={false} username={""} />
-      <h1>FlagMania</h1>
-      <p>Play the game and learn about the flags of the world!</p>
-      <FloatingTextInput
-        label="Name"
-        onChange={(newVal: string) => setPlayerName(newVal)}
-        value={playerName}
-      />
-      <ButtonContainer>
-        <Button
-          disabled={!playerName}
-          onClick={() => handleUserJoin("/publicGames")}
-        >
-          Join Public Game
-        </Button>
-        <Button
-          disabled={!playerName}
-          onClick={() => handleUserJoin("/enterGameId")}
-        >
-          Join Private Game
-        </Button>
-        <Button
-          disabled={!playerName}
-          onClick={() => handleUserJoin("/configureGame")}
-        >
-          Create New Game
-        </Button>
-      </ButtonContainer>
-    </Container>
+    <Application>
+      <H1>FlagMania</H1>
+      <p>Learn about the flags of the world!</p>
+
+      <UserContainer>
+        {isLoggedIn ? (
+          <>
+            <Button size="lg" onClick={() => navigate("/profile")}>
+              Show Your Profile
+            </Button>
+            <Button
+              size="lg"
+              onClick={() => alert("logout not implemented yet")}
+            >
+              Logout
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button size="lg" onClick={() => navigate("/login")}>
+              Login
+            </Button>
+            <Button size="lg" onClick={() => navigate("/register")}>
+              Register
+            </Button>
+          </>
+        )}
+      </UserContainer>
+
+      {!isLoggedIn && (
+        <GuestContainer>
+          <P>or play as guest</P>
+          <TextInput
+            label="Username"
+            placeholder="guest"
+            value={playerName}
+            onChange={setPlayerName}
+          />
+
+          <ButtonContainer>
+            <Button
+              disabled={!playerName}
+              onClick={() => handleGuestJoin("/publicGames")}
+            >
+              Join Public Game
+            </Button>
+            <Button
+              disabled={!playerName}
+              onClick={() => handleGuestJoin("/enterGameId")}
+            >
+              Join Private Game
+            </Button>
+            <Button
+              disabled={!playerName}
+              onClick={() => handleGuestJoin("/configureGame")}
+            >
+              Create New Game
+            </Button>
+          </ButtonContainer>
+        </GuestContainer>
+      )}
+    </Application>
   );
 };

@@ -20,7 +20,10 @@ import { LoginGuard } from "./components/routing/LoginGuard";
 import { UserDashboard } from "./views/UserDashboard";
 import { GameEnd } from "./views/GameEnd";
 
+import "./App.css";
+
 export const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [player, setPlayer] = useState<Player | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
@@ -33,7 +36,11 @@ export const App = () => {
           path="/"
           element={
             <PlayerGuard>
-              <HomePage player={player} setPlayer={setPlayer} />
+              <HomePage
+                player={player}
+                setPlayer={setPlayer}
+                isLoggedIn={isLoggedIn}
+              />
             </PlayerGuard>
           }
         />
