@@ -76,9 +76,13 @@ export const HomePage = (props: PropsType) => {
         response.data.isCreator = true;
       }
 
+      if (link === "/configureGame") {
+        response.data.isCreator = true;
+      }
+
       // Create a new Player instance from the JSON data in the response
       const player = new Player(response.data);
-      setPlayer(player);
+      //setPlayer(player);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
@@ -106,6 +110,26 @@ export const HomePage = (props: PropsType) => {
       });
     }
   };
+
+  const UserButton = ({ isLoggedIn, username }: any) => (
+    <Button
+      style={{
+        position: "fixed",
+        top: "10px",
+        right: "10px",
+        padding: "10px",
+      }}
+      onClick={() => {
+        if (isLoggedIn) {
+          navigate("/profile");
+        } else {
+          navigate("/login");
+        }
+      }}
+    >
+      {isLoggedIn ? `Welcome ${username}` : "Login"}
+    </Button>
+  );
 
   return (
     <Application>
