@@ -53,7 +53,7 @@ export const App = () => {
           path="/publicGames"
           element={
             <FlagManiaGuard shouldPreventReload={true}>
-              <ActiveGameOverview />
+              <ActiveGameOverview setLobby={setLobby} />
             </FlagManiaGuard>
           }
         />
@@ -97,6 +97,7 @@ export const App = () => {
               <GameRound
                 currentGameRound={currentGameRound}
                 setCurrentGameRound={setCurrentGameRound}
+                gameMode={lobby?.mode}
               />
             </FlagManiaGuard>
           }
