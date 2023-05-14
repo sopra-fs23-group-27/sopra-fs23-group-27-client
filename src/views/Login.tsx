@@ -5,6 +5,7 @@ import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import { Button as MantineButton } from "@mantine/core";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Application = styled.div`
   width: 100%;
@@ -42,6 +43,7 @@ const Button = styled.button<props>`
     background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
   }
 `;
+
 export const Login = () => {
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
@@ -72,10 +74,16 @@ export const Login = () => {
         { headers: {} }
       );
 
-      // set the session storage
-      sessionStorage.setItem("currentPlayerId", res.data.id);
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
+      // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
+
+      // Store the ID of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayerId", res.data.id);
+
+      // Store the Name of the currently logged-in user in sessionStorage
+      sessionStorage.setItem("currentPlayer", res.data.playerName);
+
+      // Store login status of the current user
       sessionStorage.setItem("loggedIn", "true");
 
       // show notification that player has succsessfully logged in
@@ -97,6 +105,20 @@ export const Login = () => {
   return (
     <Application>
       <Container>
+        <img
+          src={Logo}
+          alt="FlagMania Logo"
+          onClick={() => navigate("/")}
+          style={{
+            top: "10px",
+            left: "10px",
+            padding: "10px",
+            width: "5%",
+            height: "auto",
+            position: "absolute",
+            cursor: "pointer",
+          }}
+        />
         <h1>Login</h1>
         <FloatingTextInput
           label="Name"

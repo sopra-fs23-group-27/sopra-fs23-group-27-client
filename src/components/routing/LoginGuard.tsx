@@ -1,21 +1,27 @@
-import { notifications } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { UserDashboard } from "../../views/UserDashboard";
 
 export const LoginGuard = (props: any) => {
-    if (sessionStorage.getItem("loggedIn") === "false" || sessionStorage.getItem("loggedIn") === null) {
-        return props.children;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (sessionStorage.getItem("loggedIn") === "true") {
+      navigate("/dashboard");
     }
-    notifications.show({
-        title: "Ready",
-        message: "Jump right into the game!",
-        color: "teal",
-        icon: <IconCheck size="1.1rem" />
-    });
-    return UserDashboard();
+  }, [navigate]);
+  
+  if (
+    sessionStorage.getItem("loggedIn") === "false" ||
+    sessionStorage.getItem("loggedIn") === null
+  ) {
+    return props.children;
+  } 
+
+  return null;
 };
 
 LoginGuard.propTypes = {
-    children: PropTypes.node,
+  children: PropTypes.node,
 };

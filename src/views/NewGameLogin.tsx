@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Container = styled.div`
   display: flex;
@@ -62,6 +63,20 @@ export const NewGameLogin = () => {
 
   return (
     <Container>
+      <img
+        src={Logo}
+        alt="FlagMania Logo"
+        onClick={() => navigate("/")}
+        style={{
+          top: "10px",
+          left: "10px",
+          padding: "10px",
+          width: "5%",
+          height: "auto",
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      />
       <h1>Create New Game</h1>
       <Input
         placeholder="Game Name"

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@mantine/core";
 import Player from "../models/Player";
 import { RainbowLoader } from "../components/RainbowLoader";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Application = styled.div`
   display: flex;
@@ -171,6 +172,20 @@ export const GameEnd = (props: PropsType) => {
 
   return (
     <Application>
+      <img
+        src={Logo}
+        alt="FlagMania Logo"
+        onClick={() => navigate("/")}
+        style={{
+          top: "10px",
+          left: "10px",
+          padding: "10px",
+          width: "5%",
+          height: "auto",
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      />
       <UpperRankContainer>
         <FirstRankCard>
           <h2>1.</h2>

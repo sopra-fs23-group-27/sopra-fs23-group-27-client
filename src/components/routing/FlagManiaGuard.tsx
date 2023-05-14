@@ -28,6 +28,12 @@ export const FlagManiaGuard = ({ shouldPreventReload, children }: Props) => {
     navigate("/");
   };
 
+  // handle back and forward
+  const handleNavigation = (event: PopStateEvent) => {
+    // Restore the current route and prevent the navigation
+    navigate(location.pathname, { replace: true });
+  };
+
   // handle reload and close
   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
     if (shouldPreventReload) {
@@ -45,10 +51,14 @@ export const FlagManiaGuard = ({ shouldPreventReload, children }: Props) => {
 
   useEffect(() => {
     handleNotLoggedIn();
+    // Add the event listeners when the component mounts
+    window.addEventListener('popstate', handleNavigation);
     window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("unload", handleUnload);
 
     return () => {
+      // Clean up the event listener when the component unmounts
+      window.removeEventListener('popstate', handleNavigation);
       window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("unload", handleUnload);
     };

@@ -5,6 +5,7 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import styled from "styled-components";
 import { LeaderBoard } from "../components/LeaderBoard";
 import { Button } from "@mantine/core";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const LeaderBoardContainer = styled.div`
   display: flex;
@@ -115,7 +116,7 @@ export const ScoreBoardTest = () => {
       correctGuesses: [1, 2, 3],
       timeUntilCorrectGuess: [10, 20, 30],
       wrongGuesses: [1, 2, 3],
-    }
+    },
   ];
 
   const playerData: PlayerData[] = data.flatMap((game) => {
@@ -132,6 +133,20 @@ export const ScoreBoardTest = () => {
 
   return (
     <div>
+      <img
+        src={Logo}
+        alt="FlagMania Logo"
+        onClick={() => navigate("/")}
+        style={{
+          top: "10px",
+          left: "10px",
+          padding: "10px",
+          width: "5%",
+          height: "auto",
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      />
       <LeaderBoardContainer>
         <h1>ScoreBoardTest</h1>
         <LeaderBoard playerData={playerData} />

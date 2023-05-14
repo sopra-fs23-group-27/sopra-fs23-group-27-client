@@ -5,6 +5,7 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const P = styled.p`
   padding: 0;
@@ -210,6 +211,20 @@ export const GameRound = (props: PropsType) => {
         <RainbowLoader />
       ) : (
         <>
+          <img
+            src={Logo}
+            alt="FlagMania Logo"
+            onClick={() => navigate("/")}
+            style={{
+              top: "10px",
+              left: "10px",
+              padding: "10px",
+              width: "5%",
+              height: "auto",
+              position: "absolute",
+              cursor: "pointer",
+            }}
+          />
           <Points>
             <P>{points}</P>
           </Points>

@@ -6,6 +6,7 @@ import Player from "../models/Player";
 import { notifications } from "@mantine/notifications";
 import { Button, TextInput } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Application = styled.div`
   display: flex;
@@ -38,10 +39,21 @@ const GuestContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
   gap: 24px;
   margin-top: 32px;
+  justify-content: space-between;
+`;
+
+const LoginContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  justify-content: space-between;
 `;
 
 type PropsType = {
@@ -107,28 +119,22 @@ export const HomePage = (props: PropsType) => {
     }
   };
 
-  const UserButton = ({ isLoggedIn, username }: any) => (
-    <Button
-      style={{
-        position: "fixed",
-        top: "10px",
-        right: "10px",
-        padding: "10px",
-      }}
-      onClick={() => {
-        if (isLoggedIn) {
-          navigate("/profile");
-        } else {
-          navigate("/login");
-        }
-      }}
-    >
-      {isLoggedIn ? `Welcome ${username}` : "Login"}
-    </Button>
-  );
-
   return (
     <Application>
+      <img
+        src={Logo}
+        alt="FlagMania Logo"
+        onClick={() => navigate("/")}
+        style={{
+          top: "10px",
+          left: "10px",
+          padding: "10px",
+          width: "5%",
+          height: "auto",
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      />
       <H1>FlagMania</H1>
       <p>Learn about the flags of the world!</p>
 
