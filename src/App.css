@@ -1,1 +1,9 @@
-
+/* CSS styles for home page */
+/* style background */
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f7f9;
+}

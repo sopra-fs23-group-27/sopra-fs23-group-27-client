@@ -190,7 +190,9 @@ export const GameLobby = (props: PropsType) => {
     } catch (e: any) {
       notifications.show({
         title: "Error",
-        message: e.response.data.message,
+        message: e.response
+          ? e.response.data.message
+          : "Server could not be reached",
         color: "red",
       });
     }

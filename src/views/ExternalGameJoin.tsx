@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useState } from "react";
