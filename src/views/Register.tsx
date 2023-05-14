@@ -4,6 +4,7 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
+import { Button as MantineButton } from "@mantine/core";
 
 const Application = styled.div`
   display: flex;
@@ -15,16 +16,27 @@ const Application = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  border: 2px solid rgb(216, 216, 216);
+  border-radius: 10px;
+  padding: 32px 64px;
+  align-items: center;
 `;
 type props = {
   isActive: boolean;
 };
 const Button = styled.button<props>`
   cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-  background-color: ${(props) => (props.isActive ? "lightgray" : "white")};
+  background-color: ${(props) =>
+    props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
+  color: ${(props) => (props.isActive ? "white" : "gray")};
+  border: none;
   text-align: center;
-  border: 3px solid lightgray;
-  padding: 8px 16px;
+  padding: 16px 64px;
+  margin: 30px 0 50px;
+
+  &:hover {
+    background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
+  }
 `;
 
 export const Register = () => {
@@ -60,10 +72,14 @@ export const Register = () => {
 
   const registerUser = async () => {
     try {
-      const res = await httpPost("/registration", {
-        playerName: nameInput,
-        password: passwordInput,
-      }, {headers: {}});
+      const res = await httpPost(
+        "/registration",
+        {
+          playerName: nameInput,
+          password: passwordInput,
+        },
+        { headers: {} }
+      );
 
       // set the session storage
       sessionStorage.setItem("currentPlayerId", res.data.id);
@@ -77,7 +93,7 @@ export const Register = () => {
         message: "Welcome to the party, " + res.data.playerName + "!",
         color: "green",
       });
-      navigate("/login")
+      navigate("/login");
     } catch (err: any) {
       notifications.show({
         title: "Error",
@@ -114,9 +130,15 @@ export const Register = () => {
           value={passwordRepetitionInput}
           onChange={setPasswordRepetitionInput}
         />
-        <Button isActive={isFormFilledOut} disabled={!isFormFilledOut} onClick={registerUser}>
+        <Button
+          isActive={isFormFilledOut}
+          disabled={!isFormFilledOut}
+          onClick={registerUser}
+        >
           Register
         </Button>
+        <p>Already got an account?</p>
+        <MantineButton onClick={() => navigate("/login")}>Login</MantineButton>
       </Container>
     </Application>
   );

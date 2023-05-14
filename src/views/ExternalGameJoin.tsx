@@ -1,9 +1,13 @@
 import styled from "styled-components";
-import "../styles/HomePage.css";
 import { useNavigate } from "react-router-dom";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useState } from "react";
-import { handleError, httpGet, httpPost, httpPut } from "../helpers/httpService";
+import {
+  handleError,
+  httpGet,
+  httpPost,
+  httpPut,
+} from "../helpers/httpService";
 import Player from "../models/Player";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -79,7 +83,9 @@ export const ExternalGameJoin = () => {
       sessionStorage.setItem("currentPlayer", player.playerName);
 
       // define header and body
-      const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
+      const headers = {
+        Authorization: sessionStorage.getItem("FlagManiaToken"),
+      };
 
       // get lobby
       const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
@@ -100,7 +106,11 @@ export const ExternalGameJoin = () => {
   async function joinGame(privateLobbyKey: string) {
     const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
     const body = {};
-    const response = await httpPut("/lobbies/" + lobbyId + "/join?privateLobbyKey=" + privateLobbyKey, body, { headers });
+    const response = await httpPut(
+      "/lobbies/" + lobbyId + "/join?privateLobbyKey=" + privateLobbyKey,
+      body,
+      { headers }
+    );
     if (response.status === 204) {
       navigate("/lobbies/" + lobbyId);
     } else {

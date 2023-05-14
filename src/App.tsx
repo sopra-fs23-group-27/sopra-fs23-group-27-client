@@ -15,16 +15,23 @@ import { ScoreBoard } from "./views/ScoreBoard";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { useState } from "react";
 import Player from "./models/Player";
+import Lobby from "./models/Lobby";
+
 import { PlayerGuard } from "./components/routing/PlayerGuard";
 import { LoginGuard } from "./components/routing/LoginGuard";
 import { UserDashboard } from "./views/UserDashboard";
 import { GameEnd } from "./views/GameEnd";
 
+import "./App.css";
+
 export const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [player, setPlayer] = useState<Player | undefined>();
+  const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
   console.log("currentGameRound: ", currentGameRound);
+  console.log("lobby: ", lobby);
 
   return (
     <Router>
@@ -33,7 +40,11 @@ export const App = () => {
           path="/"
           element={
             <PlayerGuard>
-              <HomePage player={player} setPlayer={setPlayer} />
+              <HomePage
+                player={player}
+                setPlayer={setPlayer}
+                isLoggedIn={isLoggedIn}
+              />
             </PlayerGuard>
           }
         />
@@ -46,7 +57,10 @@ export const App = () => {
             </FlagManiaGuard>
           }
         />
-        <Route path="/configureGame" element={<ConfigureGame />} />
+        <Route
+          path="/configureGame"
+          element={<ConfigureGame setLobby={setLobby} />}
+        />
         <Route path="/lobby" element={<GameLobby player={player} />} />
         <Route
           path="/register"
