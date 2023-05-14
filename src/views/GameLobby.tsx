@@ -101,6 +101,7 @@ export const GameLobby = (props: PropsType) => {
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
       setIsLoading(false);
+      // get the lobby name and joined player names from the message
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
@@ -208,6 +209,7 @@ export const GameLobby = (props: PropsType) => {
     }
   };
 
+  // TODO: incorporate this into the useEffectOnce (or other solution)
   // resend lobby settings
   const resendLobbySettings = () => {
     if (stompClient) {
