@@ -128,9 +128,10 @@ export const UserDashboard = (props: PropsType) => {
     } catch (error: any) {
       notifications.show({
         title: "Error",
-        message: error.message,
+        message: "Something went wrong, the player could not be logged out",
         color: "red",
       });
+      console.log(error);
     }
   };
 

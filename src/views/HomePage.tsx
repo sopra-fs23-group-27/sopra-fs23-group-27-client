@@ -121,6 +121,20 @@ export const HomePage = (props: PropsType) => {
 
   return (
     <Application>
+      <img
+        src={Logo}
+        alt="FlagMania Logo"
+        onClick={() => navigate("/")}
+        style={{
+          top: "10px",
+          left: "10px",
+          padding: "10px",
+          width: "5%",
+          height: "auto",
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      />
       <H1>FlagMania</H1>
       <p>Learn about the flags of the world!</p>
 

@@ -78,7 +78,7 @@ export const Login = () => {
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
 
       // Store the ID of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayerId", res.data.playerId);
+      sessionStorage.setItem("currentPlayerId", res.data.id);
 
       // Store the Name of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayer", res.data.playerName);

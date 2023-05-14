@@ -75,14 +75,19 @@ export const GameLobby = (props: PropsType) => {
   // log the connection status
   console.log(stompClient ? "Connected" : "Not Connected");
 
-  // get the lobby name from local storage
+  // get the player and lobby information from session storage
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
+  const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>({});
 
   // map playername to name and role
-  const playerNames = joinedPlayerNames.map((playerName: string) => {
-    return { name: playerName, role: player?.isCreator ? "Creator" : "Player" };
+  const playerNamesAndRoles = joinedPlayerNames.map((playerName: string) => {
+    const role = playerRoles[playerName] ? "Creator" : "Player";
+    const name = playerName;
+    return { name, role };
   });
+  
+  // set the loading state  
   const [isLoading, setIsLoading] = useState(false);
 
   // private URL for the QR code
@@ -99,8 +104,12 @@ export const GameLobby = (props: PropsType) => {
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
+      
+      // get the player roles from the message if it exists
+      const newPlayerRoles = JSON.parse(message.body).playerRoleMap as { [key: string]: boolean };      console.log(message.body)
       console.log("Message from server: ", lobbyName);
       console.log("Message from server: ", joinedPlayerNames);
+      console.log("Message from server: ", playerRoles);
       // find players that joined the lobby recently
       const newPlayerNames = newJoinedPlayerNames.filter(
         (playerName: string) => !joinedPlayerNames.includes(playerName)
@@ -136,6 +145,7 @@ export const GameLobby = (props: PropsType) => {
       // update the lobby name and joined player names
       setLobbyname(newLobbyName);
       setJoinedPlayerNames(newJoinedPlayerNames);
+      setPlayerRoles(newPlayerRoles);
     }
   );
 
@@ -260,7 +270,7 @@ export const GameLobby = (props: PropsType) => {
           <h3>Players in lobby:</h3>
 
           <UserContainer>
-            <UsersRolesTable data={playerNames} />
+            <UsersRolesTable data={playerNamesAndRoles} />
           </UserContainer>
 
           {player?.isCreator && (

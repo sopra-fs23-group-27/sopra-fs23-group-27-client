@@ -121,7 +121,7 @@ export const ConfigureGame = (props: PropsType) => {
 
     try {
       // get token of current player from local storage
-      const headers = { 
+      const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
 

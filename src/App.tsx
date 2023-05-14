@@ -39,13 +39,13 @@ export const App = () => {
         <Route
           path="/"
           element={
-            <PlayerGuard>
+            <LoginGuard>
               <HomePage
                 player={player}
                 setPlayer={setPlayer}
                 isLoggedIn={isLoggedIn}
               />
-            </PlayerGuard>
+            </LoginGuard>
           }
         />
 

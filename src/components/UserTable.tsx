@@ -1,12 +1,38 @@
-import { Badge, Table, Group, Text, Select, ScrollArea } from "@mantine/core";
+import {
+  Avatar,
+  Badge,
+  Table,
+  Group,
+  Text,
+  ActionIcon,
+  Anchor,
+  ScrollArea,
+  useMantineTheme,
+} from '@mantine/core';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { useStompClient } from 'react-stomp-hooks';
 
 interface UsersTableProps {
   data: { name: string; role: string }[];
 }
 
-const rolesData = ["Creator", "Player"];
-
 export function UsersRolesTable({ data }: UsersTableProps) {
+  const lobbyId = sessionStorage.getItem('lobbyId');
+  const stompClient = useStompClient();
+  const handleKickingUser = (name: string) => {
+    if (stompClient) {
+      console.log('kicking user');
+      console.log("lobbyId: ", lobbyId);
+      stompClient.publish({
+        destination: `/app/games/${lobbyId}/remove`,
+        body: JSON.stringify({ name }),
+      });
+    } else {
+      console.error('Error: Could not send message');
+    }
+  };
+
+
   const rows = data.map((item) => (
     <tr key={item.name}>
       <td>
@@ -38,6 +64,16 @@ export function UsersRolesTable({ data }: UsersTableProps) {
           </Badge>
         )}
       </td>
+      <td>
+        <Group spacing={0} position="right">
+          <ActionIcon>
+            <IconPencil size="1rem" stroke={1.5} />
+          </ActionIcon>
+          <ActionIcon color="red" onClick={() => { handleKickingUser(item.name) }}>
+            <IconTrash size="1rem" stroke={1.5} />
+          </ActionIcon>
+        </Group>
+      </td>
     </tr>
   ));
 
@@ -49,6 +85,7 @@ export function UsersRolesTable({ data }: UsersTableProps) {
             <th>Name</th>
             <th>Role</th>
             <th>Status</th>
+            <th />
           </tr>
         </thead>
         <tbody>{rows}</tbody>
