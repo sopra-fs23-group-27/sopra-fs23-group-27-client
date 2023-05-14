@@ -38,6 +38,7 @@ export const UserDashboard = (props: PropsType) => {
 
   interface UserStatsProps {
     userData: {
+      link: string;
       label: string;
       stats: string;
       progress: number;
@@ -48,6 +49,7 @@ export const UserDashboard = (props: PropsType) => {
 
   const userData: UserStatsProps["userData"] = [
     {
+      link: "/gamesPlayed",
       label: "Games Played",
       stats: "10",
       progress: 100,
@@ -55,18 +57,28 @@ export const UserDashboard = (props: PropsType) => {
       icon: "up",
     },
     {
-      label: "Games Won",
+      link: "/correctGuesses",
+      label: "Correct Guesses",
       stats: "5",
       progress: 50,
       color: "green",
       icon: "up",
     },
     {
-      label: "Games Lost",
+      link: "/wrongGuesses",
+      label: "Wrong Guesses",
       stats: "5",
       progress: 50,
       color: "red",
       icon: "down",
+    },
+    {
+      link: "/totalScore",
+      label: "Total Score",
+      stats: "50",
+      progress: 100,
+      color: "blue",
+      icon: "up",
     },
   ];
 
@@ -98,6 +110,35 @@ export const UserDashboard = (props: PropsType) => {
 
       // navigate to the next page
       navigate(link);
+
+      // catch errors
+    } catch (error: any) {
+      notifications.show({
+        title: "Something went wrong",
+        message: error.response.data.message,
+        color: "red",
+      });
+    }
+  };
+
+  const handleCompareStats = async () => {
+    try {
+      // get player data from session storage
+      const playerId = sessionStorage.getItem("currentPlayerId");
+      const playerName = sessionStorage.getItem("currentPlayer");
+      const loggedIn = sessionStorage.getItem("loggedIn");
+
+      const playerInfo = {
+        playerId: playerId,
+        playerName: playerName,
+        loggedIn: loggedIn,
+      };
+
+      const player = new Player(playerInfo);
+      setPlayer(player);
+
+      // navigate to the next page
+      navigate("/compareStats");
 
       // catch errors
     } catch (error: any) {
@@ -153,7 +194,11 @@ export const UserDashboard = (props: PropsType) => {
       />
       <h1>Welcome back {playerName}, enjoy some nice stats</h1>
       <UserStats userData={userData} />
+      <p><i>Compare yourself to others by clicking one of the statistics</i></p>
       <ButtonContainer>
+        {/* <Button onClick={() => handleCompareStats()}>
+          Compare to other players
+        </Button> */}
         <Button
           disabled={!playerName}
           onClick={() => handleUserJoin("/publicGames", false)}
