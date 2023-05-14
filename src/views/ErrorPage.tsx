@@ -1,6 +1,6 @@
 import styled from "styled-components";
-
-import { useRouteError } from "react-router-dom";
+import { useNavigate, useRouteError } from "react-router-dom";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Container = styled.div`
   display: flex;
@@ -15,10 +15,25 @@ type ErrorType = {
 };
 export const ErrorPage = () => {
   const error = useRouteError() as ErrorType;
+  const navigate = useNavigate();
   console.error(error);
 
   return (
     <Container>
+      <img
+        src={Logo}
+        alt="FlagMania Logo"
+        onClick={() => navigate("/")}
+        style={{
+          top: "10px",
+          left: "10px",
+          padding: "10px",
+          width: "5%",
+          height: "auto",
+          position: "absolute",
+          cursor: "pointer",
+        }}
+      />
       <p>An unexpected error has occurred.</p>
       <p>
         <i>{error.statusText || error.message}</i>

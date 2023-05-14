@@ -8,6 +8,7 @@ import Lobby from "../models/Lobby";
 import { notifications } from "@mantine/notifications";
 import { Button as MantineButton } from "@mantine/core";
 import { BiSelect } from "../components/BiSelect";
+import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Container = styled.div`
   display: flex;
@@ -154,6 +155,20 @@ export const ConfigureGame = (props: PropsType) => {
   return (
     <Container>
       <Application>
+        <img
+          src={Logo}
+          alt="FlagMania Logo"
+          onClick={() => navigate("/")}
+          style={{
+            top: "10px",
+            left: "10px",
+            padding: "10px",
+            width: "5%",
+            height: "auto",
+            position: "absolute",
+            cursor: "pointer",
+          }}
+        />
         <h1>Configure your Game</h1>
         <FloatingTextInput
           label="Name"
