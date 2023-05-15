@@ -61,7 +61,6 @@ export const App = () => {
           path="/configureGame"
           element={<ConfigureGame setLobby={setLobby} />}
         />
-        <Route path="/lobby" element={<GameLobby player={player} />} />
         <Route
           path="/register"
           element={
@@ -86,7 +85,7 @@ export const App = () => {
           path="/lobbies/:lobbyId"
           element={
             <FlagManiaGuard shouldPreventReload={true}>
-              <GameLobby player={player} />
+              <GameLobby player={player} setLobby={setLobby} lobby={lobby} />
             </FlagManiaGuard>
           }
         />
