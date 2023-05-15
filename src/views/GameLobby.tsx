@@ -2,7 +2,7 @@ import QRCode from "react-qr-code";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
 import { httpGet, httpPut, mainURL } from "../helpers/httpService";
@@ -11,6 +11,7 @@ import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Player from "../models/Player";
 import Logo from "../icons/DALL-E_FlagMania_Logo.png";
+import Lobby from "../models/Lobby";
 
 const UserContainer = styled.div`
   display: flex;
@@ -61,9 +62,11 @@ export const getGameUrl = () => {
 
 type PropsType = {
   player: Player | undefined;
+  lobby: Lobby | undefined;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
 };
 export const GameLobby = (props: PropsType) => {
-  const { player } = props;
+  const { player, lobby, setLobby } = props;
 
   const { lobbyId } = useParams();
   const navigate = useNavigate();
@@ -78,7 +81,9 @@ export const GameLobby = (props: PropsType) => {
   // get the player and lobby information from session storage
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
-  const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>({});
+  const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   // map playername to name and role
   const playerNamesAndRoles = joinedPlayerNames.map((playerName: string) => {
@@ -86,8 +91,8 @@ export const GameLobby = (props: PropsType) => {
     const name = playerName;
     return { name, role };
   });
-  
-  // set the loading state  
+
+  // set the loading state
   const [isLoading, setIsLoading] = useState(false);
 
   // private URL for the QR code
@@ -105,9 +110,12 @@ export const GameLobby = (props: PropsType) => {
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
-      
+
       // get the player roles from the message if it exists
-      const newPlayerRoles = JSON.parse(message.body).playerRoleMap as { [key: string]: boolean };      console.log(message.body)
+      const newPlayerRoles = JSON.parse(message.body).playerRoleMap as {
+        [key: string]: boolean;
+      };
+      console.log(message.body);
       console.log("Message from server: ", lobbyName);
       console.log("Message from server: ", joinedPlayerNames);
       console.log("Message from server: ", playerRoles);
