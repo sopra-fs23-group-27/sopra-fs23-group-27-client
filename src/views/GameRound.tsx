@@ -31,9 +31,6 @@ const AdditionalBoxes = styled.div`
   position: absolute;
   top: 50px;
 `;
-const Points = styled(AdditionalBoxes)`
-  left: 50px;
-`;
 const Time = styled(AdditionalBoxes)`
   right: 50px;
 `;
@@ -63,7 +60,7 @@ const Flag = styled.img`
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 `;
 const Hint = styled.p``;
-const GuessBox = styled.div`
+const TextGuessBox = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 36px;
@@ -82,15 +79,16 @@ const GuessButton = styled.button`
 type PropsType = {
   currentGameRound: number;
   setCurrentGameRound: Dispatch<SetStateAction<number>>;
+  gameMode: "BASIC" | "ADVANCED" | undefined;
 };
 export const GameRound = (props: PropsType) => {
-  const { currentGameRound, setCurrentGameRound } = props;
+  const { currentGameRound, setCurrentGameRound, gameMode } = props;
+  const isBasic = gameMode === "BASIC";
 
   const { lobbyId } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(0);
-  const [points, setPoints] = useState(0);
   const [flagURL, setFlagURL] = useState("");
   const [guessInput, setGuessInput] = useState("");
   const [latestGlobalGuess, setLatestGlobalGuess] = useState("");
@@ -225,27 +223,34 @@ export const GameRound = (props: PropsType) => {
               cursor: "pointer",
             }}
           />
-          <Points>
-            <P>{points}</P>
-          </Points>
           <Time>
             <P>{timeLeft}</P>
           </Time>
-          <GlobalGuess>
-            <P>Latest Guess:</P>
-            <P>{latestGlobalGuess}</P>
-          </GlobalGuess>
+
+          {!isBasic && (
+            <GlobalGuess>
+              <P>Latest Guess:</P>
+              <P>{latestGlobalGuess}</P>
+            </GlobalGuess>
+          )}
+
           <Main>
             <Flag src={flagURL} />
-            <Hint>{latestHint}</Hint>
-            <GuessBox>
-              <FloatingTextInput
-                label="Your Guess"
-                value={guessInput}
-                onChange={setGuessInput}
-              />
-              <GuessButton onClick={() => submitGuess()}>Guess</GuessButton>
-            </GuessBox>
+
+            {!isBasic && (
+              <>
+                <Hint>{latestHint}</Hint>
+                <TextGuessBox>
+                  <FloatingTextInput
+                    label="Your Guess"
+                    value={guessInput}
+                    onChange={setGuessInput}
+                  />
+                  <GuessButton onClick={() => submitGuess()}>Guess</GuessButton>
+                </TextGuessBox>
+              </>
+            )}
+            {isBasic && <div>Here the four guesses will be shown</div>}
           </Main>
         </>
       )}
