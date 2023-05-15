@@ -112,11 +112,14 @@ export const App = () => {
           }
         />
         <Route path="/leaderBoard" element={<ScoreBoardTest />} />
-        <Route path="/dashboard" element={
-          <PlayerGuard>
-            <UserDashboard player={player} setPlayer={setPlayer} />
-          </PlayerGuard>
-        } />
+        <Route
+          path="/dashboard"
+          element={
+            <PlayerGuard>
+              <UserDashboard player={player} setPlayer={setPlayer} />
+            </PlayerGuard>
+          }
+        />
         <Route
           path="/game/:lobbyId/gameEnd"
           element={<GameEnd player={player} />}
