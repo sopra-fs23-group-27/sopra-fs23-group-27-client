@@ -1,16 +1,15 @@
 import QRCode from "react-qr-code";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
-import { httpGet, httpPut, mainURL } from "../helpers/httpService";
+import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Player from "../models/Player";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 import Lobby from "../models/Lobby";
 
 const UserContainer = styled.div`
@@ -246,20 +245,6 @@ export const GameLobby = (props: PropsType) => {
         <RainbowLoader />
       ) : (
         <>
-          <img
-            src={Logo}
-            alt="FlagMania Logo"
-            onClick={() => navigate("/")}
-            style={{
-              top: "10px",
-              left: "10px",
-              padding: "10px",
-              width: "5%",
-              height: "auto",
-              position: "absolute",
-              cursor: "pointer",
-            }}
-          />
           {/* <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton> */}
           <QRCode
             value={GameUrl}

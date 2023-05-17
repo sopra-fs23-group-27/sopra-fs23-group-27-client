@@ -5,6 +5,7 @@ class Lobby {
   lobbyId: number;
   lobbyName: string;
   isPublic: boolean;
+  numRounds: number;
   numSeconds: number;
   joinedPlayerNames: string[];
   lobbyCreatorPlayerToken: string;
@@ -16,6 +17,7 @@ class Lobby {
     this.lobbyId = 0;
     this.lobbyName = "";
     this.isPublic = false;
+    this.numRounds = 5;
     this.numSeconds = 0;
     this.joinedPlayerNames = [];
     this.lobbyCreatorPlayerToken = "";

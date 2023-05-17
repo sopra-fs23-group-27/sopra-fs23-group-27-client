@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { HomePage } from "./views/HomePage";
 import { ActiveGameOverview } from "./views/ActiveGamesOverview";
 import { FlagManiaGuard } from "./components/routing/FlagManiaGuard";
@@ -16,6 +21,7 @@ import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { useState } from "react";
 import Player from "./models/Player";
 import Lobby from "./models/Lobby";
+import FlagLogo from "./icons/DALL-E_FlagMania_Logo.png";
 
 import { PlayerGuard } from "./components/routing/PlayerGuard";
 import { LoginGuard } from "./components/routing/LoginGuard";
@@ -23,6 +29,25 @@ import { UserDashboard } from "./views/UserDashboard";
 import { GameEnd } from "./views/GameEnd";
 
 import "./App.css";
+import styled from "styled-components";
+
+const FlagmaniaLogo = styled.img`
+  top: 10px;
+  left: 10px;
+  padding: 10px;
+  width: 130px;
+  height: auto;
+  position: absolute;
+  cursor: pointer;
+  @media (max-width: 700px) {
+    width: 100px;
+  }
+  @media (max-width: 550px) {
+    top: 5px;
+    left: 5px;
+    width: 70px;
+  }
+`;
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,96 +59,103 @@ export const App = () => {
   console.log("lobby: ", lobby);
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <LoginGuard>
-              <HomePage
-                player={player}
-                setPlayer={setPlayer}
-                isLoggedIn={isLoggedIn}
-              />
-            </LoginGuard>
-          }
-        />
+    <>
+      <a href="/">
+        <FlagmaniaLogo src={FlagLogo} />
+      </a>
 
-        <Route
-          path="/publicGames"
-          element={
-            <FlagManiaGuard shouldPreventReload={true}>
-              <ActiveGameOverview setLobby={setLobby} />
-            </FlagManiaGuard>
-          }
-        />
-        <Route
-          path="/configureGame"
-          element={<ConfigureGame setLobby={setLobby} />}
-        />
-        <Route
-          path="/register"
-          element={
-            <LoginGuard>
-              <Register />
-            </LoginGuard>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <LoginGuard>
-              <Login />
-            </LoginGuard>
-          }
-        />
-        <Route path="/newGameLogin" element={<NewGameLogin />} />
-        <Route path="/scanQRCode/:lobbyId" element={<ScanQRCode />} />
-        <Route path="/enterGameId" element={<GameIdInput />} />
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LoginGuard>
+                <HomePage
+                  player={player}
+                  setPlayer={setPlayer}
+                  isLoggedIn={isLoggedIn}
+                />
+              </LoginGuard>
+            }
+          />
 
-        <Route
-          path="/lobbies/:lobbyId"
-          element={
-            <FlagManiaGuard shouldPreventReload={true}>
-              <GameLobby player={player} setLobby={setLobby} lobby={lobby} />
-            </FlagManiaGuard>
-          }
-        />
-        <Route
-          path="/game/:lobbyId"
-          element={
-            <FlagManiaGuard shouldPreventReload={true}>
-              <GameRound
-                currentGameRound={currentGameRound}
-                setCurrentGameRound={setCurrentGameRound}
-                gameMode={lobby?.mode}
-              />
-            </FlagManiaGuard>
-          }
-        />
-        <Route path="/lobbies/:lobbyId/join" element={<ExternalGameJoin />} />
-        <Route
-          path="/game/:lobbyId/leaderBoard"
-          element={
-            <FlagManiaGuard shouldPreventReload={true}>
-              <ScoreBoard player={player} />
-            </FlagManiaGuard>
-          }
-        />
-        <Route path="/leaderBoard" element={<ScoreBoardTest />} />
-        <Route
-          path="/dashboard"
-          element={
-            <PlayerGuard>
-              <UserDashboard player={player} setPlayer={setPlayer} />
-            </PlayerGuard>
-          }
-        />
-        <Route
-          path="/game/:lobbyId/gameEnd"
-          element={<GameEnd player={player} />}
-        />
-      </Routes>
-    </Router>
+          <Route
+            path="/publicGames"
+            element={
+              <FlagManiaGuard shouldPreventReload={true}>
+                <ActiveGameOverview setLobby={setLobby} />
+              </FlagManiaGuard>
+            }
+          />
+          <Route
+            path="/configureGame"
+            element={<ConfigureGame setLobby={setLobby} />}
+          />
+          <Route
+            path="/register"
+            element={
+              <LoginGuard>
+                <Register />
+              </LoginGuard>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LoginGuard>
+                <Login />
+              </LoginGuard>
+            }
+          />
+          <Route path="/newGameLogin" element={<NewGameLogin />} />
+          <Route path="/scanQRCode/:lobbyId" element={<ScanQRCode />} />
+          <Route path="/enterGameId" element={<GameIdInput />} />
+
+          <Route
+            path="/lobbies/:lobbyId"
+            element={
+              <FlagManiaGuard shouldPreventReload={true}>
+                <GameLobby player={player} setLobby={setLobby} lobby={lobby} />
+              </FlagManiaGuard>
+            }
+          />
+          <Route
+            path="/game/:lobbyId"
+            element={
+              <FlagManiaGuard shouldPreventReload={true}>
+                <GameRound
+                  currentGameRound={currentGameRound}
+                  setCurrentGameRound={setCurrentGameRound}
+                  gameMode={lobby?.mode}
+                  numRounds={lobby?.numRounds}
+                />
+              </FlagManiaGuard>
+            }
+          />
+          <Route path="/lobbies/:lobbyId/join" element={<ExternalGameJoin />} />
+          <Route
+            path="/game/:lobbyId/leaderBoard"
+            element={
+              <FlagManiaGuard shouldPreventReload={true}>
+                <ScoreBoard player={player} />
+              </FlagManiaGuard>
+            }
+          />
+          <Route path="/leaderBoard" element={<ScoreBoardTest />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PlayerGuard>
+                <UserDashboard player={player} setPlayer={setPlayer} />
+              </PlayerGuard>
+            }
+          />
+          <Route
+            path="/game/:lobbyId/gameEnd"
+            element={<GameEnd player={player} />}
+          />
+        </Routes>
+      </Router>
+    </>
   );
 };

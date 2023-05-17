@@ -1,4 +1,3 @@
-import { emptyGame, games } from "../helpers/fakeDatabase";
 import { game } from "../types/databaseTypes";
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 
@@ -9,7 +8,6 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 import Lobby from "../models/Lobby";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const GameContainer = styled.li`
   display: flex;
@@ -94,6 +92,7 @@ export const PublicGame = (props: PublicGameProps) => {
 
 const Application = styled.div`
   padding: 50px;
+  margin-top: 120px;
 `;
 const GameList = styled.ul`
   display: flex;
@@ -139,20 +138,6 @@ export const ActiveGameOverview = (props: PropsType) => {
         <RainbowLoader />
       ) : (
         <>
-          <img
-            src={Logo}
-            alt="FlagMania Logo"
-            onClick={() => navigate("/")}
-            style={{
-              top: "10px",
-              left: "10px",
-              padding: "10px",
-              width: "5%",
-              height: "auto",
-              position: "absolute",
-              cursor: "pointer",
-            }}
-          />
           <h1>Public Games</h1>
           {!games[0] && <p>Currently, No public games are open to join</p>}
           <GameList>
