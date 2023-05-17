@@ -37,7 +37,13 @@ const FlagmaniaLogo = styled.img`
   width: 130px;
   height: auto;
   position: absolute;
+  z-index: 1;
   cursor: pointer;
+  transition: transform 200ms ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
   @media (max-width: 700px) {
     width: 100px;
   }
