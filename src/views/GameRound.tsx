@@ -1,11 +1,10 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const P = styled.p`
   padding: 0;
@@ -113,9 +112,10 @@ type PropsType = {
   currentGameRound: number;
   setCurrentGameRound: Dispatch<SetStateAction<number>>;
   gameMode: "BASIC" | "ADVANCED" | undefined;
+  numRounds: number | undefined;
 };
 export const GameRound = (props: PropsType) => {
-  const { currentGameRound, setCurrentGameRound, gameMode } = props;
+  const { currentGameRound, setCurrentGameRound, gameMode, numRounds } = props;
   const isBasic = gameMode === "BASIC";
 
   const { lobbyId } = useParams();
@@ -194,7 +194,7 @@ export const GameRound = (props: PropsType) => {
     `/user/queue/lobbies/${lobbyId}/round-end`,
     (message: any) => {
       console.log("time is up");
-      if (currentGameRound === 3) {
+      if (currentGameRound === numRounds) {
         navigate(`/game/${lobbyId}/gameEnd`);
       } else {
         navigate(`/game/${lobbyId}/leaderBoard`);
@@ -269,20 +269,6 @@ export const GameRound = (props: PropsType) => {
         <RainbowLoader />
       ) : (
         <>
-          <img
-            src={Logo}
-            alt="FlagMania Logo"
-            onClick={() => navigate("/")}
-            style={{
-              top: "10px",
-              left: "10px",
-              padding: "10px",
-              width: "5%",
-              height: "auto",
-              position: "absolute",
-              cursor: "pointer",
-            }}
-          />
           <Time>
             <P>{timeLeft}</P>
           </Time>

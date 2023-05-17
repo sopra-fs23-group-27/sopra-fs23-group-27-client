@@ -3,9 +3,8 @@ import styled from "styled-components";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button as MantineButton } from "@mantine/core";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Application = styled.div`
   width: 100%;
@@ -105,20 +104,6 @@ export const Login = () => {
   return (
     <Application>
       <Container>
-        <img
-          src={Logo}
-          alt="FlagMania Logo"
-          onClick={() => navigate("/")}
-          style={{
-            top: "10px",
-            left: "10px",
-            padding: "10px",
-            width: "5%",
-            height: "auto",
-            position: "absolute",
-            cursor: "pointer",
-          }}
-        />
         <h1>Login</h1>
         <FloatingTextInput
           label="Name"

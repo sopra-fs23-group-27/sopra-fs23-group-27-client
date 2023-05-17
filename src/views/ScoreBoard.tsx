@@ -139,20 +139,6 @@ export const ScoreBoard = (props: PropsType) => {
 
   return (
     <div>
-      <img
-        src={Logo}
-        alt="FlagMania Logo"
-        onClick={() => navigate("/")}
-        style={{
-          top: "10px",
-          left: "10px",
-          padding: "10px",
-          width: "5%",
-          height: "auto",
-          position: "absolute",
-          cursor: "pointer",
-        }}
-      />
       <LeaderBoardContainer>
         <h1>ScoreBoard</h1>
         <LeaderBoard playerData={playerData} />
