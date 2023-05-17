@@ -12,7 +12,6 @@ import { Login } from "./views/Login";
 import { Register } from "./views/Register";
 import { GameLobby } from "./views/GameLobby";
 import { NewGameLogin } from "./views/NewGameLogin";
-import { ScanQRCode } from "./views/ScanQRCode";
 import { GameIdInput } from "./views/EnterGameId";
 import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
@@ -108,7 +107,6 @@ export const App = () => {
             }
           />
           <Route path="/newGameLogin" element={<NewGameLogin />} />
-          <Route path="/scanQRCode/:lobbyId" element={<ScanQRCode />} />
           <Route path="/enterGameId" element={<GameIdInput />} />
 
           <Route

@@ -7,10 +7,24 @@ import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
 import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
-import { Button } from "@mantine/core";
+import { Button, CloseButton } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Player from "../models/Player";
 import Lobby from "../models/Lobby";
+import { ButtonCopy } from "../components/ClipboardButton";
+
+const QrBox = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background-color: white;
+  z-index: 1;
+`;
 
 const UserContainer = styled.div`
   display: flex;
@@ -48,17 +62,6 @@ const AdditionalBoxes = styled.div`
   top: 50px;
 `;
 
-// define GameUrl as a constant
-export let GameUrl = "";
-
-export const setGameUrl = (url: string) => {
-  GameUrl = url;
-};
-
-export const getGameUrl = () => {
-  return GameUrl;
-};
-
 type PropsType = {
   player: Player | undefined;
   lobby: Lobby | undefined;
@@ -66,6 +69,9 @@ type PropsType = {
 };
 export const GameLobby = (props: PropsType) => {
   const { player, lobby, setLobby } = props;
+
+  const [showQrCodeBig, setShowQrCodeBig] = useState(false);
+  const [gameUrl, setGameUrl] = useState("");
 
   const { lobbyId } = useParams();
   const navigate = useNavigate();
@@ -216,20 +222,6 @@ export const GameLobby = (props: PropsType) => {
     }
   };
 
-  // TODO: incorporate this into the useEffectOnce (or other solution)
-  // resend lobby settings
-  const resendLobbySettings = () => {
-    if (stompClient) {
-      stompClient.publish({
-        destination: `/app/games/${lobbyId}/send-lobby-settings`,
-        body: JSON.stringify({ playerToken }),
-      });
-      console.log("Lobby settings were sent again");
-    } else {
-      console.error("Error: Could not send message");
-    }
-  };
-
   return (
     <div
       style={{
@@ -241,14 +233,28 @@ export const GameLobby = (props: PropsType) => {
         alignItems: "center",
       }}
     >
+      {showQrCodeBig && (
+        <QrBox>
+          <CloseButton
+            aria-label="Close Button"
+            size="xl"
+            iconSize={40}
+            color="red"
+            style={{ position: "relative", left: "18%" }}
+            onClick={() => setShowQrCodeBig(false)}
+          />
+          <h1>Scan to join the game</h1>
+          <QRCode value={gameUrl} style={{ width: "100%" }} />
+          <ButtonCopy url={gameUrl} />
+        </QrBox>
+      )}
       {isLoading ? (
         <RainbowLoader />
       ) : (
         <>
-          {/* <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton> */}
           <QRCode
-            value={GameUrl}
-            onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}
+            value={gameUrl}
+            onClick={() => setShowQrCodeBig(true)}
             style={{
               cursor: "pointer",
               right: "50px",
@@ -271,10 +277,6 @@ export const GameLobby = (props: PropsType) => {
           {player?.isCreator && (
             <Button onClick={() => startGame()}>Start Game</Button>
           )}
-
-          <Button onClick={() => resendLobbySettings()}>
-            Resend Lobby Settings
-          </Button>
         </>
       )}
     </div>
