@@ -150,7 +150,26 @@ export const UserDashboard = (props: PropsType) => {
     }
   };
 
+  const handlePlayerSettings = async () => {
+    try {
+      // get player id from session storage
+      const playerId = sessionStorage.getItem("currentPlayerId");
+
+      // navigate to the next page
+      navigate("/playerSettings/" + playerId);
+
+      // catch errors
+    } catch (error: any) {
+      notifications.show({
+        title: "Something went wrong",
+        message: error.response.data.message,
+        color: "red",
+      });
+    }
+  };
+
   const handleLogout = async () => {
+    // get player id from session storage
     const playerId = sessionStorage.getItem("currentPlayerId");
     try {
       const res = await httpPost(
@@ -218,6 +237,7 @@ export const UserDashboard = (props: PropsType) => {
           Create New Game
         </Button>
       </ButtonContainer>
+      <Button onClick={() => handlePlayerSettings()}> Player Settings </Button>
       <Button onClick={() => handleLogout()}> Logout </Button>
     </Container>
   );

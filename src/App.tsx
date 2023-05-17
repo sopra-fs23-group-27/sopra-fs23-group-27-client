@@ -23,6 +23,7 @@ import { UserDashboard } from "./views/UserDashboard";
 import { GameEnd } from "./views/GameEnd";
 
 import "./App.css";
+import { PlayerSettings } from "./views/PlayerSettings";
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -115,6 +116,11 @@ export const App = () => {
         <Route path="/dashboard" element={
           <PlayerGuard>
             <UserDashboard player={player} setPlayer={setPlayer} />
+          </PlayerGuard>
+        } />
+        <Route path="/playerSettings/:playerId" element={
+          <PlayerGuard>
+            <PlayerSettings player={player} setPlayer={setPlayer} />
           </PlayerGuard>
         } />
         <Route
