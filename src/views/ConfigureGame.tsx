@@ -8,7 +8,6 @@ import Lobby from "../models/Lobby";
 import { notifications } from "@mantine/notifications";
 import { Button as MantineButton } from "@mantine/core";
 import { BiSelect } from "../components/BiSelect";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Container = styled.div`
   display: flex;
@@ -67,6 +66,7 @@ const StartButton = styled.button<StartButtonProps>`
 interface PostBody {
   //commmon fields
   isPublic: boolean;
+  numRounds: number;
   numSeconds: number;
   lobbyName: string;
 
@@ -92,13 +92,13 @@ export const ConfigureGame = (props: PropsType) => {
   const [lobbyName, setLobbyName] = useState("");
   const [isBasic, setIsBasic] = useState<boolean>(true);
   const [showSettings, setShowSettings] = useState(false);
+  const [numRounds, setNumRounds] = useState(5);
   //ADVANCED
   const [numSecondsUntilHint, setNumSecondsUntilHint] = useState(10);
   const [hintInterval, setHintInterval] = useState(5);
   const [numSeconds, setNumSeconds] = useState(45);
-  const [maxNumGuesses, setMaxNumGuesses] = useState(2);
   //BASIC
-  const [numOptions, setNumOptions] = useState(3);
+  const [numOptions, setNumOptions] = useState(4);
   const [roundDuration, setRoundDuration] = useState(10);
   const [isPublic, setIsPublic] = useState(true);
 
@@ -107,6 +107,7 @@ export const ConfigureGame = (props: PropsType) => {
 
     const body: PostBody = {
       isPublic,
+      numRounds,
       numSeconds,
       lobbyName,
     };
@@ -114,7 +115,6 @@ export const ConfigureGame = (props: PropsType) => {
     if (!isBasic) {
       body.numSecondsUntilHint = numSecondsUntilHint;
       body.hintInterval = hintInterval;
-      body.maxNumGuesses = maxNumGuesses;
     } else {
       body.numOptions = numOptions;
     }
@@ -155,20 +155,6 @@ export const ConfigureGame = (props: PropsType) => {
   return (
     <Container>
       <Application>
-        <img
-          src={Logo}
-          alt="FlagMania Logo"
-          onClick={() => navigate("/")}
-          style={{
-            top: "10px",
-            left: "10px",
-            padding: "10px",
-            width: "5%",
-            height: "auto",
-            position: "absolute",
-            cursor: "pointer",
-          }}
-        />
         <h1>Configure your Game</h1>
         <FloatingTextInput
           label="Name"
@@ -192,10 +178,19 @@ export const ConfigureGame = (props: PropsType) => {
         {showSettings && !isBasic && (
           <RangeOptions>
             <div>
+              <h2>Number of Rounds</h2>
+              <RangeInput
+                min={2}
+                max={12}
+                value={numRounds}
+                setNewValue={setNumRounds}
+              />
+            </div>
+            <div>
               <h2>Show first hint after</h2>
               <RangeInput
                 min={0}
-                max={30}
+                max={15}
                 value={numSecondsUntilHint}
                 setNewValue={setNumSecondsUntilHint}
               />
@@ -212,25 +207,25 @@ export const ConfigureGame = (props: PropsType) => {
             <div>
               <h2>Time Limit per round</h2>
               <RangeInput
-                min={10}
+                min={20}
                 max={120}
                 value={numSeconds}
                 setNewValue={setNumSeconds}
-              />
-            </div>
-            <div>
-              <h2>Guessing Limit</h2>
-              <RangeInput
-                min={1}
-                max={10}
-                value={maxNumGuesses}
-                setNewValue={setMaxNumGuesses}
               />
             </div>
           </RangeOptions>
         )}
         {showSettings && isBasic && (
           <RangeOptions>
+            <div>
+              <h2>Number of Rounds</h2>
+              <RangeInput
+                min={2}
+                max={12}
+                value={numRounds}
+                setNewValue={setNumRounds}
+              />
+            </div>
             <div>
               <h2>Number of Options</h2>
               <RangeInput

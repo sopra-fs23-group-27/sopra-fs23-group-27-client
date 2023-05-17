@@ -1,11 +1,10 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const P = styled.p`
   padding: 0;
@@ -66,6 +65,39 @@ const TextGuessBox = styled.div`
   margin-top: 36px;
   align-items: center;
 `;
+const OptionsGuessBox = styled.div`
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 600px;
+`;
+const Option = styled.div`
+  width: 290px;
+  padding: 16px 32px;
+  border-radius: 10px;
+  font-size: 22px;
+  background-color: #228be6;
+  color: white;
+  transition: all 200ms ease-in-out;
+  text-align: center;
+
+  &:hover {
+    background-color: #1c7ed6;
+    transform: scale(1.05);
+  }
+`;
+const ChosenOption = styled.div`
+  margin-top: 40px;
+  width: 400px;
+  padding: 20px;
+  font-size: 30px;
+  border-radius: 10px;
+  text-align: center;
+
+  color: black;
+  background-color: lightgray;
+`;
 
 const GuessButton = styled.button`
   cursor: pointer;
@@ -80,9 +112,10 @@ type PropsType = {
   currentGameRound: number;
   setCurrentGameRound: Dispatch<SetStateAction<number>>;
   gameMode: "BASIC" | "ADVANCED" | undefined;
+  numRounds: number | undefined;
 };
 export const GameRound = (props: PropsType) => {
-  const { currentGameRound, setCurrentGameRound, gameMode } = props;
+  const { currentGameRound, setCurrentGameRound, gameMode, numRounds } = props;
   const isBasic = gameMode === "BASIC";
 
   const { lobbyId } = useParams();
@@ -90,6 +123,12 @@ export const GameRound = (props: PropsType) => {
   const [isLoading, setIsLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(0);
   const [flagURL, setFlagURL] = useState("");
+
+  // BASIC Mode
+  const [guessOptions, setGuessOptions] = useState<string[]>([]);
+  const [chosenOption, setChosenOption] = useState("");
+
+  // ADVANCED Mode
   const [guessInput, setGuessInput] = useState("");
   const [latestGlobalGuess, setLatestGlobalGuess] = useState("");
   const [latestHint, setLatestHint] = useState("");
@@ -155,7 +194,7 @@ export const GameRound = (props: PropsType) => {
     `/user/queue/lobbies/${lobbyId}/round-end`,
     (message: any) => {
       console.log("time is up");
-      if (currentGameRound === 3) {
+      if (currentGameRound === numRounds) {
         navigate(`/game/${lobbyId}/gameEnd`);
       } else {
         navigate(`/game/${lobbyId}/leaderBoard`);
@@ -187,9 +226,18 @@ export const GameRound = (props: PropsType) => {
     }
   );
 
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/choices-in-round`,
+    (message: any) => {
+      const parsedMessage = JSON.parse(message.body);
+      const choices = parsedMessage.choices;
+      setGuessOptions(choices);
+    }
+  );
+
   // TODO: final leaderboard once game is over
 
-  const submitGuess = () => {
+  const submitInputGuess = () => {
     const playerName = sessionStorage.getItem("currentPlayer");
     if (stompClient) {
       stompClient.publish({
@@ -202,6 +250,18 @@ export const GameRound = (props: PropsType) => {
       console.error("Error: could not send message");
     }
   };
+  const submitOptionGuess = (guess: string) => {
+    const playerName = sessionStorage.getItem("currentPlayer");
+    if (stompClient) {
+      stompClient.publish({
+        destination: `/app/games/${lobbyId}/guess`,
+        body: JSON.stringify({ guess, playerName }),
+      });
+      setChosenOption(guess);
+    } else {
+      console.error("Error: could not send message");
+    }
+  };
 
   return (
     <Application>
@@ -209,20 +269,6 @@ export const GameRound = (props: PropsType) => {
         <RainbowLoader />
       ) : (
         <>
-          <img
-            src={Logo}
-            alt="FlagMania Logo"
-            onClick={() => navigate("/")}
-            style={{
-              top: "10px",
-              left: "10px",
-              padding: "10px",
-              width: "5%",
-              height: "auto",
-              position: "absolute",
-              cursor: "pointer",
-            }}
-          />
           <Time>
             <P>{timeLeft}</P>
           </Time>
@@ -246,11 +292,22 @@ export const GameRound = (props: PropsType) => {
                     value={guessInput}
                     onChange={setGuessInput}
                   />
-                  <GuessButton onClick={() => submitGuess()}>Guess</GuessButton>
+                  <GuessButton onClick={() => submitInputGuess()}>
+                    Guess
+                  </GuessButton>
                 </TextGuessBox>
               </>
             )}
-            {isBasic && <div>Here the four guesses will be shown</div>}
+            {isBasic && !chosenOption && (
+              <OptionsGuessBox>
+                {guessOptions.map((o) => (
+                  <Option onClick={() => submitOptionGuess(o)}>{o}</Option>
+                ))}
+              </OptionsGuessBox>
+            )}
+            {isBasic && chosenOption && (
+              <ChosenOption>{chosenOption}</ChosenOption>
+            )}
           </Main>
         </>
       )}

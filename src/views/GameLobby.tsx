@@ -1,16 +1,30 @@
 import QRCode from "react-qr-code";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
-import { httpGet, httpPut, mainURL } from "../helpers/httpService";
+import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
-import { Button } from "@mantine/core";
+import { Button, CloseButton } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Player from "../models/Player";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
+import Lobby from "../models/Lobby";
+import { ButtonCopy } from "../components/ClipboardButton";
+
+const QrBox = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background-color: white;
+  z-index: 1;
+`;
 
 const UserContainer = styled.div`
   display: flex;
@@ -48,22 +62,16 @@ const AdditionalBoxes = styled.div`
   top: 50px;
 `;
 
-// define GameUrl as a constant
-export let GameUrl = "";
-
-export const setGameUrl = (url: string) => {
-  GameUrl = url;
-};
-
-export const getGameUrl = () => {
-  return GameUrl;
-};
-
 type PropsType = {
   player: Player | undefined;
+  lobby: Lobby | undefined;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
 };
 export const GameLobby = (props: PropsType) => {
-  const { player } = props;
+  const { player, lobby, setLobby } = props;
+
+  const [showQrCodeBig, setShowQrCodeBig] = useState(false);
+  const [gameUrl, setGameUrl] = useState("");
 
   const { lobbyId } = useParams();
   const navigate = useNavigate();
@@ -78,7 +86,9 @@ export const GameLobby = (props: PropsType) => {
   // get the player and lobby information from session storage
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
-  const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>({});
+  const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   // map playername to name and role
   const playerNamesAndRoles = joinedPlayerNames.map((playerName: string) => {
@@ -86,8 +96,8 @@ export const GameLobby = (props: PropsType) => {
     const name = playerName;
     return { name, role };
   });
-  
-  // set the loading state  
+
+  // set the loading state
   const [isLoading, setIsLoading] = useState(false);
 
   // private URL for the QR code
@@ -105,9 +115,12 @@ export const GameLobby = (props: PropsType) => {
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
-      
+
       // get the player roles from the message if it exists
-      const newPlayerRoles = JSON.parse(message.body).playerRoleMap as { [key: string]: boolean };      console.log(message.body)
+      const newPlayerRoles = JSON.parse(message.body).playerRoleMap as {
+        [key: string]: boolean;
+      };
+      console.log(message.body);
       console.log("Message from server: ", lobbyName);
       console.log("Message from server: ", joinedPlayerNames);
       console.log("Message from server: ", playerRoles);
@@ -209,20 +222,6 @@ export const GameLobby = (props: PropsType) => {
     }
   };
 
-  // TODO: incorporate this into the useEffectOnce (or other solution)
-  // resend lobby settings
-  const resendLobbySettings = () => {
-    if (stompClient) {
-      stompClient.publish({
-        destination: `/app/games/${lobbyId}/send-lobby-settings`,
-        body: JSON.stringify({ playerToken }),
-      });
-      console.log("Lobby settings were sent again");
-    } else {
-      console.error("Error: Could not send message");
-    }
-  };
-
   return (
     <div
       style={{
@@ -234,28 +233,28 @@ export const GameLobby = (props: PropsType) => {
         alignItems: "center",
       }}
     >
+      {showQrCodeBig && (
+        <QrBox>
+          <CloseButton
+            aria-label="Close Button"
+            size="xl"
+            iconSize={40}
+            color="red"
+            style={{ position: "relative", left: "18%" }}
+            onClick={() => setShowQrCodeBig(false)}
+          />
+          <h1>Scan to join the game</h1>
+          <QRCode value={gameUrl} style={{ width: "100%" }} />
+          <ButtonCopy url={gameUrl} />
+        </QrBox>
+      )}
       {isLoading ? (
         <RainbowLoader />
       ) : (
         <>
-          <img
-            src={Logo}
-            alt="FlagMania Logo"
-            onClick={() => navigate("/")}
-            style={{
-              top: "10px",
-              left: "10px",
-              padding: "10px",
-              width: "5%",
-              height: "auto",
-              position: "absolute",
-              cursor: "pointer",
-            }}
-          />
-          {/* <QRCodeButton src="https://pngimg.com/uploads/qr_code/qr_code_PNG2.png" onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}></QRCodeButton> */}
           <QRCode
-            value={GameUrl}
-            onClick={() => navigate("/scanQRCode" + "/" + lobbyId)}
+            value={gameUrl}
+            onClick={() => setShowQrCodeBig(true)}
             style={{
               cursor: "pointer",
               right: "50px",
@@ -278,10 +277,6 @@ export const GameLobby = (props: PropsType) => {
           {player?.isCreator && (
             <Button onClick={() => startGame()}>Start Game</Button>
           )}
-
-          <Button onClick={() => resendLobbySettings()}>
-            Resend Lobby Settings
-          </Button>
         </>
       )}
     </div>
