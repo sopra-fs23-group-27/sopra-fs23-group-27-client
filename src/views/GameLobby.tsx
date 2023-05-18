@@ -12,6 +12,8 @@ import { notifications } from "@mantine/notifications";
 import Player from "../models/Player";
 import Lobby from "../models/Lobby";
 import { ButtonCopy } from "../components/ClipboardButton";
+import { LobbySettingsAdvanced } from "../components/LobbySettingsAdvanced";
+import { LobbySettingsBasic } from "../components/LobbySettingsBasic";
 
 const QrBox = styled.div`
   width: 100vw;
@@ -89,6 +91,12 @@ export const GameLobby = (props: PropsType) => {
   // get the player and lobby information from session storage
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
+  const [numberOfRounds, setNumberOfRounds] = useState(0);
+  const [firstHintAfter, setFirstHintAfter] = useState(0);
+  const [hintsInterval, setHintsInterval] = useState(0);
+  const [timeLimitPerRound, setTimeLimitPerRound] = useState(0);
+  const [numberOfOptions, setNumberOfOptions] = useState(0);
+  const [gameMode, setGameMode] = useState("");
   const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>(
     {}
   );
@@ -118,6 +126,14 @@ export const GameLobby = (props: PropsType) => {
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
+      const newNumberOfRounds = JSON.parse(message.body).numRounds as number;
+      //TODO: num rounds not working
+      alert(newNumberOfRounds);
+      const newFirstHintAfter = JSON.parse(message.body).numSecondsUntilHint as number;
+      const newHintsInterval = JSON.parse(message.body).hintInterval as number;
+      const newTimeLimitPerRound = JSON.parse(message.body).numSeconds as number;
+      const numberOfOptions = JSON.parse(message.body).numOptions as number;
+      const gameMode = JSON.parse(message.body).mode as string;
 
       // get the player roles from the message if it exists
       const newPlayerRoles = JSON.parse(message.body).playerRoleMap as {
@@ -209,6 +225,12 @@ export const GameLobby = (props: PropsType) => {
       // update the lobby name and joined player names
       setLobbyname(newLobbyName);
       setJoinedPlayerNames(newJoinedPlayerNames);
+      setNumberOfRounds(newNumberOfRounds);
+      setFirstHintAfter(newFirstHintAfter);
+      setHintsInterval(newHintsInterval);
+      setTimeLimitPerRound(newTimeLimitPerRound);
+      setNumberOfOptions(numberOfOptions);
+      setGameMode(gameMode);
       setPlayerRoles(newPlayerRoles);
     }
   );
@@ -289,6 +311,28 @@ export const GameLobby = (props: PropsType) => {
     }
   };
 
+  interface advancedProps {
+    lobbyId: string | undefined;
+    lobbyName: string | undefined;
+    numberOfPlayers: number;
+    numberOfRounds: number;
+    showFirstHintAfter: number;
+    hintsInterval: number;
+    timeLimitPerRound: number;
+  }
+
+  interface basicProps {
+    lobbyId: string | undefined;
+    lobbyName: string | undefined;
+    numberOfPlayers: number;
+    numberOfRounds: number;
+    numberOfOptions: number;
+    timeLimitPerRound: number;
+  }
+
+  // number of players
+  const numberOfPlayers = joinedPlayerNames.length;
+
   return (
     <div
       style={{
@@ -330,10 +374,11 @@ export const GameLobby = (props: PropsType) => {
               width: "100px",
             }}
           />
-          <h1>
-            Game Lobby {lobbyId}: {lobbyName}
-          </h1>
-          <h2>Waiting for players to join...</h2>
+
+          {gameMode === "ADVANCED" ? (
+            <LobbySettingsAdvanced lobbyId={lobbyId} lobbyName={lobbyName} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} showFirstHintAfter={firstHintAfter} hintsInterval={hintsInterval} timeLimitPerRound={timeLimitPerRound} /> ) :
+            ( <LobbySettingsBasic lobbyId={lobbyId} lobbyName={lobbyName} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} numberOfOptions={numberOfOptions} timeLimitPerRound={timeLimitPerRound} /> )
+          }
 
           <h3>Players in lobby:</h3>
 
