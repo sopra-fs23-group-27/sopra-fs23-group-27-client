@@ -1,11 +1,12 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UserStats } from "../components/UserStats";
-import { httpPost } from "../helpers/httpService";
+import { httpGet, httpPost } from "../helpers/httpService";
 import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import Player from "../models/Player";
+import { get } from "http";
 
 const Container = styled.div`
   display: flex;
@@ -31,15 +32,66 @@ type PropsType = {
 
 export const UserDashboard = (props: PropsType) => {
   const playerName = sessionStorage.getItem("currentPlayer");
+  const playerId = sessionStorage.getItem("currentPlayerId");
   const { player, setPlayer } = props;
+  const [nRoundsPlayed, setNRoundsPlayed] = useState(0);
+  const [overallTotalNumberOfCorrectGuesses, setOverallTotalNumberOfCorrectGuesses] = useState(0);
+  const [overallTotalNumberOfWrongGuesses, setOverallTotalNumberOfWrongGuesses] = useState(0);
+  const [overallTotalTimeUntilCorrectGuess, setOverallTotalTimeUntilCorrectGuess] = useState(0);
+  const [permanent, setPermanent] = useState(false);
+  const [ratioOfCorrectGuesses, setRatioOfCorrectGuesses] = useState(0);
+  const [ratioOfWrongGuesses, setRatioOfWrongGuesses] = useState(0);
 
   const navigate = useNavigate();
+
+  // get user stats on page load
+  useEffect(() => {
+    getUserStats();
+  }, []);
+
+  const getUserStats = async () => {
+    try {
+      const response = await httpGet(`/players/${playerId}`, {
+        headers: {
+          Authorization: sessionStorage.getItem("FlagManiaToken"),
+        },
+      });
+      notifications.show({
+        title: "Success",
+        message: "User stats loaded",
+        color: "green",
+      });
+      setNRoundsPlayed(response.data.nRoundsPlayed);
+      setOverallTotalNumberOfCorrectGuesses(response.data.overallTotalNumberOfCorrectGuesses);
+      setOverallTotalNumberOfWrongGuesses(response.data.overallTotalNumberOfWrongGuesses);
+      setOverallTotalTimeUntilCorrectGuess(response.data.overallTotalTimeUntilCorrectGuess);
+      setPermanent(response.data.permanent);
+
+      // calculate ration of correct guesses
+      setRatioOfCorrectGuesses(Math.round(
+        (response.data.overallTotalNumberOfCorrectGuesses /
+          (response.data.overallTotalNumberOfCorrectGuesses +
+            response.data.overallTotalNumberOfWrongGuesses)) *
+          100
+      ));
+
+      setRatioOfWrongGuesses(100 - ratioOfCorrectGuesses);
+
+    } catch (error: any) {
+      console.log(error.response.data.message);
+      notifications.show({
+        title: "Error",
+        message: "User stats could not be loaded",
+        color: "red",
+      });
+    }
+  };
 
   interface UserStatsProps {
     userData: {
       link: string;
       label: string;
-      stats: string;
+      stats: number | string;
       progress: number;
       color: string;
       icon: "up" | "down";
@@ -50,7 +102,7 @@ export const UserDashboard = (props: PropsType) => {
     {
       link: "/gamesPlayed",
       label: "Games Played",
-      stats: "10",
+      stats: nRoundsPlayed,
       progress: 100,
       color: "blue",
       icon: "up",
@@ -58,23 +110,23 @@ export const UserDashboard = (props: PropsType) => {
     {
       link: "/correctGuesses",
       label: "Correct Guesses",
-      stats: "5",
-      progress: 50,
+      stats: overallTotalNumberOfCorrectGuesses,
+      progress: ratioOfCorrectGuesses,
       color: "green",
       icon: "up",
     },
     {
       link: "/wrongGuesses",
       label: "Wrong Guesses",
-      stats: "5",
-      progress: 50,
+      stats: overallTotalNumberOfWrongGuesses,
+      progress: ratioOfWrongGuesses,
       color: "red",
       icon: "down",
     },
     {
-      link: "/totalScore",
-      label: "Total Score",
-      stats: "50",
+      link: "/guessingSpeed",
+      label: "Guessing Speed",
+      stats: overallTotalTimeUntilCorrectGuess,
       progress: 100,
       color: "blue",
       icon: "up",
@@ -222,6 +274,7 @@ export const UserDashboard = (props: PropsType) => {
           Create New Game
         </Button>
       </ButtonContainer>
+
       <Button onClick={() => handlePlayerSettings()}> Player Settings </Button>
       <Button onClick={() => handleLogout()}> Logout </Button>
     </Container>
