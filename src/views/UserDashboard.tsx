@@ -250,7 +250,9 @@ export const UserDashboard = (props: PropsType) => {
     <Container>
       <h1>Welcome back {playerName}, enjoy some nice stats</h1>
       <UserStats userData={userData} />
-      <p><i>Compare yourself to others by clicking one of the statistics</i></p>
+      <p>
+        <i>Compare yourself to others by clicking one of the statistics</i>
+      </p>
       <ButtonContainer>
         {/* <Button onClick={() => handleCompareStats()}>
           Compare to other players

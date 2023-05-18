@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { FloatingTextInput } from "../components/FloatingTextInput";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   handleError,
   httpGet,
@@ -12,6 +12,7 @@ import Player from "../models/Player";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Logo from "../icons/DALL-E_FlagMania_Logo.png";
+import Lobby from "../models/Lobby";
 
 const Container = styled.div`
   display: flex;
@@ -51,8 +52,12 @@ const GreenButton = styled.button`
   font-weight: bold;
   cursor: pointer;
 `;
+type PropsType = {
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+};
 
-export const ExternalGameJoin = () => {
+export const ExternalGameJoin = (props: PropsType) => {
+  const { setLobby } = props;
   const [playerName, setPlayerName] = useState("");
   const navigate = useNavigate();
   const lobbyId = window.location.pathname.split("/")[2];
@@ -90,6 +95,8 @@ export const ExternalGameJoin = () => {
 
       // get lobby
       const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
+      console.log("set lobby: ", lobby.data);
+      setLobby(lobby.data);
 
       // join game
       joinGame(lobby.data.privateLobbyKey);

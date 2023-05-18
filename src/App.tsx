@@ -38,7 +38,13 @@ const FlagmaniaLogo = styled.img`
   width: 130px;
   height: auto;
   position: absolute;
+  z-index: 1;
   cursor: pointer;
+  transition: transform 200ms ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
   @media (max-width: 700px) {
     width: 100px;
   }
@@ -131,7 +137,10 @@ export const App = () => {
               </FlagManiaGuard>
             }
           />
-          <Route path="/lobbies/:lobbyId/join" element={<ExternalGameJoin />} />
+          <Route
+            path="/lobbies/:lobbyId/join"
+            element={<ExternalGameJoin setLobby={setLobby} />}
+          />
           <Route
             path="/game/:lobbyId/leaderBoard"
             element={
@@ -149,12 +158,15 @@ export const App = () => {
               </PlayerGuard>
             }
           />
-          <Route path="/playerSettings/:playerId" element={
-          <PlayerGuard>
-            <PlayerSettings />
-          </PlayerGuard>
-        } />
-        <Route
+          <Route
+            path="/playerSettings/:playerId"
+            element={
+              <PlayerGuard>
+                <PlayerSettings />
+              </PlayerGuard>
+            }
+          />
+          <Route
             path="/game/:lobbyId/gameEnd"
             element={<GameEnd player={player} />}
           />

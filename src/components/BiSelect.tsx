@@ -5,7 +5,7 @@ type PropsType = {
   aSelected: boolean;
   labelA: string;
   labelB: string;
-  setASelected: Dispatch<SetStateAction<boolean>>;
+  setASelected: Function;
 };
 export const BiSelect = (props: PropsType) => {
   const { aSelected, labelA, labelB, setASelected } = props;
