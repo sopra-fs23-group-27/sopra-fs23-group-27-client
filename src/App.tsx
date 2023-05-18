@@ -120,7 +120,7 @@ export const App = () => {
             path="/lobbies/:lobbyId"
             element={
               <FlagManiaGuard shouldPreventReload={true}>
-                <GameLobby player={player} setLobby={setLobby} lobby={lobby} />
+                <GameLobby player={player} setPlayer={setPlayer} setLobby={setLobby} lobby={lobby} />
               </FlagManiaGuard>
             }
           />

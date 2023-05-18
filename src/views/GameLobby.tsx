@@ -64,13 +64,12 @@ const AdditionalBoxes = styled.div`
 
 type PropsType = {
   player: Player | undefined;
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   lobby: Lobby | undefined;
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
 };
 export const GameLobby = (props: PropsType) => {
-  const lobby = props.lobby;
-  const setLobby = props.setLobby;
-  const player = props.player;
+  const { player, setPlayer, lobby, setLobby } = props;
 
   const [currentAdmin, setCurrentAdmin] = useState("");
 
@@ -93,30 +92,6 @@ export const GameLobby = (props: PropsType) => {
   const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>(
     {}
   );
-
-  // define the admin
-  const admin = joinedPlayerNames.find((playerName: string) =>
-    playerRoles[playerName] ? true : false
-  );
-
-  // if the admin changes, notify all players in the lobby
-  useEffectOnce(() => {
-    if (admin && currentAdmin !== admin && currentAdmin !== "") {
-      setCurrentAdmin(admin);
-      notifications.show({
-        title: "New admin",
-        message: "The admin is now " + admin,
-        color: "blue",
-      });
-    } else if (admin && currentAdmin === "") {
-      setCurrentAdmin(admin);
-      notifications.show({
-        title: "Admin",
-        message: "The admin is " + admin,
-        color: "blue",
-      });
-    }
-  });
 
   // map playername to name and role
   const playerNamesAndRoles = joinedPlayerNames.map((playerName: string) => {
@@ -188,6 +163,49 @@ export const GameLobby = (props: PropsType) => {
           }
         });
       }
+
+      // show notification for all players if the admin changed
+      if (newPlayerRoles) {
+        const newAdmin = Object.keys(newPlayerRoles).find(
+          (playerName: string) => newPlayerRoles[playerName] === true
+        );
+        setCurrentAdmin(newAdmin ? newAdmin : "");
+        if (newAdmin && newAdmin !== currentAdmin && currentAdmin !== "") {
+          notifications.show({
+            title: "New admin",
+            message: "The admin is now " + newAdmin,
+            color: "blue",
+          });
+        } else if (newAdmin && currentAdmin === "") {
+          notifications.show({
+            title: "Admin",
+            message: "The admin is " + newAdmin,
+            color: "blue",
+          });
+        }
+      }
+
+      // get player data from session storage
+      const playerId = sessionStorage.getItem("currentPlayerId");
+      const playerName = sessionStorage.getItem("currentPlayer");
+      const loggedIn = sessionStorage.getItem("loggedIn");
+
+      // get the player role
+      if (playerName && newPlayerRoles) {
+        const isCreator = newPlayerRoles[playerName];
+
+        // create player object
+        const playerInfo = {
+          playerNId: playerId,
+          playerName: playerName,
+          loggedIn: loggedIn,
+          isCreator: isCreator,
+        };
+
+        const player = new Player(playerInfo);
+        setPlayer(player);
+      }
+
       // update the lobby name and joined player names
       setLobbyname(newLobbyName);
       setJoinedPlayerNames(newJoinedPlayerNames);
