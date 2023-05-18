@@ -28,6 +28,7 @@ import { UserDashboard } from "./views/UserDashboard";
 import { GameEnd } from "./views/GameEnd";
 
 import "./App.css";
+import { PlayerSettings } from "./views/PlayerSettings";
 import styled from "styled-components";
 
 const FlagmaniaLogo = styled.img`
@@ -148,7 +149,12 @@ export const App = () => {
               </PlayerGuard>
             }
           />
-          <Route
+          <Route path="/playerSettings/:playerId" element={
+          <PlayerGuard>
+            <PlayerSettings />
+          </PlayerGuard>
+        } />
+        <Route
             path="/game/:lobbyId/gameEnd"
             element={<GameEnd player={player} />}
           />
