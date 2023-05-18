@@ -68,7 +68,9 @@ type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
 };
 export const GameLobby = (props: PropsType) => {
-  const { player, lobby, setLobby } = props;
+  const lobby = props.lobby;
+  const setLobby = props.setLobby;
+  const player = props.player;
 
   const [showQrCodeBig, setShowQrCodeBig] = useState(false);
   const [gameUrl, setGameUrl] = useState("");
@@ -92,7 +94,7 @@ export const GameLobby = (props: PropsType) => {
 
   // map playername to name and role
   const playerNamesAndRoles = joinedPlayerNames.map((playerName: string) => {
-    const role = playerRoles[playerName] ? "Creator" : "Player";
+    const role = playerRoles[playerName] ? "Admin" : "Player";
     const name = playerName;
     return { name, role };
   });
@@ -167,6 +169,23 @@ export const GameLobby = (props: PropsType) => {
     `/user/queue/lobbies/${lobbyId}/game-start`,
     (message: any) => {
       navigate("/game/" + lobbyId);
+    }
+  );
+
+  useSubscription(
+    `/user/queue/removed-from-lobby`,
+    (message: any) => {
+      // inform the user that he was removed from the lobby
+      notifications.show({
+        title: "Removed from lobby",
+        message: "You were removed from the lobby",
+        color: "red",
+      });
+      // remove lobby from session storage
+      sessionStorage.removeItem("lobbyId");
+      sessionStorage.removeItem("lobbyName");
+      // navigate to public lobbies
+      navigate("/publicGames");
     }
   );
 
@@ -271,7 +290,7 @@ export const GameLobby = (props: PropsType) => {
           <h3>Players in lobby:</h3>
 
           <UserContainer>
-            <UsersRolesTable data={playerNamesAndRoles} />
+            <UsersRolesTable data={playerNamesAndRoles} player={player} />
           </UserContainer>
 
           {player?.isCreator && (

@@ -13,16 +13,22 @@ import { notifications } from "@mantine/notifications";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useStompClient } from "react-stomp-hooks";
+import Player from "../models/Player";
 
-interface UsersTableProps {
+
+type PropsType = {
   data: { name: string; role: string }[];
-}
+  player: Player | undefined;
+};
 
-export function UsersRolesTable({ data }: UsersTableProps) {
+export function UsersRolesTable(props: PropsType) {
   const navigate = useNavigate();
   const lobbyId = sessionStorage.getItem("lobbyId");
   const currentPlayer = sessionStorage.getItem("currentPlayer");
   const stompClient = useStompClient();
+
+  // get props
+  const { data, player } = props;
 
   // kick user from lobby
   const handleKickingUser = (name: string) => {
@@ -79,19 +85,17 @@ export function UsersRolesTable({ data }: UsersTableProps) {
         )}
       </td>
       <td>
-        {currentPlayer === item.name ? (
-          <ActionIcon variant="outline" color="blue" radius="xl">
-            <IconPencil />
-          </ActionIcon>
-        ) : (
+        {currentPlayer !== item.name && player?.isCreator ? (
           <ActionIcon
-            variant="outline"
-            color="red"
-            radius="xl"
-            onClick={() => handleKickingUser(item.name)}
-          >
-            <IconTrash />
-          </ActionIcon>
+          variant="outline"
+          color="red"
+          radius="xl"
+          onClick={() => handleKickingUser(item.name)}
+        >
+          <IconTrash />
+        </ActionIcon>
+        ) : (
+          ""
         )}
       </td>
     </tr>

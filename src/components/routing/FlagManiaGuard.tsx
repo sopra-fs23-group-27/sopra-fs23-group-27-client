@@ -45,7 +45,8 @@ export const FlagManiaGuard = ({ shouldPreventReload, children }: Props) => {
 
   const handleUnload = () => {
     // delete session storage
-    sessionStorage.clear();
+    sessionStorage.removeItem("lobbyId");
+    sessionStorage.removeItem("lobbyName");
     navigate("/");
   };
 
