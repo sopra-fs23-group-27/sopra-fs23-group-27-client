@@ -171,6 +171,19 @@ export const GameEnd = (props: PropsType) => {
     return 0;
   };
 
+  const handlePlayAgain = () => {
+    const playerName = sessionStorage.getItem("currentPlayer");
+    if (stompClient) {
+      stompClient.publish({
+        destination: `/app/games/${lobbyId}/play-again`,
+        body: JSON.stringify({ playerName }),
+      });
+      navigate(`/game/${lobbyId}`);
+    } else {
+      console.error("Error: could not send message");
+    }
+  };
+
   return (
     <Application>
       <UpperRankContainer>

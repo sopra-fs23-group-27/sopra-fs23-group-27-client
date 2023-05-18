@@ -31,6 +31,7 @@ import "./App.css";
 import { PlayerSettings } from "./views/PlayerSettings";
 import styled from "styled-components";
 import { PlayAgain } from "./views/PlayAgain";
+import { ErrorPage } from "./views/ErrorPage";
 
 const FlagmaniaLogo = styled.img`
   top: 10px;
@@ -84,6 +85,7 @@ export const App = () => {
                 />
               </LoginGuard>
             }
+            errorElement={<ErrorPage />}
           />
 
           <Route
@@ -93,10 +95,12 @@ export const App = () => {
                 <ActiveGameOverview setLobby={setLobby} />
               </FlagManiaGuard>
             }
+            errorElement={<ErrorPage />}
           />
           <Route
             path="/configureGame"
             element={<ConfigureGame setLobby={setLobby} />}
+            errorElement={<ErrorPage />}
           />
           <Route
             path="/register"
@@ -105,6 +109,7 @@ export const App = () => {
                 <Register />
               </LoginGuard>
             }
+            errorElement={<ErrorPage />}
           />
           <Route
             path="/login"
@@ -113,9 +118,18 @@ export const App = () => {
                 <Login />
               </LoginGuard>
             }
+            errorElement={<ErrorPage />}
           />
-          <Route path="/newGameLogin" element={<NewGameLogin />} />
-          <Route path="/enterGameId" element={<GameIdInput />} />
+          <Route
+            path="/newGameLogin"
+            element={<NewGameLogin />}
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/enterGameId"
+            element={<GameIdInput />}
+            errorElement={<ErrorPage />}
+          />
 
           <Route
             path="/lobbies/:lobbyId"
@@ -129,6 +143,7 @@ export const App = () => {
                 />
               </FlagManiaGuard>
             }
+            errorElement={<ErrorPage />}
           />
           <Route
             path="/game/:lobbyId"
@@ -142,10 +157,12 @@ export const App = () => {
                 />
               </FlagManiaGuard>
             }
+            errorElement={<ErrorPage />}
           />
           <Route
             path="/lobbies/:lobbyId/join"
             element={<ExternalGameJoin setLobby={setLobby} />}
+            errorElement={<ErrorPage />}
           />
           <Route
             path="/game/:lobbyId/leaderBoard"
@@ -154,6 +171,7 @@ export const App = () => {
                 <ScoreBoard player={player} />
               </FlagManiaGuard>
             }
+            errorElement={<ErrorPage />}
           />
           <Route path="/leaderBoard" element={<ScoreBoardTest />} />
           <Route
@@ -163,6 +181,7 @@ export const App = () => {
                 <UserDashboard player={player} setPlayer={setPlayer} />
               </PlayerGuard>
             }
+            errorElement={<ErrorPage />}
           />
           <Route
             path="/playerSettings/:playerId"
@@ -171,6 +190,7 @@ export const App = () => {
                 <PlayerSettings />
               </PlayerGuard>
             }
+            errorElement={<ErrorPage />}
           />
           <Route
             path="/game/:lobbyId/gameEnd"
@@ -179,6 +199,7 @@ export const App = () => {
                 <GameEnd player={player} />
               </FlagManiaGuard>
             }
+            errorElement={<ErrorPage />}
           />
           <Route
             path="playAgain"
