@@ -1,0 +1,18 @@
+To be displayed on the start screen!
+Have you ever felt ashamed because a friend showed you a flag, but you had no idea which country it belonged to? Well, improve your knowledge now playfully with FlagMania!
+Here is what you can do: 
+First decide if you want to play with your friends or with strangers from around the world. 
+If you only want to play with your friends, choose a username and click “Create New Game”! After you have chosen a lobby name, you can select the game mode:
+- Basic Mode: Do you know very little about the flags of countries from all over the world? Then try Basic Mode first! Here you will be shown possible answers and you have to choose the country that matches the displayed flag. 
+- Advanced Mode: Are you already a real flag expert? Then try the Advanced Mode! Here you must type the correct country directly into an input field. To the right you can even see the wrong guesses of the other players. The round ends when the first player has guessed the correct country. Can you hold your own against the other players?
+Do you already have a user login? If no, then register as soon as possible! There are great advantages waiting for you. For example, you can protect your username and view your overall statistics. To do so, go to the register page on the homepage and log in. Alternatively, you can also register after playing a round!
+To be displayed beneath the scoring board:
+Are you confused with the numbers you are displayed? Here is what they mean: 
+For each player you see their overall current rank, current total score, current total number of currently correct guessed countries (round won) as well as the summed-up time each player got during the previous rounds and an answer distribution:
+1. The current overall rank is entirely determined by the current score.
+2. The current score is computed as follows: (10* the number of consecutively correct guesses*1) + (100 / the time until the correct guess in the previous round*2) – (the number of times you have not guessed correctly). After each round, the score of the last round is added to the score of the previous rounds.
+3. If you have guessed the country correctly, you are awarded one point in the “correct guesses” column, else 0.
+4. In the column “Time Until Correct Guess” you see the overall time you had until the correct guess! If you have not guessed the country correctly, you get the full length (in seconds) of the last round assigned! So better guess correctly!
+5. The answer distribution displays the number of countries guessed correctly relative to the number of rounds played!
+*1: For example, if you guessed the country correctly in the last 2 rounds, you get 10*2=20 points here; If you have guessed the country correctly in the round before the last round but have not guessed it correctly in the previous round, you get 0 points here as the guesses must be correct consecutively!)
+*2 This condition ensures that faster answers are rewarded more points. 
