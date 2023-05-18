@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 import Player from "../models/Player";
 
 const Container = styled.div`
@@ -197,20 +196,6 @@ export const UserDashboard = (props: PropsType) => {
 
   return (
     <Container>
-      <img
-        src={Logo}
-        alt="FlagMania Logo"
-        onClick={() => navigate("/")}
-        style={{
-          top: "10px",
-          left: "10px",
-          padding: "10px",
-          width: "5%",
-          height: "auto",
-          position: "absolute",
-          cursor: "pointer",
-        }}
-      />
       <h1>Welcome back {playerName}, enjoy some nice stats</h1>
       <UserStats userData={userData} />
       <p><i>Compare yourself to others by clicking one of the statistics</i></p>

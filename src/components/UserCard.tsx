@@ -106,16 +106,20 @@ export function UserCardImage({ name, stats }: UserCardImageProps) {
         },
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
+      
+      // store the new token in sessionStorage
+      sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
 
       // Store the new name (if applicable) of the currently logged-in user in sessionStorage
       if (nameInput) {
         sessionStorage.setItem("currentPlayer", nameInput);
       }
+      const currentName = sessionStorage.getItem("currentPlayer");
 
       // show notification that player has been registered
       notifications.show({
         title: "Success",
-        message: "Welcome to the party, " + res.data.playerName + "!",
+        message: "Looking good, " + currentName + "!",
         color: "green",
       });
       navigate("/login");

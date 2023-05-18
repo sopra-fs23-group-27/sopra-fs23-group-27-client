@@ -151,7 +151,7 @@ export const App = () => {
           />
           <Route path="/playerSettings/:playerId" element={
           <PlayerGuard>
-            <PlayerSettings player={player} setPlayer={setPlayer} />
+            <PlayerSettings />
           </PlayerGuard>
         } />
         <Route

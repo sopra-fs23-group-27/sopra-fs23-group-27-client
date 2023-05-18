@@ -7,8 +7,7 @@ type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
 };
 
-export const PlayerSettings = (props: PropsType) => {
-  const { player, setPlayer } = props;
+export const PlayerSettings = () => {
 
   // get player data from session storage
   const playerId = sessionStorage.getItem("currentPlayerId");
