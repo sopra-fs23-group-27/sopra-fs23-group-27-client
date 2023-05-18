@@ -85,7 +85,7 @@ export const Login = () => {
       // Store login status of the current user
       sessionStorage.setItem("loggedIn", "true");
 
-      // show notification that player has succsessfully logged in
+      // show notification that player has successfully logged in
       notifications.show({
         title: "Success",
         message: "Welcome back, " + res.data.playerName + "!",
