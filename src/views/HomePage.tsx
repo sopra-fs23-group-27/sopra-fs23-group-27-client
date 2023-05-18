@@ -73,36 +73,42 @@ export const HomePage = (props: PropsType) => {
   ) => {
     const password = "";
     try {
-      const response = await httpPost(
-        "/players",
-        {
-          playerName: playerName,
-          password: password,
-        },
-        { headers: {} }
-      );
+      // check if player is already in sessionStorage
+      if (sessionStorage.getItem("currentPlayerId") === null) {
+        const response = await httpPost(
+          "/players",
+          {
+            playerName: playerName,
+            password: password,
+          },
+          { headers: {} }
+        );
 
-      console.log(response.data);
+        console.log(response.data);
 
-      if (link === "/configureGame") {
-        response.data.isCreator = true;
+        if (link === "/configureGame") {
+          response.data.isCreator = true;
+        }
+
+        // Create a new Player instance from the JSON data in the response
+        const player = new Player(response.data);
+        setPlayer(player);
+
+        // Store the token into the session storage.
+        sessionStorage.setItem(
+          "FlagManiaToken",
+          response.headers.authorization
+        );
+
+        // Store the ID of the currently logged-in user in sessionStorage
+        sessionStorage.setItem("currentPlayerId", player.id.toString());
+
+        // Store the Name of the currently logged-in user in sessionStorage
+        sessionStorage.setItem("currentPlayer", player.playerName);
+
+        // Store login status of the current user
+        sessionStorage.setItem("loggedIn", "false");
       }
-
-      // Create a new Player instance from the JSON data in the response
-      const player = new Player(response.data);
-      setPlayer(player);
-
-      // Store the token into the session storage.
-      sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
-
-      // Store the ID of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayerId", player.id.toString());
-
-      // Store the Name of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayer", player.playerName);
-
-      // Store login status of the current user
-      sessionStorage.setItem("loggedIn", "false");
 
       // navigate to respective view
       navigate(link);
@@ -149,7 +155,7 @@ export const HomePage = (props: PropsType) => {
         )}
       </UserContainer>
 
-      {!isLoggedIn && (
+      {!isLoggedIn && !sessionStorage.getItem("FlagManiaToken") ? (
         <GuestContainer>
           <P>or play as guest</P>
           <TextInput
@@ -157,30 +163,35 @@ export const HomePage = (props: PropsType) => {
             placeholder="guest"
             value={playerName}
             onChange={setPlayerName}
-          />
-
-          <ButtonContainer>
-            <Button
-              disabled={!playerName}
-              onClick={() => handleGuestJoin("/publicGames")}
-            >
-              Join Public Game
-            </Button>
-            <Button
-              disabled={!playerName}
-              onClick={() => handleGuestJoin("/enterGameId")}
-            >
-              Join Private Game
-            </Button>
-            <Button
-              disabled={!playerName}
-              onClick={() => handleGuestJoin("/configureGame")}
-            >
-              Create New Game
-            </Button>
-          </ButtonContainer>
+          />{" "}
+        </GuestContainer>
+      ) : (
+        <GuestContainer>
+          <P>User: {sessionStorage.getItem("currentPlayer")}</P>
         </GuestContainer>
       )}
+      <GuestContainer>
+        <ButtonContainer>
+          <Button
+            disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
+            onClick={() => handleGuestJoin("/publicGames")}
+          >
+            Join Public Game
+          </Button>
+          <Button
+            disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
+            onClick={() => handleGuestJoin("/enterGameId")}
+          >
+            Join Private Game
+          </Button>
+          <Button
+            disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
+            onClick={() => handleGuestJoin("/configureGame")}
+          >
+            Create New Game
+          </Button>
+        </ButtonContainer>
+      </GuestContainer>
     </Application>
   );
 };

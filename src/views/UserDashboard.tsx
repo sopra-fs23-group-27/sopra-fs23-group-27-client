@@ -66,11 +66,6 @@ export const UserDashboard = (props: PropsType) => {
           Authorization: sessionStorage.getItem("FlagManiaToken"),
         },
       });
-      notifications.show({
-        title: "Success",
-        message: "User stats loaded",
-        color: "green",
-      });
       setNRoundsPlayed(response.data.nRoundsPlayed);
       setOverallTotalNumberOfCorrectGuesses(
         response.data.overallTotalNumberOfCorrectGuesses

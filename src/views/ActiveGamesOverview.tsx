@@ -8,6 +8,7 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 import Lobby from "../models/Lobby";
+import { Table } from "@mantine/core";
 
 const GameContainer = styled.li`
   display: flex;
@@ -37,6 +38,23 @@ const JoinButton = styled.button`
     border: 3px solid #19376d;
   }
 `;
+
+const ReloadButton = styled.button`
+  background-color: #19376d;
+  border: 3px solid transparent;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  padding: 10px 18px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: lightgray;
+    color: #19376d;
+    border: 3px solid #19376d;
+  }
+`;
+
 type PublicGameProps = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
   game: game;
@@ -51,27 +69,23 @@ export const PublicGame = (props: PublicGameProps) => {
 
     console.log("lobby from join: ", lobby);
     if (lobby.status === 200) {
-      if (lobby.data.joinedPlayerNames.length >= lobby.data.maxNumPlayers) {
-        throw new Error("Game is full");
+      const headers = {
+        Authorization: sessionStorage.getItem("FlagManiaToken"),
+      };
+      const body = {};
+      const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
+        headers,
+      });
+      if (response.status === 204) {
+        setLobby(lobby.data);
+        navigate("/lobbies/" + lobbyId);
       } else {
-        const headers = {
-          Authorization: sessionStorage.getItem("FlagManiaToken"),
-        };
-        const body = {};
-        const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
-          headers,
+        notifications.show({
+          title: "Error",
+          message: response.status,
+          color: "red",
         });
-        if (response.status === 204) {
-          setLobby(lobby.data);
-          navigate("/lobbies/" + lobbyId);
-        } else {
-          notifications.show({
-            title: "Error",
-            message: response.status,
-            color: "red",
-          });
-          throw new Error("Error joining game");
-        }
+        throw new Error("Error joining game");
       }
     } else {
       throw new Error("Error joining game");
@@ -81,7 +95,7 @@ export const PublicGame = (props: PublicGameProps) => {
   return (
     <GameContainer>
       <GameItem>{lobbyName}</GameItem>
-      <GameItem>{joinedPlayerNames.length}/20</GameItem>
+      <GameItem>{joinedPlayerNames.length}</GameItem>
       <GameItem>{mode}</GameItem>
       <GameItem>
         <JoinButton onClick={() => joinGame(lobbyId)}>Join</JoinButton>
@@ -110,19 +124,19 @@ export const ActiveGameOverview = (props: PropsType) => {
   const [games, setGames] = useState<game[]>([]);
   const navigate = useNavigate();
 
-  useEffectOnce(() => {
-    const getLobbies = async () => {
-      const playerToken = sessionStorage.getItem("FlagManiaToken") as string;
-      try {
-        const games = (await httpGet("/lobbies", playerToken))
-          .data as unknown as game[];
-        console.log(games);
-        setGames(games);
-      } catch (e: any) {
-        console.error(e);
-      }
-    };
+  const getLobbies = async () => {
+    const playerToken = sessionStorage.getItem("FlagManiaToken") as string;
+    try {
+      const games = (await httpGet("/lobbies", playerToken))
+        .data as unknown as game[];
+      console.log(games);
+      setGames(games);
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
 
+  useEffectOnce(() => {
     getLobbies();
   });
 
@@ -139,7 +153,18 @@ export const ActiveGameOverview = (props: PropsType) => {
       ) : (
         <>
           <h1>Public Games</h1>
+          <ReloadButton onClick={() => getLobbies()}>Reload</ReloadButton>
           {!games[0] && <p>Currently, No public games are open to join</p>}
+          <Table miw={800} verticalSpacing="sm">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th># Players</th>
+                <th>Mode</th>
+                <th />
+              </tr>
+            </thead>
+          </Table>
           <GameList>
             {games.map((g, ind) => (
               <PublicGame setLobby={setLobby} key={ind} game={g} />
