@@ -89,7 +89,12 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
                 </td>
                 <td>{row.playerScore}</td>
                 <td>{row.correctGuesses}</td>
-                <td>{timePerAnswer[index]} seconds</td>
+                {timePerAnswer[index] ? (
+                  <td>{timePerAnswer[index]} seconds</td>
+                ) : (
+                  <td></td>
+                )}
+
                 <td>
                   <Group position="apart">
                     <Text fz="xs" c="teal" weight={700}>

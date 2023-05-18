@@ -28,6 +28,7 @@ import { UserDashboard } from "./views/UserDashboard";
 import { GameEnd } from "./views/GameEnd";
 
 import "./App.css";
+import { PlayerSettings } from "./views/PlayerSettings";
 import styled from "styled-components";
 
 const FlagmaniaLogo = styled.img`
@@ -37,7 +38,13 @@ const FlagmaniaLogo = styled.img`
   width: 130px;
   height: auto;
   position: absolute;
+  z-index: 1;
   cursor: pointer;
+  transition: transform 200ms ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
   @media (max-width: 700px) {
     width: 100px;
   }
@@ -130,7 +137,10 @@ export const App = () => {
               </FlagManiaGuard>
             }
           />
-          <Route path="/lobbies/:lobbyId/join" element={<ExternalGameJoin />} />
+          <Route
+            path="/lobbies/:lobbyId/join"
+            element={<ExternalGameJoin setLobby={setLobby} />}
+          />
           <Route
             path="/game/:lobbyId/leaderBoard"
             element={
@@ -145,6 +155,14 @@ export const App = () => {
             element={
               <PlayerGuard>
                 <UserDashboard player={player} setPlayer={setPlayer} />
+              </PlayerGuard>
+            }
+          />
+          <Route
+            path="/playerSettings/:playerId"
+            element={
+              <PlayerGuard>
+                <PlayerSettings />
               </PlayerGuard>
             }
           />

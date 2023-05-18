@@ -6,7 +6,7 @@ interface UserStatsProps {
   userData: {
     link: string;
     label: string;
-    stats: string;
+    stats: number | string;
     progress: number;
     color: string;
     icon: 'up' | 'down';
@@ -24,7 +24,7 @@ export function UserStats({ userData }: UserStatsProps) {
     const Icon = icons[stat.icon];
     return (
       <Paper withBorder radius="md" p="xs" key={stat.label}>
-        <Group onClick={() => navigate(stat.link)} position="center">
+        <Group onClick={() => navigate(stat.link)} position="center" style={{ cursor: 'pointer' }}>
           <RingProgress
             size={80}
             roundCaps

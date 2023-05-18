@@ -93,15 +93,29 @@ export const ConfigureGame = (props: PropsType) => {
   const [isBasic, setIsBasic] = useState<boolean>(true);
   const [showSettings, setShowSettings] = useState(false);
   const [numRounds, setNumRounds] = useState(5);
+  const numSecondsBasicDefault = 10;
+  const numSecondsAdvancedDefault = 30;
+  const [numSeconds, setNumSeconds] = useState(numSecondsBasicDefault);
+
   //ADVANCED
   const [numSecondsUntilHint, setNumSecondsUntilHint] = useState(10);
   const [hintInterval, setHintInterval] = useState(5);
-  const [numSeconds, setNumSeconds] = useState(45);
   //BASIC
   const [numOptions, setNumOptions] = useState(4);
-  const [roundDuration, setRoundDuration] = useState(10);
   const [isPublic, setIsPublic] = useState(true);
 
+  const changeGameMode = (updatedGameModeIsBasic: boolean) => {
+    if (updatedGameModeIsBasic === isBasic) {
+      return;
+    }
+
+    if (updatedGameModeIsBasic) {
+      setNumSeconds(numSecondsBasicDefault);
+    } else {
+      setNumSeconds(numSecondsAdvancedDefault);
+    }
+    setIsBasic(updatedGameModeIsBasic);
+  };
   const createLobby = async () => {
     const mode = isBasic ? "basic" : "advanced";
 
@@ -165,7 +179,7 @@ export const ConfigureGame = (props: PropsType) => {
           labelA={"BASIC"}
           labelB={"ADVANCED"}
           aSelected={isBasic}
-          setASelected={setIsBasic}
+          setASelected={changeGameMode}
         />
 
         <div style={{ marginTop: "32px" }}>
@@ -237,12 +251,12 @@ export const ConfigureGame = (props: PropsType) => {
             </div>
 
             <div>
-              <h2>Round duration</h2>
+              <h2>Time limit per round</h2>
               <RangeInput
                 min={5}
                 max={30}
-                value={roundDuration}
-                setNewValue={setRoundDuration}
+                value={numSeconds}
+                setNewValue={setNumSeconds}
               />
             </div>
           </RangeOptions>
