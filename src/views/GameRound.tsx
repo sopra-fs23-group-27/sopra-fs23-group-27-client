@@ -11,7 +11,7 @@ const P = styled.p`
   margin: 0;
 `;
 const Application = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
 
   display: flex;
@@ -44,19 +44,30 @@ const GlobalGuess = styled.div`
 `;
 const Main = styled.div`
   width: 900px;
-  height: 700px;
+  min-height: 700px;
   border: 2px solid rgb(216, 216, 216);
   border-radius: 10px;
+  padding-bottom: 12px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-const Flag = styled.img`
+const FlagContainer = styled.div`
   margin-top: -2px;
+  position: relative;
+`;
+const Flag = styled.img`
+  //margin-top: -2px;
   width: 600px;
   height: 400px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+`;
+const FlagCover = styled.div`
+  position: absolute;
+  top: 0;
+  width: 600px;
+  height: 400px;
 `;
 const Hint = styled.p``;
 const TextGuessBox = styled.div`
@@ -64,6 +75,7 @@ const TextGuessBox = styled.div`
   flex-direction: column;
   margin-top: 36px;
   align-items: center;
+  justify-content: center;
 `;
 const OptionsGuessBox = styled.div`
   margin-top: 40px;
@@ -73,6 +85,7 @@ const OptionsGuessBox = styled.div`
   width: 600px;
 `;
 const Option = styled.div`
+  display: flex;
   width: 290px;
   padding: 16px 32px;
   border-radius: 10px;
@@ -86,6 +99,9 @@ const Option = styled.div`
     background-color: #1c7ed6;
     transform: scale(1.05);
   }
+`;
+const OptionText = styled.p`
+  margin: auto;
 `;
 const ChosenOption = styled.div`
   margin-top: 40px;
@@ -144,12 +160,7 @@ export const GameRound = (props: PropsType) => {
       setGuessInput("");
     }
   );
-  useSubscription(
-    `/user/queue/lobbies/${lobbyId}/round-end`,
-    (message: any) => {
-      console.log("round has ended");
-    }
-  );
+
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/hints-in-round`,
     (message: any) => {
@@ -194,14 +205,27 @@ export const GameRound = (props: PropsType) => {
     `/user/queue/lobbies/${lobbyId}/round-end`,
     (message: any) => {
       console.log("time is up");
-      if (currentGameRound === numRounds) {
-        navigate(`/game/${lobbyId}/gameEnd`);
-      } else {
-        navigate(`/game/${lobbyId}/leaderBoard`);
-      }
+      setTimeout(() => {
+        console.log("now timeout function gets executed");
+        if (currentGameRound === numRounds) {
+          navigate(`/game/${lobbyId}/gameEnd`);
+        } else {
+          navigate(`/game/${lobbyId}/leaderBoard`);
+        }
+      }, 0);
     }
   );
 
+  // Get correct guess after each round
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/correct-guess`,
+    (message: any) => {
+      const parsedMessage = JSON.parse(message.body);
+      console.log("correct guess: ", parsedMessage);
+    }
+  );
+
+  // Basic mode
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/guess-evaluation`,
     (message: any) => {
@@ -234,8 +258,6 @@ export const GameRound = (props: PropsType) => {
       setGuessOptions(choices);
     }
   );
-
-  // TODO: final leaderboard once game is over
 
   const submitInputGuess = () => {
     const playerName = sessionStorage.getItem("currentPlayer");
@@ -281,7 +303,10 @@ export const GameRound = (props: PropsType) => {
           )}
 
           <Main>
-            <Flag src={flagURL} />
+            <FlagContainer>
+              <Flag src={flagURL} />
+              <FlagCover />
+            </FlagContainer>
 
             {!isBasic && (
               <>
@@ -300,8 +325,10 @@ export const GameRound = (props: PropsType) => {
             )}
             {isBasic && !chosenOption && (
               <OptionsGuessBox>
-                {guessOptions.map((o) => (
-                  <Option onClick={() => submitOptionGuess(o)}>{o}</Option>
+                {guessOptions.map((o, ind) => (
+                  <Option key={ind} onClick={() => submitOptionGuess(o)}>
+                    <OptionText>{o}</OptionText>
+                  </Option>
                 ))}
               </OptionsGuessBox>
             )}

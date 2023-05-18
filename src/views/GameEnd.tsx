@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSubscription } from "react-stomp-hooks";
+import { useStompClient, useSubscription } from "react-stomp-hooks";
 import { useState } from "react";
 
 import { Button } from "@mantine/core";
@@ -90,6 +90,8 @@ export const GameEnd = (props: PropsType) => {
   );
   const [wrongGuesses, setWrongGuesses] = useState<number[]>([]);
 
+  const stompClient = useStompClient();
+
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
     (message: any) => {
@@ -169,6 +171,19 @@ export const GameEnd = (props: PropsType) => {
     return 0;
   };
 
+  const handlePlayAgain = () => {
+    const playerName = sessionStorage.getItem("currentPlayer");
+    if (stompClient) {
+      stompClient.publish({
+        destination: `/app/games/${lobbyId}/play-again`,
+        body: JSON.stringify({ playerName }),
+      });
+      navigate(`/game/${lobbyId}`);
+    } else {
+      console.error("Error: could not send message");
+    }
+  };
+
   return (
     <Application>
       <UpperRankContainer>
@@ -204,10 +219,13 @@ export const GameEnd = (props: PropsType) => {
       )}
 
       <ButtonContainer>
-        <Button disabled={false} onClick={() => navigate(`/game/${lobbyId}`)}>
+        <Button disabled={false} onClick={() => handlePlayAgain()}>
           Play again
         </Button>
-        <Button disabled={false} onClick={() => navigate("/register")}>
+        <Button
+          disabled={true}
+          onClick={() => navigate("/register-save-stats")}
+        >
           Register to save your stats
         </Button>
       </ButtonContainer>

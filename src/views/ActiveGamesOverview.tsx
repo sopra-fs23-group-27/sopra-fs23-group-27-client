@@ -8,7 +8,7 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 import Lobby from "../models/Lobby";
-import { Table } from "@mantine/core";
+import { Button, Table } from "@mantine/core";
 
 const GameContainer = styled.li`
   display: flex;
@@ -53,6 +53,10 @@ const ReloadButton = styled.button`
     color: #19376d;
     border: 3px solid #19376d;
   }
+`;
+
+const Td = styled.td`
+  padding: 12px 10px;
 `;
 
 type PublicGameProps = {
@@ -136,6 +140,34 @@ export const ActiveGameOverview = (props: PropsType) => {
     }
   };
 
+  const joinGame = async (lobbyId: number) => {
+    const lobby = await httpGet("/lobbies/" + lobbyId, {});
+
+    console.log("lobby from join: ", lobby);
+    if (lobby.status === 200) {
+      const headers = {
+        Authorization: sessionStorage.getItem("FlagManiaToken"),
+      };
+      const body = {};
+      const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
+        headers,
+      });
+      if (response.status === 204) {
+        setLobby(lobby.data);
+        navigate("/lobbies/" + lobbyId);
+      } else {
+        notifications.show({
+          title: "Error",
+          message: response.status,
+          color: "red",
+        });
+        throw new Error("Error joining game");
+      }
+    } else {
+      throw new Error("Error joining game");
+    }
+  };
+
   useEffectOnce(() => {
     getLobbies();
   });
@@ -153,7 +185,9 @@ export const ActiveGameOverview = (props: PropsType) => {
       ) : (
         <>
           <h1>Public Games</h1>
-          <ReloadButton onClick={() => getLobbies()}>Reload</ReloadButton>
+          <Button onClick={() => getLobbies()} style={{ marginBottom: "36px" }}>
+            Reload
+          </Button>
           {!games[0] && <p>Currently, No public games are open to join</p>}
           <Table miw={800} verticalSpacing="sm">
             <thead>
@@ -161,15 +195,21 @@ export const ActiveGameOverview = (props: PropsType) => {
                 <th>Name</th>
                 <th># Players</th>
                 <th>Mode</th>
+                <th></th>
                 <th />
               </tr>
+              {games.map((g, ind) => (
+                <tr>
+                  <Td>{g.lobbyName}</Td>
+                  <Td>{g.joinedPlayerNames.length}</Td>
+                  <Td>{g.mode}</Td>
+                  <Td>
+                    <Button onClick={() => joinGame(g.lobbyId)}>Join</Button>
+                  </Td>
+                </tr>
+              ))}
             </thead>
           </Table>
-          <GameList>
-            {games.map((g, ind) => (
-              <PublicGame setLobby={setLobby} key={ind} game={g} />
-            ))}
-          </GameList>
         </>
       )}
     </Application>

@@ -19,6 +19,7 @@ const Container = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
+  gap: 32px;
   flex-direction: row;
   align-items: center;
   height: 40vh;
@@ -35,9 +36,18 @@ export const UserDashboard = (props: PropsType) => {
   const playerId = sessionStorage.getItem("currentPlayerId");
   const { player, setPlayer } = props;
   const [nRoundsPlayed, setNRoundsPlayed] = useState(0);
-  const [overallTotalNumberOfCorrectGuesses, setOverallTotalNumberOfCorrectGuesses] = useState(0);
-  const [overallTotalNumberOfWrongGuesses, setOverallTotalNumberOfWrongGuesses] = useState(0);
-  const [overallTotalTimeUntilCorrectGuess, setOverallTotalTimeUntilCorrectGuess] = useState(0);
+  const [
+    overallTotalNumberOfCorrectGuesses,
+    setOverallTotalNumberOfCorrectGuesses,
+  ] = useState(0);
+  const [
+    overallTotalNumberOfWrongGuesses,
+    setOverallTotalNumberOfWrongGuesses,
+  ] = useState(0);
+  const [
+    overallTotalTimeUntilCorrectGuess,
+    setOverallTotalTimeUntilCorrectGuess,
+  ] = useState(0);
   const [permanent, setPermanent] = useState(false);
   const [ratioOfCorrectGuesses, setRatioOfCorrectGuesses] = useState(0);
   const [ratioOfWrongGuesses, setRatioOfWrongGuesses] = useState(0);
@@ -57,21 +67,28 @@ export const UserDashboard = (props: PropsType) => {
         },
       });
       setNRoundsPlayed(response.data.nRoundsPlayed);
-      setOverallTotalNumberOfCorrectGuesses(response.data.overallTotalNumberOfCorrectGuesses);
-      setOverallTotalNumberOfWrongGuesses(response.data.overallTotalNumberOfWrongGuesses);
-      setOverallTotalTimeUntilCorrectGuess(response.data.overallTotalTimeUntilCorrectGuess);
+      setOverallTotalNumberOfCorrectGuesses(
+        response.data.overallTotalNumberOfCorrectGuesses
+      );
+      setOverallTotalNumberOfWrongGuesses(
+        response.data.overallTotalNumberOfWrongGuesses
+      );
+      setOverallTotalTimeUntilCorrectGuess(
+        response.data.overallTotalTimeUntilCorrectGuess
+      );
       setPermanent(response.data.permanent);
 
       // calculate ration of correct guesses
-      setRatioOfCorrectGuesses(Math.round(
-        (response.data.overallTotalNumberOfCorrectGuesses /
-          (response.data.overallTotalNumberOfCorrectGuesses +
-            response.data.overallTotalNumberOfWrongGuesses)) *
-          100
-      ));
+      setRatioOfCorrectGuesses(
+        Math.round(
+          (response.data.overallTotalNumberOfCorrectGuesses /
+            (response.data.overallTotalNumberOfCorrectGuesses +
+              response.data.overallTotalNumberOfWrongGuesses)) *
+            100
+        )
+      );
 
       setRatioOfWrongGuesses(100 - ratioOfCorrectGuesses);
-
     } catch (error: any) {
       console.log(error.response.data.message);
       notifications.show({
@@ -243,7 +260,7 @@ export const UserDashboard = (props: PropsType) => {
 
   return (
     <Container>
-      <h1>Welcome back {playerName}, enjoy some nice stats</h1>
+      <h1>Welcome {playerName}</h1>
       <UserStats userData={userData} />
       <p>
         <i>Compare yourself to others by clicking one of the statistics</i>
@@ -272,7 +289,12 @@ export const UserDashboard = (props: PropsType) => {
         </Button>
       </ButtonContainer>
 
-      <Button onClick={() => handlePlayerSettings()}> Player Settings </Button>
+      <Button
+        onClick={() => handlePlayerSettings()}
+        style={{ marginBottom: "12px" }}
+      >
+        Player Settings{" "}
+      </Button>
       <Button onClick={() => handleLogout()}> Logout </Button>
     </Container>
   );
