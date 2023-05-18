@@ -30,6 +30,7 @@ import { GameEnd } from "./views/GameEnd";
 import "./App.css";
 import { PlayerSettings } from "./views/PlayerSettings";
 import styled from "styled-components";
+import { PlayAgain } from "./views/PlayAgain";
 
 const FlagmaniaLogo = styled.img`
   top: 10px;
@@ -120,7 +121,12 @@ export const App = () => {
             path="/lobbies/:lobbyId"
             element={
               <FlagManiaGuard shouldPreventReload={true}>
-                <GameLobby player={player} setPlayer={setPlayer} setLobby={setLobby} lobby={lobby} />
+                <GameLobby
+                  player={player}
+                  setPlayer={setPlayer}
+                  setLobby={setLobby}
+                  lobby={lobby}
+                />
               </FlagManiaGuard>
             }
           />
@@ -173,6 +179,10 @@ export const App = () => {
                 <GameEnd player={player} />
               </FlagManiaGuard>
             }
+          />
+          <Route
+            path="playAgain"
+            element={<PlayAgain lobbyId={lobby?.lobbyId} />}
           />
         </Routes>
       </Router>
