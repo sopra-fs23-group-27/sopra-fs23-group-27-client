@@ -59,7 +59,7 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
     if (row.timeUntilCorrectGuess === null) {
       return "";
     } else {
-      return row.timeUntilCorrectGuess.toFixed(2) + " seconds";
+      return row.timeUntilCorrectGuess;
     }
   });
 
