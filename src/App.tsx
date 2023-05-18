@@ -88,7 +88,7 @@ export const App = () => {
           <Route
             path="/publicGames"
             element={
-              <FlagManiaGuard shouldPreventReload={true}>
+              <FlagManiaGuard shouldPreventReload={false}>
                 <ActiveGameOverview setLobby={setLobby} />
               </FlagManiaGuard>
             }
@@ -168,7 +168,11 @@ export const App = () => {
           />
           <Route
             path="/game/:lobbyId/gameEnd"
-            element={<GameEnd player={player} />}
+            element={
+              <FlagManiaGuard shouldPreventReload={true}>
+                <GameEnd player={player} />
+              </FlagManiaGuard>
+            }
           />
         </Routes>
       </Router>

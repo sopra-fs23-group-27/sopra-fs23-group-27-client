@@ -44,9 +44,13 @@ export const FlagManiaGuard = ({ shouldPreventReload, children }: Props) => {
   };
 
   const handleUnload = () => {
-    // delete session storage
+    // delete lobby from session storage
     sessionStorage.removeItem("lobbyId");
     sessionStorage.removeItem("lobbyName");
+    // for non-permanent users, flush session storage
+    if (!sessionStorage.getItem("loggedIn") === true) {
+      sessionStorage.clear();
+    }
     navigate("/");
   };
 

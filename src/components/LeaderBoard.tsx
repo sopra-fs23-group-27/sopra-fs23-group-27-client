@@ -54,14 +54,13 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
     return [correctGuessesPercentage, wrongGuessesPercentage, totalGuesses];
   });
 
-  // calculate time per answer
+  // time per answer for player with correct guess
   const timePerAnswer = playerData.map((row) => {
-    const totalTime = row.timeUntilCorrectGuess as unknown as number;
-    if (row.correctGuesses === 0) {
-      return totalTime;
+    if (row.timeUntilCorrectGuess === null) {
+      return "";
+    } else {
+      return row.timeUntilCorrectGuess.toFixed(2) + " seconds";
     }
-    const timeUntilCorrectGuess = totalTime / row.correctGuesses;
-    return timeUntilCorrectGuess;
   });
 
   return (
@@ -82,11 +81,7 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
             return (
               <tr key={index}>
                 <td>{rank[index]}</td>
-                <td>
-                  <Anchor component="button" fz="sm">
-                    {row.playerName}
-                  </Anchor>
-                </td>
+                <td>{row.playerName}</td>
                 <td>{row.playerScore}</td>
                 <td>{row.correctGuesses}</td>
                 {timePerAnswer[index] ? (

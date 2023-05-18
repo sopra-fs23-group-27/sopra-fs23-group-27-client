@@ -72,6 +72,8 @@ export const GameLobby = (props: PropsType) => {
   const setLobby = props.setLobby;
   const player = props.player;
 
+  const [currentAdmin, setCurrentAdmin] = useState("");
+
   const [showQrCodeBig, setShowQrCodeBig] = useState(false);
   const [gameUrl, setGameUrl] = useState("");
 
@@ -91,6 +93,30 @@ export const GameLobby = (props: PropsType) => {
   const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>(
     {}
   );
+
+  // define the admin
+  const admin = joinedPlayerNames.find((playerName: string) =>
+    playerRoles[playerName] ? true : false
+  );
+
+  // if the admin changes, notify all players in the lobby
+  useEffectOnce(() => {
+    if (admin && currentAdmin !== admin && currentAdmin !== "") {
+      setCurrentAdmin(admin);
+      notifications.show({
+        title: "New admin",
+        message: "The admin is now " + admin,
+        color: "blue",
+      });
+    } else if (admin && currentAdmin === "") {
+      setCurrentAdmin(admin);
+      notifications.show({
+        title: "Admin",
+        message: "The admin is " + admin,
+        color: "blue",
+      });
+    }
+  });
 
   // map playername to name and role
   const playerNamesAndRoles = joinedPlayerNames.map((playerName: string) => {
@@ -139,11 +165,13 @@ export const GameLobby = (props: PropsType) => {
       if (newPlayerNames.length > 0) {
         // show notification for each player that joined
         newPlayerNames.forEach((playerName: string) => {
-          notifications.show({
-            title: "Player joined",
-            message: playerName,
-            color: "green",
-          });
+          if (playerName !== sessionStorage.getItem("currentPlayer")) {
+            notifications.show({
+              title: "Player joined",
+              message: playerName,
+              color: "green",
+            });
+          }
         });
       }
 
@@ -151,11 +179,13 @@ export const GameLobby = (props: PropsType) => {
       if (leftPlayerNames.length > 0) {
         // show notification for each player that joined
         leftPlayerNames.forEach((playerName: string) => {
-          notifications.show({
-            title: "Player left",
-            message: playerName,
-            color: "red",
-          });
+          if (playerName !== sessionStorage.getItem("currentPlayer")) {
+            notifications.show({
+              title: "Player left",
+              message: playerName,
+              color: "red",
+            });
+          }
         });
       }
       // update the lobby name and joined player names
@@ -172,22 +202,22 @@ export const GameLobby = (props: PropsType) => {
     }
   );
 
-  useSubscription(
-    `/user/queue/removed-from-lobby`,
-    (message: any) => {
-      // inform the user that he was removed from the lobby
-      notifications.show({
-        title: "Removed from lobby",
-        message: "You were removed from the lobby",
-        color: "red",
-      });
-      // remove lobby from session storage
-      sessionStorage.removeItem("lobbyId");
-      sessionStorage.removeItem("lobbyName");
-      // navigate to public lobbies
-      navigate("/publicGames");
+  useSubscription(`/user/queue/removed-from-lobby`, (message: any) => {
+    // inform the user that he was removed from the lobby
+    notifications.show({
+      title: "Removed from lobby",
+      message: "You were removed from the lobby",
+      color: "red",
+    });
+    // delete lobby from session storage
+    sessionStorage.removeItem("lobbyId");
+    sessionStorage.removeItem("lobbyName");
+    // for non-permanent users, flush session storage
+    if (!sessionStorage.getItem("loggedIn") === true) {
+      sessionStorage.clear();
     }
-  );
+    navigate("/");
+  });
 
   console.log("player token: ", playerToken);
 
