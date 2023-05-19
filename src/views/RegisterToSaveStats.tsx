@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
+import Player from "../models/Player";
 
 const Application = styled.div`
   display: flex;
@@ -38,7 +39,11 @@ const Button = styled.button<props>`
   }
 `;
 
-export const RegisterToSaveStats = () => {
+type PropsType = {
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+};
+export const RegisterToSaveStats = (props: PropsType) => {
+  const { setPlayer } = props;
   const guestName = sessionStorage.getItem("currentPlayer") || "";
   const [nameInput, setNameInput] = useState(guestName);
   const [passwordInput, setPasswordInput] = useState("");
@@ -67,17 +72,21 @@ export const RegisterToSaveStats = () => {
 
   const registerUser = async () => {
     try {
+      const headers = {
+        Authorization: sessionStorage.getItem("FlagManiaToken"),
+      };
       const playerId = sessionStorage.getItem("currentPlayerId");
+      console.log("playerId: ", playerId);
       const res = await httpPut(
-        `player/${playerId}`,
+        `/players/${playerId}`,
         {
           playerName: nameInput,
           password: passwordInput,
           permanent: true,
         },
-        { headers: {} }
+        { headers }
       );
-      console.log(res);
+      setPlayer(res.data);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
@@ -104,6 +113,7 @@ export const RegisterToSaveStats = () => {
         message: err.message,
         color: "red",
       });
+      console.error(err);
     }
   };
 

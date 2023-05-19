@@ -5,6 +5,7 @@ import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 import { Button as MantineButton } from "@mantine/core";
+import Player from "../models/Player";
 
 const Application = styled.div`
   width: 100%;
@@ -43,7 +44,12 @@ const Button = styled.button<props>`
   }
 `;
 
-export const Login = () => {
+type PropsType = {
+  setPlayer: React.Dispatch<React.SetStateAction<Player | undefined>>;
+};
+
+export const Login = (props: PropsType) => {
+  const { setPlayer } = props;
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
@@ -91,6 +97,7 @@ export const Login = () => {
         message: "Welcome back, " + res.data.playerName + "!",
         color: "green",
       });
+      setPlayer(res.data);
       navigate("/");
     } catch (err: any) {
       notifications.show({

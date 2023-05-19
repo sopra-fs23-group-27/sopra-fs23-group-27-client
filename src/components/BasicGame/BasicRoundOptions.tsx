@@ -63,9 +63,11 @@ export const BasicRoundOptions = (props: PropsType) => {
   const lowercaseCorrectCountry = correctCountry
     .toLowerCase()
     .replace(/\s/g, "");
-  const lowercaseUserSelection = userSelection.toLowerCase().replace(/\s/g, "");
+  const lowercaseUserSelection = userSelection
+    ? userSelection.toLowerCase().replace(/\s/g, "")
+    : "";
   const parsedCountryOptions = countryOptions.map((o) =>
-    o.toLowerCase().replace(/\s/g, "")
+    o ? o.toLowerCase().replace(/\s/g, "") : ""
   );
 
   if (userSelection && !correctCountry) {
@@ -74,18 +76,17 @@ export const BasicRoundOptions = (props: PropsType) => {
 
   return (
     <OptionsGuessBox>
-      {parsedCountryOptions.map((o, ind) => {
-        return (
-          <Option
-            correct={lowercaseCorrectCountry === o.toLowerCase()}
-            userSelection={lowercaseUserSelection === o.toLowerCase()}
-            onClick={() => submitOptionGuess(countryOptions[ind])}
-            clickable={!userSelection && !correctCountry}
-          >
-            <OptionText>{countryOptions[ind]}</OptionText>
-          </Option>
-        );
-      })}
+      {parsedCountryOptions.map((o, ind) => (
+        <Option
+          key={ind}
+          correct={o ? lowercaseCorrectCountry === o.toLowerCase() : false}
+          userSelection={o ? lowercaseUserSelection === o.toLowerCase() : false}
+          onClick={() => submitOptionGuess(countryOptions[ind])}
+          clickable={!userSelection && !correctCountry}
+        >
+          <OptionText>{countryOptions[ind]}</OptionText>
+        </Option>
+      ))}
     </OptionsGuessBox>
   );
 };

@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 import { Button as MantineButton } from "@mantine/core";
+import Player from "../models/Player";
 
 const Application = styled.div`
   display: flex;
@@ -40,7 +41,11 @@ const Button = styled.button<props>`
   }
 `;
 
-export const Register = () => {
+type PropsType = {
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+};
+export const Register = (props: PropsType) => {
+  const { setPlayer } = props;
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
@@ -77,6 +82,7 @@ export const Register = () => {
         },
         { headers: {} }
       );
+      setPlayer(res.data);
       console.log("new permanent player created: ", res.data);
 
       // Store the token into the session storage.

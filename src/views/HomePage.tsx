@@ -84,6 +84,7 @@ export const HomePage = (props: PropsType) => {
         // Create a new Player instance from the JSON data in the response
         const player = new Player(response.data);
         setPlayer(player);
+        console.log("new guest player created: ", player);
 
         // Store the token into the session storage.
         sessionStorage.setItem(
