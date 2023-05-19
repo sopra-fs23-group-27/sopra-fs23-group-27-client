@@ -116,6 +116,16 @@ const ChosenOption = styled.div`
   background-color: lightgray;
 `;
 
+const CorrectCountryAdvanced = styled.div`
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  text-align: center;
+  font-size: 30px;
+  color: black;
+  background-color: lightgray;
+`;
+
 const GuessButton = styled.button`
   cursor: pointer;
   background-color: lightgray;
@@ -215,7 +225,7 @@ export const GameRound = (props: PropsType) => {
         } else {
           navigate(`/game/${lobbyId}/leaderBoard`);
         }
-      }, 4700);
+      }, 4500);
     }
   );
 
@@ -316,7 +326,7 @@ export const GameRound = (props: PropsType) => {
               <FlagCover />
             </FlagContainer>
 
-            {!isBasic && (
+            {!isBasic && !correctCountry && (
               <>
                 <Hint>{latestHint}</Hint>
                 <TextGuessBox>
@@ -331,19 +341,14 @@ export const GameRound = (props: PropsType) => {
                 </TextGuessBox>
               </>
             )}
-            {/*
-            isBasic && !chosenOption && (
-              <OptionsGuessBox>
-                {guessOptions.map((o, ind) => (
-                  <Option key={ind} onClick={() => submitOptionGuess(o)}>
-                    <OptionText>{o}</OptionText>
-                  </Option>
-                ))}
-              </OptionsGuessBox>
+            {!isBasic && correctCountry && (
+              <div>
+                <p>correct country:</p>
+                <CorrectCountryAdvanced>
+                  {correctCountry}
+                </CorrectCountryAdvanced>
+              </div>
             )}
-            {isBasic && chosenOption && (
-              <ChosenOption>{chosenOption}</ChosenOption>
-            ) */}
 
             {isBasic && (
               <BasicRoundOptions
