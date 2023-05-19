@@ -91,6 +91,7 @@ export const GameLobby = (props: PropsType) => {
   // get the player and lobby information from session storage
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
+  const [continent, setContinent] = useState("");
   const [numberOfRounds, setNumberOfRounds] = useState(0);
   const [firstHintAfter, setFirstHintAfter] = useState(0);
   const [hintsInterval, setHintsInterval] = useState(0);
@@ -126,8 +127,9 @@ export const GameLobby = (props: PropsType) => {
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
+      const continent = JSON.parse(message.body).continent as string;
       const newNumberOfRounds = JSON.parse(message.body).numRounds as number;
-      //TODO: num rounds not working
+      //TODO: num rounds and continent not working
       const newFirstHintAfter = JSON.parse(message.body).numSecondsUntilHint as number;
       const newHintsInterval = JSON.parse(message.body).hintInterval as number;
       const newTimeLimitPerRound = JSON.parse(message.body).numSeconds as number;
@@ -224,6 +226,7 @@ export const GameLobby = (props: PropsType) => {
       // update the lobby name and joined player names
       setLobbyname(newLobbyName);
       setJoinedPlayerNames(newJoinedPlayerNames);
+      setContinent(continent);
       setNumberOfRounds(newNumberOfRounds);
       setFirstHintAfter(newFirstHintAfter);
       setHintsInterval(newHintsInterval);
@@ -313,6 +316,7 @@ export const GameLobby = (props: PropsType) => {
   interface advancedProps {
     lobbyId: string | undefined;
     lobbyName: string | undefined;
+    continent: string | undefined;
     numberOfPlayers: number;
     numberOfRounds: number;
     showFirstHintAfter: number;
@@ -323,6 +327,7 @@ export const GameLobby = (props: PropsType) => {
   interface basicProps {
     lobbyId: string | undefined;
     lobbyName: string | undefined;
+    continent: string | undefined;
     numberOfPlayers: number;
     numberOfRounds: number;
     numberOfOptions: number;
@@ -375,8 +380,8 @@ export const GameLobby = (props: PropsType) => {
           />
 
           {gameMode === "ADVANCED" ? (
-            <LobbySettingsAdvanced lobbyId={lobbyId} lobbyName={lobbyName} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} showFirstHintAfter={firstHintAfter} hintsInterval={hintsInterval} timeLimitPerRound={timeLimitPerRound} /> ) :
-            ( <LobbySettingsBasic lobbyId={lobbyId} lobbyName={lobbyName} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} numberOfOptions={numberOfOptions} timeLimitPerRound={timeLimitPerRound} /> )
+            <LobbySettingsAdvanced lobbyId={lobbyId} lobbyName={lobbyName} continent={continent} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} showFirstHintAfter={firstHintAfter} hintsInterval={hintsInterval} timeLimitPerRound={timeLimitPerRound} /> ) :
+            ( <LobbySettingsBasic lobbyId={lobbyId} lobbyName={lobbyName} continent={continent} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} numberOfOptions={numberOfOptions} timeLimitPerRound={timeLimitPerRound} /> )
           }
 
           <h3>Players in lobby:</h3>

@@ -8,6 +8,8 @@ import Lobby from "../models/Lobby";
 import { notifications } from "@mantine/notifications";
 import { Button as MantineButton } from "@mantine/core";
 import { BiSelect } from "../components/BiSelect";
+import { ImageCheckbox, ImageCheckboxes } from "../components/Checkboxes";
+import FlagLogo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Container = styled.div`
   display: flex;
@@ -65,6 +67,7 @@ const StartButton = styled.button<StartButtonProps>`
 
 interface PostBody {
   //commmon fields
+  continent: string;
   isPublic: boolean;
   numRounds: number;
   numSeconds: number;
@@ -104,6 +107,9 @@ export const ConfigureGame = (props: PropsType) => {
   const [numOptions, setNumOptions] = useState(4);
   const [isPublic, setIsPublic] = useState(true);
 
+  // Region
+  const [continent, setContinent] = useState("Europe");
+  
   const changeGameMode = (updatedGameModeIsBasic: boolean) => {
     if (updatedGameModeIsBasic === isBasic) {
       return;
@@ -120,6 +126,7 @@ export const ConfigureGame = (props: PropsType) => {
     const mode = isBasic ? "basic" : "advanced";
 
     const body: PostBody = {
+      continent,
       isPublic,
       numRounds,
       numSeconds,
@@ -261,6 +268,10 @@ export const ConfigureGame = (props: PropsType) => {
             </div>
           </RangeOptions>
         )}
+
+        <h2>Select Region</h2>
+
+        <ImageCheckboxes setRegion={setContinent} />
 
         <div style={{ marginTop: "36px" }}>
           <BiSelect

@@ -26,6 +26,7 @@ const useStyles = createStyles((theme) => ({
 interface basicProps {
   lobbyId: string | undefined;
   lobbyName: string | undefined;
+  continent: string | undefined;
   numberOfPlayers: number;
   numberOfRounds: number;
   numberOfOptions: number;
@@ -34,7 +35,7 @@ interface basicProps {
 
 export function LobbySettingsBasic(props: basicProps) {
   const { classes } = useStyles();
-  const { lobbyId, lobbyName, numberOfPlayers, numberOfRounds, numberOfOptions, timeLimitPerRound } = props;
+  const { lobbyId, lobbyName, continent, numberOfPlayers, numberOfRounds, numberOfOptions, timeLimitPerRound } = props;
 
   return (
     <Paper radius="md" withBorder className={classes.card} mt={`calc(${ICON_SIZE} / 3)`}>
@@ -46,7 +47,7 @@ export function LobbySettingsBasic(props: basicProps) {
         Game Lobby {lobbyId}: {lobbyName}
       </Text>
       <Text c="dimmed" ta="center" fz="sm">
-        Basic Mode
+        {continent} (Basic Mode)
       </Text>
 
       <Group position="apart" mt="xs">

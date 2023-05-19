@@ -26,6 +26,7 @@ const useStyles = createStyles((theme) => ({
 interface advancedProps {
   lobbyId: string | undefined;
   lobbyName: string | undefined;
+  continent: string | undefined;
   numberOfPlayers: number;
   numberOfRounds: number;
   showFirstHintAfter: number;
@@ -35,7 +36,7 @@ interface advancedProps {
 
 export function LobbySettingsAdvanced(props: advancedProps) {
   const { classes } = useStyles();
-  const { lobbyId, lobbyName, numberOfPlayers, numberOfRounds, showFirstHintAfter, hintsInterval, timeLimitPerRound } = props;
+  const { lobbyId, lobbyName, continent, numberOfPlayers, numberOfRounds, showFirstHintAfter, hintsInterval, timeLimitPerRound } = props;
 
   return (
     <Paper radius="md" withBorder className={classes.card} mt={`calc(${ICON_SIZE} / 3)`}>
@@ -47,7 +48,7 @@ export function LobbySettingsAdvanced(props: advancedProps) {
         Game Lobby {lobbyId}: {lobbyName}
       </Text>
       <Text c="dimmed" ta="center" fz="sm">
-        Advanced Mode
+      {continent} (Advanced Mode)
       </Text>
 
       <Group position="apart" mt="xs">
