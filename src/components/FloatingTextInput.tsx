@@ -6,10 +6,11 @@ const Container = styled.div`
   padding: 15px 0;
 `;
 const Input = styled.input`
-  padding: 5px 10px;
+  padding: 5px 12px;
   border-radius: 10px;
   border: 1px solid black;
   background-color: #f5f7f9;
+  font-size: 28px;
 `;
 const Label = styled.label`
   position: absolute;
@@ -17,20 +18,23 @@ const Label = styled.label`
   padding: 0 2px;
   left: 10px;
   top: 22px;
+  color: dimgray;
   background-color: #f5f7f9;
-  font-size: 20px;
+  font-size: 28px;
   line-height: 1;
   transition: top 120ms ease-in, font-size 120ms ease-in;
   &:hover {
     cursor: text;
   }
   ${Input}:not(:placeholder-shown) ~ & {
-    top: 5px;
-    font-size: 16px;
+    top: 2px;
+    font-size: 18px;
+    color: black;
   }
   ${Input}:focus ~ & {
-    top: 5px;
-    font-size: 16px;
+    top: 2px;
+    font-size: 18px;
+    color: black;
   }
 `;
 

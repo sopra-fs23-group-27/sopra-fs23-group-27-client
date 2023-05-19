@@ -68,15 +68,9 @@ export const UserDashboard = (props: PropsType) => {
         },
       });
       setNRoundsPlayed(response.data.nRoundsPlayed);
-      setOverallTotalNumberOfCorrectGuesses(
-        response.data.totalCorrectGuesses
-      );
-      setOverallTotalNumberOfWrongGuesses(
-        response.data.numWrongGuesses
-      );
-      setOverallTotalTimeUntilCorrectGuess(
-        response.data.timeUntilCorrectGuess
-      );
+      setOverallTotalNumberOfCorrectGuesses(response.data.totalCorrectGuesses);
+      setOverallTotalNumberOfWrongGuesses(response.data.numWrongGuesses);
+      setOverallTotalTimeUntilCorrectGuess(response.data.timeUntilCorrectGuess);
       setPermanent(response.data.isPermanent);
 
       // calculate ration of correct guesses
@@ -97,13 +91,12 @@ export const UserDashboard = (props: PropsType) => {
       } else {
         setGuessingSpeed(
           Math.round(
-            response.data.timeUntilCorrectGuess /
-              response.data.nRoundsPlayed
+            response.data.timeUntilCorrectGuess / response.data.nRoundsPlayed
           )
         );
       }
     } catch (error: any) {
-      console.log(error.response.data.message);
+      console.error(error.response.data.message);
       notifications.show({
         title: "Error",
         message: "User stats could not be loaded",
@@ -259,7 +252,6 @@ export const UserDashboard = (props: PropsType) => {
       sessionStorage.setItem("currentPlayer", "");
       sessionStorage.setItem("currentPlayerId", "");
       sessionStorage.setItem("FlagManiaToken", "");
-      console.log(res);
       navigate("/");
     } catch (error: any) {
       notifications.show({
@@ -267,7 +259,7 @@ export const UserDashboard = (props: PropsType) => {
         message: "Something went wrong, the player could not be logged out",
         color: "red",
       });
-      console.log(error);
+      console.error(error);
     }
   };
 

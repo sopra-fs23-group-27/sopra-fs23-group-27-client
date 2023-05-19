@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HomePage } from "./views/HomePage";
 import { ActiveGameOverview } from "./views/ActiveGamesOverview";
 import { FlagManiaGuard } from "./components/routing/FlagManiaGuard";
@@ -37,7 +32,7 @@ const FlagmaniaLogo = styled.img`
   top: 10px;
   left: 10px;
   padding: 10px;
-  width: 130px;
+  width: 180px;
   height: auto;
   position: absolute;
   z-index: 1;
@@ -62,9 +57,6 @@ export const App = () => {
   const [player, setPlayer] = useState<Player | undefined>();
   const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
-
-  console.log("currentGameRound: ", currentGameRound);
-  console.log("lobby: ", lobby);
 
   return (
     <>
@@ -135,12 +127,7 @@ export const App = () => {
             path="/lobbies/:lobbyId"
             element={
               <FlagManiaGuard shouldPreventReload={true}>
-                <GameLobby
-                  player={player}
-                  setPlayer={setPlayer}
-                  setLobby={setLobby}
-                  lobby={lobby}
-                />
+                <GameLobby player={player} setPlayer={setPlayer} />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}

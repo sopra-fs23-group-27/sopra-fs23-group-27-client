@@ -73,9 +73,11 @@ export const Register = () => {
         {
           playerName: nameInput,
           password: passwordInput,
+          permanent: true,
         },
         { headers: {} }
       );
+      console.log("new permanent player created: ", res.data);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
