@@ -163,8 +163,16 @@ export const GameLobby = (props: PropsType) => {
             color: "blue",
           });
         }
+
+        const updatedPlayer = player ? { ...player } : undefined;
+        const thisPlayerIsCreator = updatedPlayer?.playerName === newAdmin;
+        if (updatedPlayer) {
+          updatedPlayer.isCreator = thisPlayerIsCreator;
+          setPlayer(updatedPlayer);
+        }
       }
 
+      /*
       // get player data from session storage
       const playerId = sessionStorage.getItem("currentPlayerId");
       const playerName = sessionStorage.getItem("currentPlayer");
@@ -185,6 +193,7 @@ export const GameLobby = (props: PropsType) => {
         const player = new Player(playerInfo);
         setPlayer(player);
       }
+      */
 
       // update the lobby name and joined player names
       setLobbyname(newLobbyName);

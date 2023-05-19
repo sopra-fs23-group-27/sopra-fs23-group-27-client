@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
-import { useStompClient, useSubscription } from "react-stomp-hooks";
+import { useSubscription } from "react-stomp-hooks";
 import { useState } from "react";
 
 import { Button } from "@mantine/core";
@@ -91,7 +91,7 @@ export const GameEnd = (props: PropsType) => {
   const [wrongGuesses, setWrongGuesses] = useState<number[]>([]);
   const [playAgainTimer, setPlayAgainTimer] = useState<number>(10);
 
-  const stompClient = useStompClient();
+  console.log("currentPlayer: ", currentPlayer);
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
@@ -217,13 +217,18 @@ export const GameEnd = (props: PropsType) => {
 
           <ButtonContainer>
             <Button
+              size="xl"
               disabled={playAgainTimer === 0}
               onClick={() => navigate("/playAgain")}
             >
               Play again {playAgainTimer}
             </Button>
+            <Button size="xl" onClick={() => navigate("/")}>
+              Home
+            </Button>
+
             {!currentPlayer?.permanent && (
-              <Button onClick={() => navigate("/register-save-stats")}>
+              <Button size="xl" onClick={() => navigate("/saveStatsRegister")}>
                 Register to save your stats
               </Button>
             )}
