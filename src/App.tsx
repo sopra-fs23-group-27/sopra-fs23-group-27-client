@@ -30,6 +30,7 @@ import { GameEnd } from "./views/GameEnd";
 import "./App.css";
 import { PlayerSettings } from "./views/PlayerSettings";
 import styled from "styled-components";
+import { PlayAgain } from "./views/PlayAgain";
 import { ErrorPage } from "./views/ErrorPage";
 
 const FlagmaniaLogo = styled.img`
@@ -119,14 +120,27 @@ export const App = () => {
             }
             errorElement={<ErrorPage />}
           />
-          <Route path="/newGameLogin" element={<NewGameLogin />} errorElement={<ErrorPage />} />
-          <Route path="/enterGameId" element={<GameIdInput />} errorElement={<ErrorPage />} />
+          <Route
+            path="/newGameLogin"
+            element={<NewGameLogin />}
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/enterGameId"
+            element={<GameIdInput />}
+            errorElement={<ErrorPage />}
+          />
 
           <Route
             path="/lobbies/:lobbyId"
             element={
               <FlagManiaGuard shouldPreventReload={true}>
-                <GameLobby player={player} setPlayer={setPlayer} setLobby={setLobby} lobby={lobby} />
+                <GameLobby
+                  player={player}
+                  setPlayer={setPlayer}
+                  setLobby={setLobby}
+                  lobby={lobby}
+                />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}
@@ -186,6 +200,10 @@ export const App = () => {
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}
+          />
+          <Route
+            path="playAgain"
+            element={<PlayAgain lobbyId={lobby?.lobbyId} />}
           />
         </Routes>
       </Router>

@@ -9,6 +9,7 @@ const Input = styled.input`
   padding: 5px 10px;
   border-radius: 10px;
   border: 1px solid black;
+  background-color: #f5f7f9;
 `;
 const Label = styled.label`
   position: absolute;
@@ -16,7 +17,7 @@ const Label = styled.label`
   padding: 0 2px;
   left: 10px;
   top: 22px;
-  background-color: white;
+  background-color: #f5f7f9;
   font-size: 20px;
   line-height: 1;
   transition: top 120ms ease-in, font-size 120ms ease-in;

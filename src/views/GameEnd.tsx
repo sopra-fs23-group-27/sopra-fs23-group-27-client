@@ -171,64 +171,57 @@ export const GameEnd = (props: PropsType) => {
     return 0;
   };
 
-  const handlePlayAgain = () => {
-    const playerName = sessionStorage.getItem("currentPlayer");
-    if (stompClient) {
-      stompClient.publish({
-        destination: `/app/games/${lobbyId}/play-again`,
-        body: JSON.stringify({ playerName }),
-      });
-      navigate(`/game/${lobbyId}`);
-    } else {
-      console.error("Error: could not send message");
-    }
-  };
-
   return (
-    <Application>
-      <UpperRankContainer>
-        <FirstRankCard>
-          <h2>1.</h2>
-          <h1>{playerData[0]?.playerName}</h1>
-          <p>{playerData[0]?.playerScore} points</p>
-        </FirstRankCard>
-      </UpperRankContainer>
-      <LowerRankContainer>
-        <Card>
-          <h2>2.</h2>
-          <h1>{playerData[1]?.playerName}</h1>
-          <p>{playerData[1]?.playerScore} points</p>
-        </Card>
+    <>
+      {isLoading ? (
+        <RainbowLoader />
+      ) : (
+        <Application>
+          <UpperRankContainer>
+            <FirstRankCard>
+              <h2>1.</h2>
+              <h1>{playerData[0]?.playerName}</h1>
+              <p>{playerData[0]?.playerScore} points</p>
+            </FirstRankCard>
+          </UpperRankContainer>
+          <LowerRankContainer>
+            <Card>
+              <h2>2.</h2>
+              <h1>{playerData[1]?.playerName}</h1>
+              <p>{playerData[1]?.playerScore} points</p>
+            </Card>
 
-        {playerData[2]?.playerName ? (
-          <Card>
-            <h2>3.</h2>
-            <h1>{playerData[2]?.playerName}</h1>
-            <p>{playerData[2]?.playerScore} points</p>
-          </Card>
-        ) : (
-          <InvisibleCard />
-        )}
-      </LowerRankContainer>
+            {playerData[2]?.playerName ? (
+              <Card>
+                <h2>3.</h2>
+                <h1>{playerData[2]?.playerName}</h1>
+                <p>{playerData[2]?.playerScore} points</p>
+              </Card>
+            ) : (
+              <InvisibleCard />
+            )}
+          </LowerRankContainer>
 
-      {!isPlayerInTopThree() && (
-        <Container>
-          Your Rank: {getCurrentPlayerRank()}, with {getCurrentPlayerScore()}{" "}
-          points
-        </Container>
+          {!isPlayerInTopThree() && (
+            <Container>
+              Your Rank: {getCurrentPlayerRank()}, with{" "}
+              {getCurrentPlayerScore()} points
+            </Container>
+          )}
+
+          <ButtonContainer>
+            <Button disabled={false} onClick={() => navigate("/playAgain")}>
+              Play again
+            </Button>
+            <Button
+              disabled={true}
+              onClick={() => navigate("/register-save-stats")}
+            >
+              Register to save your stats
+            </Button>
+          </ButtonContainer>
+        </Application>
       )}
-
-      <ButtonContainer>
-        <Button disabled={false} onClick={() => handlePlayAgain()}>
-          Play again
-        </Button>
-        <Button
-          disabled={true}
-          onClick={() => navigate("/register-save-stats")}
-        >
-          Register to save your stats
-        </Button>
-      </ButtonContainer>
-    </Application>
+    </>
   );
 };
