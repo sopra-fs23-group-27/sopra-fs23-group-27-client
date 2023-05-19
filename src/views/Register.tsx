@@ -12,6 +12,7 @@ const Application = styled.div`
   height: 100vh;
   justify-content: center;
   align-items: center;
+  background-color: #f5f7f9;
 `;
 const Container = styled.div`
   display: flex;
