@@ -178,9 +178,6 @@ export const GameRound = (props: PropsType) => {
       console.log(latestHint);
       setLatestHint(latestHint);
       setLatestGlobalGuess("");
-      setLatestHint("");
-      setGuessInput("");
-      setCorrectCountry("");
     }
   );
 
