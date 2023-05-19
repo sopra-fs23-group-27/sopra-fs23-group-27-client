@@ -5,6 +5,7 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
+import { BasicRoundOptions } from "../components/BasicGame/BasicRoundOptions";
 
 const P = styled.p`
   padding: 0;
@@ -139,6 +140,7 @@ export const GameRound = (props: PropsType) => {
   const [isLoading, setIsLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(0);
   const [flagURL, setFlagURL] = useState("");
+  const [correctCountry, setCorrectCountry] = useState("");
 
   // BASIC Mode
   const [guessOptions, setGuessOptions] = useState<string[]>([]);
@@ -155,9 +157,6 @@ export const GameRound = (props: PropsType) => {
     `/user/queue/lobbies/${lobbyId}/round-start`,
     (message: any) => {
       console.log("round has started");
-      setLatestGlobalGuess("");
-      setLatestHint("");
-      setGuessInput("");
     }
   );
 
@@ -168,6 +167,10 @@ export const GameRound = (props: PropsType) => {
       latestHint = latestHint.replace("=", ": ");
       console.log(latestHint);
       setLatestHint(latestHint);
+      setLatestGlobalGuess("");
+      setLatestHint("");
+      setGuessInput("");
+      setCorrectCountry("");
     }
   );
 
@@ -212,16 +215,18 @@ export const GameRound = (props: PropsType) => {
         } else {
           navigate(`/game/${lobbyId}/leaderBoard`);
         }
-      }, 0);
+      }, 4700);
     }
   );
 
   // Get correct guess after each round
   useSubscription(
-    `/user/queue/lobbies/${lobbyId}/correct-guess`,
+    `/user/queue/lobbies/${lobbyId}/correct-country`,
     (message: any) => {
       const parsedMessage = JSON.parse(message.body);
-      console.log("correct guess: ", parsedMessage);
+      const correctCountry = parsedMessage.correctGuess;
+      console.log("correct country: ", correctCountry);
+      setCorrectCountry(correctCountry);
     }
   );
 
@@ -273,6 +278,9 @@ export const GameRound = (props: PropsType) => {
     }
   };
   const submitOptionGuess = (guess: string) => {
+    if (chosenOption) {
+      return;
+    }
     const playerName = sessionStorage.getItem("currentPlayer");
     if (stompClient) {
       stompClient.publish({
@@ -323,7 +331,8 @@ export const GameRound = (props: PropsType) => {
                 </TextGuessBox>
               </>
             )}
-            {isBasic && !chosenOption && (
+            {/*
+            isBasic && !chosenOption && (
               <OptionsGuessBox>
                 {guessOptions.map((o, ind) => (
                   <Option key={ind} onClick={() => submitOptionGuess(o)}>
@@ -334,6 +343,15 @@ export const GameRound = (props: PropsType) => {
             )}
             {isBasic && chosenOption && (
               <ChosenOption>{chosenOption}</ChosenOption>
+            ) */}
+
+            {isBasic && (
+              <BasicRoundOptions
+                correctCountry={correctCountry}
+                userSelection={chosenOption}
+                countryOptions={guessOptions}
+                submitOptionGuess={submitOptionGuess}
+              />
             )}
           </Main>
         </>
