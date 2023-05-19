@@ -203,7 +203,13 @@ export const App = () => {
           />
           <Route
             path="playAgain"
-            element={<PlayAgain lobbyId={lobby?.lobbyId} />}
+            element={
+              <PlayAgain
+                setLobby={setLobby}
+                lobby={lobby}
+                setCurrentGameRound={setCurrentGameRound}
+              />
+            }
           />
         </Routes>
       </Router>
