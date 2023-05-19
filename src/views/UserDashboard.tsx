@@ -51,6 +51,7 @@ export const UserDashboard = (props: PropsType) => {
   const [permanent, setPermanent] = useState(false);
   const [ratioOfCorrectGuesses, setRatioOfCorrectGuesses] = useState(0);
   const [ratioOfWrongGuesses, setRatioOfWrongGuesses] = useState(0);
+  const [guessingSpeed, setGuessingSpeed] = useState(0);
 
   const navigate = useNavigate();
 
@@ -68,27 +69,39 @@ export const UserDashboard = (props: PropsType) => {
       });
       setNRoundsPlayed(response.data.nRoundsPlayed);
       setOverallTotalNumberOfCorrectGuesses(
-        response.data.overallTotalNumberOfCorrectGuesses
+        response.data.totalCorrectGuesses
       );
       setOverallTotalNumberOfWrongGuesses(
-        response.data.overallTotalNumberOfWrongGuesses
+        response.data.numWrongGuesses
       );
       setOverallTotalTimeUntilCorrectGuess(
-        response.data.overallTotalTimeUntilCorrectGuess
+        response.data.timeUntilCorrectGuess
       );
-      setPermanent(response.data.permanent);
+      setPermanent(response.data.isPermanent);
 
       // calculate ration of correct guesses
       setRatioOfCorrectGuesses(
         Math.round(
-          (response.data.overallTotalNumberOfCorrectGuesses /
-            (response.data.overallTotalNumberOfCorrectGuesses +
-              response.data.overallTotalNumberOfWrongGuesses)) *
+          (response.data.totalCorrectGuesses /
+            (response.data.totalCorrectGuesses +
+              response.data.numWrongGuesses)) *
             100
         )
       );
 
       setRatioOfWrongGuesses(100 - ratioOfCorrectGuesses);
+
+      // guessing speed
+      if (response.data.nRoundsPlayed === 0) {
+        setGuessingSpeed(0);
+      } else {
+        setGuessingSpeed(
+          Math.round(
+            response.data.timeUntilCorrectGuess /
+              response.data.nRoundsPlayed
+          )
+        );
+      }
     } catch (error: any) {
       console.log(error.response.data.message);
       notifications.show({
@@ -138,7 +151,7 @@ export const UserDashboard = (props: PropsType) => {
     {
       link: "/guessingSpeed",
       label: "Guessing Speed",
-      stats: overallTotalTimeUntilCorrectGuess,
+      stats: guessingSpeed + "s",
       progress: 100,
       color: "blue",
       icon: "up",
