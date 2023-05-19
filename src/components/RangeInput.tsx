@@ -6,24 +6,17 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-`;
-const Main = styled.div`
-  display: flex;
-  align-items: center;
-`;
-const SmallP = styled.p`
-  font-size: 14px;
-`;
-const MainInput = styled.input`
-  width: 150px;
+  text-align: center;
 `;
 const Value = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 40px;
-  background-color: lightgray;
+  height: 45px;
+  width: 45px;
+  color: white;
+  background-color: #228be6;
+  border-radius: 40px;
 `;
 
 type PropsType = {
@@ -33,7 +26,7 @@ type PropsType = {
   setNewValue: Function;
 };
 export const RangeInput = (props: PropsType) => {
-  const { hovered, ref } = useHover();
+  const { hovered } = useHover();
   const { value, setNewValue, min, max } = props;
 
   return (

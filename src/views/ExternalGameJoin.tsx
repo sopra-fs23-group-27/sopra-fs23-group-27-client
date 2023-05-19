@@ -106,6 +106,7 @@ export const ExternalGameJoin = (props: PropsType) => {
         {
           playerName: playerName,
           password: password,
+          permanent: false,
         },
         { headers: {} }
       );

@@ -68,10 +68,6 @@ export const BasicRoundOptions = (props: PropsType) => {
     o.toLowerCase().replace(/\s/g, "")
   );
 
-  console.log("countryOptions: ", countryOptions);
-  console.log("user selection: ", userSelection);
-  console.log("correct country: ", correctCountry);
-
   if (userSelection && !correctCountry) {
     return <ChosenOption>{userSelection}</ChosenOption>;
   }
@@ -79,16 +75,6 @@ export const BasicRoundOptions = (props: PropsType) => {
   return (
     <OptionsGuessBox>
       {parsedCountryOptions.map((o, ind) => {
-        console.log("currentOption: ", o);
-        console.log(
-          "is correct: ",
-          lowercaseCorrectCountry === o.toLowerCase()
-        );
-        console.log(
-          "is selected: ",
-          lowercaseUserSelection === o.toLowerCase()
-        );
-
         return (
           <Option
             correct={lowercaseCorrectCountry === o.toLowerCase()}

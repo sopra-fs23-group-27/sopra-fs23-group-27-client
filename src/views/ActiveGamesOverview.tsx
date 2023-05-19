@@ -71,7 +71,6 @@ export const PublicGame = (props: PublicGameProps) => {
   const joinGame = async (lobbyId: number) => {
     const lobby = await httpGet("/lobbies/" + lobbyId, {});
 
-    console.log("lobby from join: ", lobby);
     if (lobby.status === 200) {
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
@@ -133,7 +132,6 @@ export const ActiveGameOverview = (props: PropsType) => {
     try {
       const games = (await httpGet("/lobbies", playerToken))
         .data as unknown as game[];
-      console.log(games);
       setGames(games);
     } catch (e: any) {
       console.error(e);

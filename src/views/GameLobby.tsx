@@ -10,7 +10,6 @@ import { RainbowLoader } from "../components/RainbowLoader";
 import { Button, CloseButton } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Player from "../models/Player";
-import Lobby from "../models/Lobby";
 import { ButtonCopy } from "../components/ClipboardButton";
 import { LobbySettingsAdvanced } from "../components/LobbySettingsAdvanced";
 import { LobbySettingsBasic } from "../components/LobbySettingsBasic";
@@ -37,41 +36,12 @@ const UserContainer = styled.div`
   font-size: 38px;
 `;
 
-const GreenButton = styled.button`
-  width: 200px;
-  height: 50px;
-  background-color: #90ee90;
-  border: 1px solid #000;
-  border-radius: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
-const P = styled.p`
-  padding: 0;
-  margin: 0;
-`;
-
-const AdditionalBoxes = styled.div`
-  padding: 8px 16px;
-  border: 2px solid rgb(216, 216, 216);
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 50px;
-`;
-
 type PropsType = {
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
-  lobby: Lobby | undefined;
-  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
 };
 export const GameLobby = (props: PropsType) => {
-  const { player, setPlayer, lobby, setLobby } = props;
+  const { player, setPlayer } = props;
 
   const [currentAdmin, setCurrentAdmin] = useState("");
 
@@ -85,8 +55,6 @@ export const GameLobby = (props: PropsType) => {
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
   const stompClient = useStompClient();
-  // log the connection status
-  console.log(stompClient ? "Connected" : "Not Connected");
 
   // get the player and lobby information from session storage
   const [lobbyName, setLobbyname] = useState("");
@@ -116,8 +84,6 @@ export const GameLobby = (props: PropsType) => {
   // get the current lobby URL
   const lobbyURL = window.location.href;
 
-  console.log("player token: ", playerToken);
-
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
@@ -128,9 +94,11 @@ export const GameLobby = (props: PropsType) => {
         .joinedPlayerNames as string[];
       const newNumberOfRounds = JSON.parse(message.body).numRounds as number;
       //TODO: num rounds not working
-      const newFirstHintAfter = JSON.parse(message.body).numSecondsUntilHint as number;
+      const newFirstHintAfter = JSON.parse(message.body)
+        .numSecondsUntilHint as number;
       const newHintsInterval = JSON.parse(message.body).hintInterval as number;
-      const newTimeLimitPerRound = JSON.parse(message.body).numSeconds as number;
+      const newTimeLimitPerRound = JSON.parse(message.body)
+        .numSeconds as number;
       const numberOfOptions = JSON.parse(message.body).numOptions as number;
       const gameMode = JSON.parse(message.body).mode as string;
 
@@ -138,10 +106,7 @@ export const GameLobby = (props: PropsType) => {
       const newPlayerRoles = JSON.parse(message.body).playerRoleMap as {
         [key: string]: boolean;
       };
-      console.log(message.body);
-      console.log("Message from server: ", lobbyName);
-      console.log("Message from server: ", joinedPlayerNames);
-      console.log("Message from server: ", playerRoles);
+
       // find players that joined the lobby recently
       const newPlayerNames = newJoinedPlayerNames.filter(
         (playerName: string) => !joinedPlayerNames.includes(playerName)
@@ -258,15 +223,11 @@ export const GameLobby = (props: PropsType) => {
     navigate("/");
   });
 
-  console.log("player token: ", playerToken);
-
   useEffectOnce(() => {
-    console.log("lobbyId: ", lobbyId);
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
         const privateLobbyKey = response.data.privateLobbyKey;
         if (privateLobbyKey === null) {
-          console.log("Public lobby");
           setGameUrl(lobbyURL + "/join");
         } else {
           setGameUrl(lobbyURL + "/join/?key=" + privateLobbyKey);
@@ -275,7 +236,6 @@ export const GameLobby = (props: PropsType) => {
       .catch((error) => {
         console.error(error);
       });
-    console.log("StompClient Status: ", stompClient);
     if (stompClient) {
       stompClient.publish({
         destination: "/app/authentication",
@@ -283,19 +243,16 @@ export const GameLobby = (props: PropsType) => {
       });
     } else {
       console.error("Error: Could not send message");
-      // reconnect the websocket
-      // stompClient.reconnect_delay = 5000;
     }
   });
 
   const startGame = async () => {
-    console.log("PlayerToken: ", playerToken);
     try {
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
       const body = {};
-      const response = await httpPut("/lobbies/" + lobbyId + "/start", body, {
+      await httpPut("/lobbies/" + lobbyId + "/start", body, {
         headers,
       });
       navigate("/game/" + lobbyId);
@@ -309,25 +266,6 @@ export const GameLobby = (props: PropsType) => {
       });
     }
   };
-
-  interface advancedProps {
-    lobbyId: string | undefined;
-    lobbyName: string | undefined;
-    numberOfPlayers: number;
-    numberOfRounds: number;
-    showFirstHintAfter: number;
-    hintsInterval: number;
-    timeLimitPerRound: number;
-  }
-
-  interface basicProps {
-    lobbyId: string | undefined;
-    lobbyName: string | undefined;
-    numberOfPlayers: number;
-    numberOfRounds: number;
-    numberOfOptions: number;
-    timeLimitPerRound: number;
-  }
 
   // number of players
   const numberOfPlayers = joinedPlayerNames.length;
@@ -370,14 +308,30 @@ export const GameLobby = (props: PropsType) => {
               right: "50px",
               position: "absolute",
               top: "0",
-              width: "100px",
+              width: "160px",
             }}
           />
 
           {gameMode === "ADVANCED" ? (
-            <LobbySettingsAdvanced lobbyId={lobbyId} lobbyName={lobbyName} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} showFirstHintAfter={firstHintAfter} hintsInterval={hintsInterval} timeLimitPerRound={timeLimitPerRound} /> ) :
-            ( <LobbySettingsBasic lobbyId={lobbyId} lobbyName={lobbyName} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} numberOfOptions={numberOfOptions} timeLimitPerRound={timeLimitPerRound} /> )
-          }
+            <LobbySettingsAdvanced
+              lobbyId={lobbyId}
+              lobbyName={lobbyName}
+              numberOfPlayers={numberOfPlayers}
+              numberOfRounds={numberOfRounds}
+              showFirstHintAfter={firstHintAfter}
+              hintsInterval={hintsInterval}
+              timeLimitPerRound={timeLimitPerRound}
+            />
+          ) : (
+            <LobbySettingsBasic
+              lobbyId={lobbyId}
+              lobbyName={lobbyName}
+              numberOfPlayers={numberOfPlayers}
+              numberOfRounds={numberOfRounds}
+              numberOfOptions={numberOfOptions}
+              timeLimitPerRound={timeLimitPerRound}
+            />
+          )}
 
           <h3>Players in lobby:</h3>
 
@@ -386,7 +340,13 @@ export const GameLobby = (props: PropsType) => {
           </UserContainer>
 
           {player?.isCreator && (
-            <Button onClick={() => startGame()}>Start Game</Button>
+            <Button
+              size="xl"
+              style={{ padding: "12px 36px" }}
+              onClick={() => startGame()}
+            >
+              Start Game
+            </Button>
           )}
         </>
       )}

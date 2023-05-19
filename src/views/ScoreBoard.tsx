@@ -65,11 +65,7 @@ export const ScoreBoard = (props: PropsType) => {
         .totalTimeUntilCorrectGuess as number[];
       const totalWrongGuesses = JSON.parse(message.body)
         .totalWrongGuesses as number[];
-      console.log("Message from server: ", playerNames);
-      console.log("Message from server: ", totalGameScores);
-      console.log("Message from server: ", totalCorrectGuesses);
-      console.log("Message from server: ", totalTimeUntilCorrectGuess);
-      console.log("Message from server: ", totalWrongGuesses);
+
       setPlayerNames(playerNames);
       setPlayerScores(totalGameScores);
       setCorrectGuesses(totalCorrectGuesses);
@@ -81,7 +77,6 @@ export const ScoreBoard = (props: PropsType) => {
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/round-start`,
     (message: any) => {
-      console.log("round start");
       navigate(`/game/${lobbyId}`);
     }
   );

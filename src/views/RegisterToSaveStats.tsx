@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
-import { httpPost } from "../helpers/httpService";
+import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import { Button as MantineButton } from "@mantine/core";
 
 const Application = styled.div`
   display: flex;
@@ -40,7 +39,8 @@ const Button = styled.button<props>`
 `;
 
 export const RegisterToSaveStats = () => {
-  const [nameInput, setNameInput] = useState("");
+  const guestName = sessionStorage.getItem("currentPlayer") || "";
+  const [nameInput, setNameInput] = useState(guestName);
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
@@ -67,14 +67,17 @@ export const RegisterToSaveStats = () => {
 
   const registerUser = async () => {
     try {
-      const res = await httpPost(
-        "/registration",
+      const playerId = sessionStorage.getItem("currentPlayerId");
+      const res = await httpPut(
+        `player/${playerId}`,
         {
           playerName: nameInput,
           password: passwordInput,
+          permanent: true,
         },
         { headers: {} }
       );
+      console.log(res);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
