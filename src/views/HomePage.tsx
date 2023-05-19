@@ -79,6 +79,7 @@ export const HomePage = (props: PropsType) => {
         if (link === "/configureGame") {
           response.data.isCreator = true;
         }
+        console.log("new guest player created: ", response.data);
 
         // Create a new Player instance from the JSON data in the response
         const player = new Player(response.data);
