@@ -128,7 +128,6 @@ export const GameLobby = (props: PropsType) => {
         .joinedPlayerNames as string[];
       const newNumberOfRounds = JSON.parse(message.body).numRounds as number;
       //TODO: num rounds not working
-      alert(newNumberOfRounds);
       const newFirstHintAfter = JSON.parse(message.body).numSecondsUntilHint as number;
       const newHintsInterval = JSON.parse(message.body).hintInterval as number;
       const newTimeLimitPerRound = JSON.parse(message.body).numSeconds as number;
