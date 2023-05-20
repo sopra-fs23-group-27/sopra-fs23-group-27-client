@@ -15,6 +15,7 @@ import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { useEffect, useState } from "react";
 import Player from "./models/Player";
 import Lobby from "./models/Lobby";
+import FlagBackground from "./icons/Background_Flagmania.png";
 
 import { PlayerGuard } from "./components/routing/PlayerGuard";
 import { LoginGuard } from "./components/routing/LoginGuard";
@@ -26,6 +27,25 @@ import { PlayAgain } from "./views/PlayAgain";
 import { ErrorPage } from "./views/ErrorPage";
 import { RegisterToSaveStats } from "./views/RegisterToSaveStats";
 import { FlagmaniaLogo } from "./components/FlagmaniaLogo";
+import styled from "styled-components";
+
+const BackgroundImageContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+`;
+
+const FlagManiaBackground = styled.img`
+  position: absolute;
+  width: 100%;
+  height: auto;
+  z-index: -0.5;
+  opacity: 0.1;
+  transform: translateY(-150px);
+`;
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -39,6 +59,10 @@ export const App = () => {
 
   return (
     <>
+      <BackgroundImageContainer>
+        <FlagManiaBackground src={FlagBackground} />
+      </BackgroundImageContainer>
+
       <Router>
         <FlagmaniaLogo />
         <Routes>

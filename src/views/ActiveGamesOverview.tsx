@@ -90,7 +90,7 @@ export const PublicGame = (props: PublicGameProps) => {
 const Container = styled.div`
   width: 100vw;
   min-height: 100vh;
-  background-color: #dba11c;
+  // background-color: #dba11c;
   display: flex;
   justify-content: center;
 `;

@@ -13,7 +13,7 @@ const Application = styled.div`
   align-items: center;
   width: 100vw;
   min-height: 100vh;
-  background-color: #dba11c;
+  // background-color: #dba11c;
   padding-top: 100px;
 `;
 const LeaderBoardContainer = styled.div`
@@ -53,16 +53,16 @@ export const ScoreBoard = (props: PropsType) => {
   // get the player name from local storage
   const playerName = sessionStorage.getItem("playerName");
 
-  useEffectOnce(() => {
-    if (stompClient) {
-      stompClient.publish({
-        destination: "/app/authentication",
-        body: JSON.stringify({ playerToken }),
-      });
-    } else {
-      console.error("Error: Could not send message");
-    }
-  });
+  // useEffectOnce(() => {
+  //   if (stompClient) {
+  //     stompClient.publish({
+  //       destination: "/app/authentication",
+  //       body: JSON.stringify({ playerToken }),
+  //     });
+  //   } else {
+  //     console.error("Error: Could not send message");
+  //   }
+  // });
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
