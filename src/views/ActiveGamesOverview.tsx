@@ -127,6 +127,7 @@ export const ActiveGameOverview = (props: PropsType) => {
     try {
       const games = (await httpGet("/lobbies", playerToken))
         .data as unknown as game[];
+      setIsLoading(false);
       setGames(games);
     } catch (e: any) {
       console.error(e);
@@ -145,7 +146,6 @@ export const ActiveGameOverview = (props: PropsType) => {
       const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
         headers,
       });
-      setIsLoading(false);
       if (response.status === 204) {
         setLobby(lobby.data);
         navigate("/lobbies/" + lobbyId);
