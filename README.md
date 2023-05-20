@@ -2,8 +2,7 @@
   <img src="src//icons//DALL-E_FlagMania_Logo.png" width="200" height="200" />
 </p>
 
-[![Deploy Project](https://github.com/sopra-fs22-group-03/sopra-fs22-group-03-client/actions/workflows/deploy.yml/badge.svg)](https://github.com/sopra-fs22-group-03/sopra-fs22-group-03-client/actions/workflows/deploy.yml)
-
+[![Deploy Project to App Engine](https://github.com/sopra-fs23-group-27/sopra-fs23-group-27-client/actions/workflows/main.yml/badge.svg)](https://github.com/sopra-fs23-group-27/sopra-fs23-group-27-client/actions/workflows/main.yml)
 
 # FlagMania Client Application - SoPra FS23 - Group 27
 
