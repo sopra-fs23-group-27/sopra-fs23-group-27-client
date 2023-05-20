@@ -131,15 +131,6 @@ export const GameRound = (props: PropsType) => {
 
   const stompClient = useStompClient();
 
-  /*
-  useSubscription(
-    `/user/queue/lobbies/${lobbyId}/round-start`,
-    (message: any) => {
-      console.log("round has started");
-    }
-  );
-  */
-
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/hints-in-round`,
     (message: any) => {

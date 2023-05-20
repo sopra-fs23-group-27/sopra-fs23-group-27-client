@@ -65,7 +65,7 @@ export const PublicGame = (props: PublicGameProps) => {
       } else {
         notifications.show({
           title: "Error",
-          message: response.status,
+          message: response.data.message,
           color: "red",
         });
         throw new Error("Error joining game");
@@ -151,7 +151,7 @@ export const ActiveGameOverview = (props: PropsType) => {
       } else {
         notifications.show({
           title: "Error",
-          message: response.status,
+          message: response.data.message,
           color: "red",
         });
         throw new Error("Error joining game");

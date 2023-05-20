@@ -105,47 +105,11 @@ export const Register = (props: PropsType) => {
     } catch (err: any) {
       notifications.show({
         title: "Error",
-        message: err.message,
+        message: err.response.data.message,
         color: "red",
       });
     }
   };
-
-//   return (
-//     <Application>
-//       <Container>
-//         <h1>Register</h1>
-//         <FloatingTextInput
-//           label="Name"
-//           value={nameInput}
-//           onChange={setNameInput}
-//         />
-//         <p>
-//           Minimum password length: <br />6 characters
-//         </p>
-//         <FloatingTextInput
-//           label="Password"
-//           value={passwordInput}
-//           onChange={setPasswordInput}
-//         />
-//         <FloatingTextInput
-//           label="repeat Password"
-//           value={passwordRepetitionInput}
-//           onChange={setPasswordRepetitionInput}
-//         />
-//         <Button
-//           isActive={isFormFilledOut}
-//           disabled={!isFormFilledOut}
-//           onClick={registerUser}
-//         >
-//           Register
-//         </Button>
-//         <p>Already got an account?</p>
-//         <MantineButton onClick={() => navigate("/login")}>Login</MantineButton>
-//       </Container>
-//     </Application>
-//   );
-// };
 
 return (
   <Application>

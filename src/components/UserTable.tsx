@@ -40,10 +40,10 @@ export function UsersRolesTable(props: PropsType) {
           destination: `/app/games/${lobbyId}/remove`,
           body: JSON.stringify({ playerName: name }),
         });
-      } catch (error) {
+      } catch (error: any) {
         notifications.show({
           title: "Error",
-          message: "Could not kick user",
+          message: error.message,
           color: "red",
         });
         console.log(error);

@@ -94,7 +94,7 @@ export const UserDashboard = (props: PropsType) => {
       console.error(error.response.data.message);
       notifications.show({
         title: "Error",
-        message: "User stats could not be loaded",
+        message: error.response.data.message,
         color: "red",
       });
     }
@@ -102,7 +102,6 @@ export const UserDashboard = (props: PropsType) => {
 
   interface UserStatsProps {
     userData: {
-      link: string;
       label: string;
       stats: number | string;
       progress: number;
@@ -113,7 +112,6 @@ export const UserDashboard = (props: PropsType) => {
 
   const userData: UserStatsProps["userData"] = [
     {
-      link: "/gamesPlayed",
       label: "Games Played",
       stats: nRoundsPlayed,
       progress: 100,
@@ -121,7 +119,6 @@ export const UserDashboard = (props: PropsType) => {
       icon: "up",
     },
     {
-      link: "/correctGuesses",
       label: "Correct Guesses",
       stats: overallTotalNumberOfCorrectGuesses,
       progress: ratioOfCorrectGuesses,
@@ -129,7 +126,6 @@ export const UserDashboard = (props: PropsType) => {
       icon: "up",
     },
     {
-      link: "/wrongGuesses",
       label: "Wrong Guesses",
       stats: overallTotalNumberOfWrongGuesses,
       progress: ratioOfWrongGuesses,
@@ -137,7 +133,6 @@ export const UserDashboard = (props: PropsType) => {
       icon: "down",
     },
     {
-      link: "/guessingSpeed",
       label: "Guessing Speed",
       stats: guessingSpeed + "s",
       progress: 100,
@@ -157,35 +152,6 @@ export const UserDashboard = (props: PropsType) => {
 
       // navigate to the next page
       navigate(link);
-
-      // catch errors
-    } catch (error: any) {
-      notifications.show({
-        title: "Something went wrong",
-        message: error.response.data.message,
-        color: "red",
-      });
-    }
-  };
-
-  const handleCompareStats = async () => {
-    try {
-      // get player data from session storage
-      const playerId = sessionStorage.getItem("currentPlayerId");
-      const playerName = sessionStorage.getItem("currentPlayer");
-      const loggedIn = sessionStorage.getItem("loggedIn");
-
-      const playerInfo = {
-        playerId: playerId,
-        playerName: playerName,
-        loggedIn: loggedIn,
-      };
-
-      const player = new Player(playerInfo);
-      setPlayer(player);
-
-      // navigate to the next page
-      navigate("/compareStats");
 
       // catch errors
     } catch (error: any) {
@@ -226,15 +192,12 @@ export const UserDashboard = (props: PropsType) => {
       );
 
       // reset the session storage
-      sessionStorage.setItem("loggedIn", "false");
-      sessionStorage.setItem("currentPlayer", "");
-      sessionStorage.setItem("currentPlayerId", "");
-      sessionStorage.setItem("FlagManiaToken", "");
+      sessionStorage.clear();
       navigate("/");
     } catch (error: any) {
       notifications.show({
         title: "Error",
-        message: "Something went wrong, the player could not be logged out",
+        message: error.response.data.message,
         color: "red",
       });
       console.error(error);
@@ -245,9 +208,9 @@ export const UserDashboard = (props: PropsType) => {
     <Container>
       <h1>Welcome {player?.playerName}</h1>
       <UserStats userData={userData} />
-      <p>
+      {/* <p>
         <i>Compare yourself to others by clicking one of the statistics</i>
-      </p>
+      </p> */}
       <ButtonContainer>
         {/* <Button onClick={() => handleCompareStats()}>
           Compare to other players

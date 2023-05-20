@@ -19,6 +19,17 @@ const Container = styled.div`
   width: 100vw;
   // background-color: #dba11c;
 `;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  flex-direction: row;
+  height: 40vh;
+  justify-content: space-between;
+`;
+
 const Application = styled.div`
   display: flex;
   justify-content: center;
@@ -274,6 +285,31 @@ export const GameLobby = (props: PropsType) => {
     }
   };
 
+  const handleLeaveLobby = async () => {
+    try {
+      await httpPut(
+        "/lobbies/" + lobbyId + "/leave",
+        {},
+        { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
+      );
+      // delete lobby from session storage
+      sessionStorage.removeItem("lobbyId");
+      sessionStorage.removeItem("lobbyName");
+      // for non-permanent users, flush session storage
+      if (!sessionStorage.getItem("loggedIn") || sessionStorage.getItem("loggedIn") === "false") {
+        sessionStorage.clear();
+      }
+      navigate("/");
+    } catch (error: any) {
+      notifications.show({
+        title: "Error",
+        message: error.response.data.message,
+        color: "red",
+      });
+      console.error(error);
+    }
+  };
+
   // number of players
   const numberOfPlayers = joinedPlayerNames.length;
 
@@ -316,28 +352,28 @@ export const GameLobby = (props: PropsType) => {
               }}
             />
 
-          {gameMode === "ADVANCED" ? (
-            <LobbySettingsAdvanced
-              lobbyId={lobbyId}
-              lobbyName={lobbyName}
-              continent={continent} 
-              numberOfPlayers={numberOfPlayers}
-              numberOfRounds={numberOfRounds}
-              showFirstHintAfter={firstHintAfter}
-              hintsInterval={hintsInterval}
-              timeLimitPerRound={timeLimitPerRound}
-            />
-          ) : (
-            <LobbySettingsBasic
-              lobbyId={lobbyId}
-              lobbyName={lobbyName}
-              continent={continent} 
-              numberOfPlayers={numberOfPlayers}
-              numberOfRounds={numberOfRounds}
-              numberOfOptions={numberOfOptions}
-              timeLimitPerRound={timeLimitPerRound}
-            />
-          )}
+            {gameMode === "ADVANCED" ? (
+              <LobbySettingsAdvanced
+                lobbyId={lobbyId}
+                lobbyName={lobbyName}
+                continent={continent}
+                numberOfPlayers={numberOfPlayers}
+                numberOfRounds={numberOfRounds}
+                showFirstHintAfter={firstHintAfter}
+                hintsInterval={hintsInterval}
+                timeLimitPerRound={timeLimitPerRound}
+              />
+            ) : (
+              <LobbySettingsBasic
+                lobbyId={lobbyId}
+                lobbyName={lobbyName}
+                continent={continent}
+                numberOfPlayers={numberOfPlayers}
+                numberOfRounds={numberOfRounds}
+                numberOfOptions={numberOfOptions}
+                timeLimitPerRound={timeLimitPerRound}
+              />
+            )}
 
             <h3>Players in lobby:</h3>
 
@@ -345,15 +381,25 @@ export const GameLobby = (props: PropsType) => {
               <UsersRolesTable data={playerNamesAndRoles} player={player} />
             </UserContainer>
 
-            {player?.isCreator && (
+            <ButtonContainer>
+              {player?.isCreator && (
+                <Button
+                  size="xl"
+                  style={{ padding: "12px 36px" }}
+                  onClick={() => startGame()}
+                >
+                  Start Game
+                </Button>
+              )}
               <Button
                 size="xl"
+                color="red"
                 style={{ padding: "12px 36px" }}
-                onClick={() => startGame()}
+                onClick={() => handleLeaveLobby()}
               >
-                Start Game
+                Leave Lobby
               </Button>
-            )}
+            </ButtonContainer>
           </>
         )}
       </Application>
