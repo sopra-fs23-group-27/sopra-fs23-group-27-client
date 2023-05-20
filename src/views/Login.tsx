@@ -9,21 +9,24 @@ import Player from "../models/Player";
 
 const Application = styled.div`
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f7f9;
+  background-color: #dba11c;
+  //background-color: #f5f7f9;
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 20px;
 
-  border: 2px solid rgb(216, 216, 216);
+  border: 2px solid black;
   border-radius: 10px;
   padding: 16px 32px;
+  background-color: #f5f7f9;
 `;
 
 type props = {
@@ -36,7 +39,7 @@ const Button = styled.button<props>`
   padding: 16px 64px;
   margin: 32px 0;
   color: ${(props) => (props.isActive ? "white" : "gray")};
-
+  font-size: 32px;
   background-color: ${(props) =>
     props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
   &:hover {
@@ -130,7 +133,7 @@ export const Login = (props: PropsType) => {
           Login
         </Button>
         <p>Not an account yet?</p>
-        <MantineButton onClick={() => navigate("/register")}>
+        <MantineButton size="lg" onClick={() => navigate("/register")}>
           Register
         </MantineButton>
       </Container>

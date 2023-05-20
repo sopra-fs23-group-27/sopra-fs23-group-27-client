@@ -10,6 +10,7 @@ import { BasicRoundOptions } from "../components/BasicGame/BasicRoundOptions";
 const P = styled.p`
   padding: 0;
   margin: 0;
+  font-size: 24px;
 `;
 const Application = styled.div`
   min-height: 100vh;
@@ -19,11 +20,12 @@ const Application = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  background-color: #dba11c;
 `;
 
 const AdditionalBoxes = styled.div`
   padding: 8px 16px;
-  border: 2px solid rgb(216, 216, 216);
+  border: 1px solid black;
   border-radius: 5px;
   display: flex;
   justify-content: center;
@@ -33,6 +35,8 @@ const AdditionalBoxes = styled.div`
 `;
 const Time = styled(AdditionalBoxes)`
   right: 50px;
+  width: 122px;
+  background-color: #f5f7f9;
 `;
 const GlobalGuess = styled.div`
   position: absolute;
@@ -46,13 +50,14 @@ const GlobalGuess = styled.div`
 const Main = styled.div`
   width: 900px;
   min-height: 700px;
-  border: 2px solid rgb(216, 216, 216);
+  border: 1px solid black;
   border-radius: 10px;
   padding-bottom: 12px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #f5f7f9;
 `;
 const FlagContainer = styled.div`
   margin-top: -2px;
@@ -77,43 +82,6 @@ const TextGuessBox = styled.div`
   margin-top: 36px;
   align-items: center;
   justify-content: center;
-`;
-const OptionsGuessBox = styled.div`
-  margin-top: 40px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  width: 600px;
-`;
-const Option = styled.div`
-  display: flex;
-  width: 290px;
-  padding: 16px 32px;
-  border-radius: 10px;
-  font-size: 22px;
-  background-color: #228be6;
-  color: white;
-  transition: all 200ms ease-in-out;
-  text-align: center;
-
-  &:hover {
-    background-color: #1c7ed6;
-    transform: scale(1.05);
-  }
-`;
-const OptionText = styled.p`
-  margin: auto;
-`;
-const ChosenOption = styled.div`
-  margin-top: 40px;
-  width: 400px;
-  padding: 20px;
-  font-size: 30px;
-  border-radius: 10px;
-  text-align: center;
-
-  color: black;
-  background-color: lightgray;
 `;
 
 const CorrectCountryAdvanced = styled.div`
@@ -194,8 +162,7 @@ export const GameRound = (props: PropsType) => {
   );
   useSubscription(`/user/queue/lobbies/${lobbyId}/guesses`, (message: any) => {
     const latestGlobalGuess = JSON.parse(message.body).guess as string;
-    const latestGlobalGuessOrigin = JSON.parse(message.body)
-      .playerName as string;
+    //const latestGlobalGuessOrigin = JSON.parse(message.body).playerName as string;
     setLatestGlobalGuess(latestGlobalGuess);
   });
 
@@ -296,7 +263,7 @@ export const GameRound = (props: PropsType) => {
       ) : (
         <>
           <Time>
-            <P>{timeLeft}</P>
+            <P>Time: {timeLeft}</P>
           </Time>
 
           {!isBasic && (

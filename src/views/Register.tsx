@@ -13,15 +13,18 @@ const Application = styled.div`
   height: 100vh;
   justify-content: center;
   align-items: center;
-  background-color: #f5f7f9;
+  //background-color: #f5f7f9;
+  background-color: #dba11c;
 `;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  border: 2px solid rgb(216, 216, 216);
+  border: 2px solid black;
   border-radius: 10px;
+  font-size: 20px;
   padding: 32px 64px;
   align-items: center;
+  background-color: #f5f7f9;
 `;
 type props = {
   isActive: boolean;
@@ -35,6 +38,7 @@ const Button = styled.button<props>`
   text-align: center;
   padding: 16px 64px;
   margin: 30px 0 50px;
+  font-size: 32px;
 
   &:hover {
     background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
@@ -143,7 +147,9 @@ export const Register = (props: PropsType) => {
           Register
         </Button>
         <p>Already got an account?</p>
-        <MantineButton onClick={() => navigate("/login")}>Login</MantineButton>
+        <MantineButton size="lg" onClick={() => navigate("/login")}>
+          Login
+        </MantineButton>
       </Container>
     </Application>
   );

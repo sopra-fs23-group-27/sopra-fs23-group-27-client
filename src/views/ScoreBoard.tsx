@@ -6,14 +6,26 @@ import styled from "styled-components";
 import { LeaderBoard } from "../components/LeaderBoard";
 import { Button } from "@mantine/core";
 import Player from "../models/Player";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
+const Application = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #dba11c;
+  padding-top: 100px;
+`;
 const LeaderBoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   font-size: 38px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: #f5f7f9;
+  padding: 0 45px 65px 45px;
 `;
 
 type PropsType = {
@@ -133,16 +145,22 @@ export const ScoreBoard = (props: PropsType) => {
   });
 
   return (
-    <div>
+    <Application>
       <LeaderBoardContainer>
         <h1>ScoreBoard</h1>
         <LeaderBoard playerData={playerData} />
         {player?.isCreator && (
-          <Button onClick={startNextRound}>Start Next Round</Button>
+          <Button
+            size="xl"
+            onClick={startNextRound}
+            style={{ marginTop: "65px" }}
+          >
+            Start Next Round
+          </Button>
         )}
 
         {/* <Button onClick={anotherGame}>Another Game</Button> */}
       </LeaderBoardContainer>
-    </div>
+    </Application>
   );
 };

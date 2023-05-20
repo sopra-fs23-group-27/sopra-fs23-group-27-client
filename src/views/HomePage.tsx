@@ -153,7 +153,7 @@ export const HomePage = (props: PropsType) => {
           <TextInput
             size="lg"
             label="Username"
-            placeholder="guest"
+            placeholder="Guest"
             value={playerName}
             onChange={setPlayerName}
           />{" "}

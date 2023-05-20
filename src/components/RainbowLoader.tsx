@@ -3,15 +3,30 @@ import styled, { keyframes } from "styled-components";
 const Container = styled.div`
   height: 100vh;
   width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
   top: 50%;
   border-radius: 0.6em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
+
+/*
+const Container = styled.div`
+  height: 34em;
+  width: 34em;
+  background-color: #ffffff;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  border-radius: 0.6em;
+  box-shadow: 0 1.5em 3.5em rgba(32, 47, 80, 0.2);
+`;
+*/
+
 const RainbowAnimation = keyframes`
   30% {
     transform: translate(-50%, -50%) rotate(180deg);
@@ -27,7 +42,6 @@ const RainbowAnimation = keyframes`
   }
 `;
 const RainbowColor = styled.div`
-  background-color: #ffffff;
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
