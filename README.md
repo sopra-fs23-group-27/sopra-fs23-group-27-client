@@ -1,3 +1,10 @@
+<p align="center">
+  <img src="src//icons//DALL-E_FlagMania_Logo.png" width="200" height="200" />
+</p>
+
+[![Deploy Project](https://github.com/sopra-fs22-group-03/sopra-fs22-group-03-client/actions/workflows/deploy.yml/badge.svg)](https://github.com/sopra-fs22-group-03/sopra-fs22-group-03-client/actions/workflows/deploy.yml)
+
+
 # FlagMania Client Application - SoPra FS23 - Group 27
 
 ## Introduction and Motivation
@@ -13,15 +20,16 @@ Whether you're a beginner or a dedicated flag enthusiast, FlagMania offers an im
 So, what are you waiting for? Unleash your inner adventurer and test your flag knowledge. Get ready to explore the fascinating world of flags and become the ultimate FlagMania champion!
 
 ## Technologies
-At the forefront, we have utilized TypeScript for the frontend development, ensuring a robust and scalable user interface. TypeScript enhances the development process by adding static typing and improved tooling to JavaScript, resulting in a more reliable and efficient Frontend experience.
-
 To establish a seamless connection between the frontend and backend, we have employed REST and Stomp-Websockets protocols. REST (Representational State Transfer) enables smooth communication and data transfer, allowing the frontend to interact with the backend effortlessly. Stomp-Websockets, a subprotocol of WebSocket, adds a layer of real-time communication, ensuring instant updates and an immersive gameplay experience.
-
-The powerful Java Spring Boot framework dives the backend. Spring Boot provides a solid foundation for building high-performance web applications, while maintaining a simple and versatile Development Environment. 
 
 Speaking of APIs, we have integrated two exceptional sources to bring the User of our applicaton accurate and up-to-date information. The first is the FLAGCDN API (https://flagcdn.com/), which supplies us with an extensive collection of country flags. With this API, we ensure that each flag displayed in the game is authentic and visually appealing (specifically, it was difficult finding an API that provides flags in high resolution), enhancing your learning experience.
 
 Additionally, we have integrated the Country API from API Ninjas (https://api-ninjas.com/api/country) to provide the user of our application with fascinating facts surrounding each country. This API allows us to enrich the gameplay by helping the user guessing the flag with hints ranging from interesting trivia to helpful insights about the nations behind the flags.
+
+### Frontend specific technologies
+At the forefront, we have utilized [TypeScript](https://www.typescriptlang.org/) for the frontend development, ensuring a robust and scalable user interface. TypeScript enhances the development process by adding static typing and improved tooling to JavaScript, resulting in a more reliable and efficient Frontend experience.
+
+[Mantine](https://mantine.dev/) is a React-based framework that provides a collection of customizable components and hooks. Mantine is used to build the frontend components, ensuring a consistent and visually appealing user interface. Mantine's components are highly customizable, allowing to tailor the user interface to our needs and preferences.
 
 ## High-level components
 How do I make a Hyperlink:
