@@ -73,14 +73,19 @@ export function ImageCheckbox({
   const { classes, cx } = useStyles({ checked: value });
 
   const updateContinents = (checked: boolean) => {
-    setContinent((prevContinents: string[]) => {
-      if (checked) {
-        return [...prevContinents, title];
-      } else {
-        return prevContinents.filter((continent: string) => continent !== title);
+    const updatedContinents = [...continents];
+    if (checked) {
+      updatedContinents.push(title);
+    } else {
+      const index = updatedContinents.indexOf(title);
+      if (index !== -1) {
+        updatedContinents.splice(index, 1);
       }
-    });
+    }
+    // setContinent([JSON.stringify(updatedContinents)]);
+    setContinent(updatedContinents);
   };
+
 
   useEffect(() => {
     updateContinents(value);

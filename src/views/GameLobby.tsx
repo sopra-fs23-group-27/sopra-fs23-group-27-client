@@ -174,29 +174,6 @@ export const GameLobby = (props: PropsType) => {
         }
       }
 
-      /*
-      // get player data from session storage
-      const playerId = sessionStorage.getItem("currentPlayerId");
-      const playerName = sessionStorage.getItem("currentPlayer");
-      const loggedIn = sessionStorage.getItem("loggedIn");
-
-      // get the player role
-      if (playerName && newPlayerRoles) {
-        const isCreator = newPlayerRoles[playerName];
-
-        // create player object
-        const playerInfo = {
-          playerNId: playerId,
-          playerName: playerName,
-          loggedIn: loggedIn,
-          isCreator: isCreator,
-        };
-
-        const player = new Player(playerInfo);
-        setPlayer(player);
-      }
-      */
-
       // update the lobby name and joined player names
       setLobbyname(newLobbyName);
       setJoinedPlayerNames(newJoinedPlayerNames);
@@ -278,27 +255,6 @@ export const GameLobby = (props: PropsType) => {
       });
     }
   };
-
-  interface advancedProps {
-    lobbyId: string | undefined;
-    lobbyName: string | undefined;
-    continent: string | undefined;
-    numberOfPlayers: number;
-    numberOfRounds: number;
-    showFirstHintAfter: number;
-    hintsInterval: number;
-    timeLimitPerRound: number;
-  }
-
-  interface basicProps {
-    lobbyId: string | undefined;
-    lobbyName: string | undefined;
-    continent: string | undefined;
-    numberOfPlayers: number;
-    numberOfRounds: number;
-    numberOfOptions: number;
-    timeLimitPerRound: number;
-  }
 
   // number of players
   const numberOfPlayers = joinedPlayerNames.length;

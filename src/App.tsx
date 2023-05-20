@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import Player from "./models/Player";
 import Lobby from "./models/Lobby";
 import FlagLogo from "./icons/DALL-E_FlagMania_Logo.png";
+import FlagBackground from "./icons/Background_Flagmania.png";
 
 import { PlayerGuard } from "./components/routing/PlayerGuard";
 import { LoginGuard } from "./components/routing/LoginGuard";
@@ -53,6 +54,24 @@ const FlagmaniaLogo = styled.img`
   }
 `;
 
+const BackgroundImageContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+`;
+
+const FlagManiaBackground = styled.img`
+  position: absolute;
+  width: 100%;
+  height: auto;
+  z-index: -0.5;
+  opacity: 0.1;
+  transform: translateY(-150px);
+`;
+
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [player, setPlayer] = useState<Player | undefined>();
@@ -68,6 +87,10 @@ export const App = () => {
       <a href="/">
         <FlagmaniaLogo src={FlagLogo} />
       </a>
+
+      <BackgroundImageContainer>
+        <FlagManiaBackground src={FlagBackground} />
+      </BackgroundImageContainer>
 
       <Router>
         <Routes>

@@ -14,11 +14,11 @@ const Application = styled.div`
   align-items: center;
   height: 100vh;
   font-size: 38px;
-  //color: black;
-  color: white;
+  color: black;
+  // color: white;
   text-align: center;
   //background-color: #f5f7f9;
-  background-color: #dba11c;
+  //background-color: #dba11c;
 `;
 const H1 = styled.h1`
   margin: 0;

@@ -8,8 +8,7 @@ import Lobby from "../models/Lobby";
 import { notifications } from "@mantine/notifications";
 import { Button as MantineButton } from "@mantine/core";
 import { BiSelect } from "../components/BiSelect";
-import { ImageCheckbox, ImageCheckboxes } from "../components/Checkboxes";
-import FlagLogo from "../icons/DALL-E_FlagMania_Logo.png";
+import { ImageCheckboxes } from "../components/Checkboxes";
 
 const Container = styled.div`
   display: flex;
@@ -17,7 +16,7 @@ const Container = styled.div`
   align-items: center;
   padding: 50px;
   min-height: 100vh;
-  background-color: #dba11c;
+  // background-color: #dba11c;
 `;
 const Application = styled.div`
   display: flex;
@@ -50,6 +49,7 @@ const StartButton = styled.button<StartButtonProps>`
   font-size: 32px;
   padding: 16px 32px;
   margin: 64px 0;
+  z-index: 1;
   color: ${(props) => (props.isActive ? "white" : "gray")};
 
   &:hover {
@@ -276,7 +276,7 @@ export const ConfigureGame = (props: PropsType) => {
           </RangeOptions>
         )}
 
-        <h2>Select Region</h2>
+        <h2>Select Regions</h2>
 
         <ImageCheckboxes setContinent={setContinent} />
 
