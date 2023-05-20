@@ -14,17 +14,35 @@ import { ButtonCopy } from "../components/ClipboardButton";
 import { LobbySettingsAdvanced } from "../components/LobbySettingsAdvanced";
 import { LobbySettingsBasic } from "../components/LobbySettingsBasic";
 
-const QrBox = styled.div`
+const Container = styled.div`
+  min-height: 100vh;
   width: 100vw;
-  height: 100vh;
+  background-color: #dba11c;
+`;
+const Application = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 80vh;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const QrContainer = styled.div`
+  width: 100vw;
+  min-height: 100vh;
   position: absolute;
+  top: 0;
+  z-index: 1;
+  background-color: white;
+`;
+const QrBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  background-color: white;
-  z-index: 1;
+  height: 80vh;
 `;
 
 const UserContainer = styled.div`
@@ -260,46 +278,43 @@ export const GameLobby = (props: PropsType) => {
   const numberOfPlayers = joinedPlayerNames.length;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        height: "80vh",
-        position: "relative",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      {showQrCodeBig && (
-        <QrBox>
-          <CloseButton
-            aria-label="Close Button"
-            size="xl"
-            iconSize={40}
-            color="red"
-            style={{ position: "relative", left: "18%" }}
-            onClick={() => setShowQrCodeBig(false)}
-          />
-          <h1>Scan to join the game</h1>
-          <QRCode value={gameUrl} style={{ width: "100%" }} />
-          <ButtonCopy url={gameUrl} />
-        </QrBox>
-      )}
-      {isLoading ? (
-        <RainbowLoader />
-      ) : (
-        <>
-          <QRCode
-            value={gameUrl}
-            onClick={() => setShowQrCodeBig(true)}
-            style={{
-              cursor: "pointer",
-              right: "50px",
-              position: "absolute",
-              top: "0",
-              width: "160px",
-            }}
-          />
+    <Container>
+      <Application>
+        {showQrCodeBig && (
+          <QrContainer>
+            <QrBox>
+              <CloseButton
+                aria-label="Close Button"
+                size="xl"
+                iconSize={40}
+                color="red"
+                style={{ position: "relative", left: "18%" }}
+                onClick={() => setShowQrCodeBig(false)}
+              />
+              <h1>Scan to join the game</h1>
+              <QRCode value={gameUrl} style={{ width: "100%" }} />
+              <ButtonCopy url={gameUrl} />
+            </QrBox>
+          </QrContainer>
+        )}
+        {isLoading ? (
+          <RainbowLoader />
+        ) : (
+          <>
+            <QRCode
+              value={gameUrl}
+              onClick={() => setShowQrCodeBig(true)}
+              style={{
+                cursor: "pointer",
+                right: "40px",
+                position: "absolute",
+                top: "40px",
+                width: "180px",
+                height: "auto",
+                padding: "12px",
+                backgroundColor: "white",
+              }}
+            />
 
           {gameMode === "ADVANCED" ? (
             <LobbySettingsAdvanced
@@ -324,23 +339,24 @@ export const GameLobby = (props: PropsType) => {
             />
           )}
 
-          <h3>Players in lobby:</h3>
+            <h3>Players in lobby:</h3>
 
-          <UserContainer>
-            <UsersRolesTable data={playerNamesAndRoles} player={player} />
-          </UserContainer>
+            <UserContainer>
+              <UsersRolesTable data={playerNamesAndRoles} player={player} />
+            </UserContainer>
 
-          {player?.isCreator && (
-            <Button
-              size="xl"
-              style={{ padding: "12px 36px" }}
-              onClick={() => startGame()}
-            >
-              Start Game
-            </Button>
-          )}
-        </>
-      )}
-    </div>
+            {player?.isCreator && (
+              <Button
+                size="xl"
+                style={{ padding: "12px 36px" }}
+                onClick={() => startGame()}
+              >
+                Start Game
+              </Button>
+            )}
+          </>
+        )}
+      </Application>
+    </Container>
   );
 };
