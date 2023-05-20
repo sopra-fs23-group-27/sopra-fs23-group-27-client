@@ -59,7 +59,7 @@ const StartButton = styled.button<StartButtonProps>`
 
 interface PostBody {
   //commmon fields
-  // continent: string[];
+  continent: string[];
   isPublic: boolean;
   numRounds: number;
   numSeconds: number;
@@ -125,7 +125,7 @@ export const ConfigureGame = (props: PropsType) => {
     const mode = isBasic ? "basic" : "advanced";
 
     const body: PostBody = {
-      // continent,
+      continent,
       isPublic,
       numRounds,
       numSeconds,
