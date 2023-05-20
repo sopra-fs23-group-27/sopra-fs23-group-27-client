@@ -248,7 +248,7 @@ export const UserDashboard = (props: PropsType) => {
       >
         Player Settings{" "}
       </Button>
-      <Button onClick={() => handleLogout()}> Logout </Button>
+      <Button color="red" onClick={() => handleLogout()}> Logout </Button>
     </Container>
   );
 };
