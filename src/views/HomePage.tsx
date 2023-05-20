@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Dispatch, SetStateAction } from "react";
-import { handleError, httpPost } from "../helpers/httpService";
+import { httpPost } from "../helpers/httpService";
 import Player from "../models/Player";
 import { notifications } from "@mantine/notifications";
 import { Button, TextInput } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
 
 const Application = styled.div`
   display: flex;
@@ -15,16 +14,18 @@ const Application = styled.div`
   align-items: center;
   height: 100vh;
   font-size: 38px;
-  color: black;
+  //color: black;
+  color: white;
   text-align: center;
-  background-color: #f5f7f9;
+  //background-color: #f5f7f9;
+  background-color: #dba11c;
 `;
 const H1 = styled.h1`
   margin: 0;
   margin-bottom: 32px;
 `;
 const P = styled.p`
-  font-size: 18px;
+  font-size: 24px;
   margin: 0;
 `;
 const UserContainer = styled.div`
@@ -45,17 +46,6 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
 `;
 
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  padding: 10px;
-  justify-content: space-between;
-`;
-
 type PropsType = {
   isLoggedIn: boolean;
   player: Player | undefined;
@@ -63,7 +53,7 @@ type PropsType = {
 };
 
 export const HomePage = (props: PropsType) => {
-  const { isLoggedIn, player, setPlayer } = props;
+  const { isLoggedIn, setPlayer } = props;
 
   const [playerName, setPlayerName] = useInputState("");
   const navigate = useNavigate();
@@ -84,15 +74,17 @@ export const HomePage = (props: PropsType) => {
           { headers: {} }
         );
 
-        console.log(response.data);
+        response.data.permanent = false;
 
         if (link === "/configureGame") {
           response.data.isCreator = true;
         }
+        console.log("new guest player created: ", response.data);
 
         // Create a new Player instance from the JSON data in the response
         const player = new Player(response.data);
         setPlayer(player);
+        console.log("new guest player created: ", player);
 
         // Store the token into the session storage.
         sessionStorage.setItem(
@@ -133,11 +125,11 @@ export const HomePage = (props: PropsType) => {
       <UserContainer>
         {isLoggedIn ? (
           <>
-            <Button size="lg" onClick={() => navigate("/profile")}>
+            <Button size="xl" onClick={() => navigate("/profile")}>
               Show Your Profile
             </Button>
             <Button
-              size="lg"
+              size="xl"
               onClick={() => alert("logout not implemented yet")}
             >
               Logout
@@ -145,10 +137,10 @@ export const HomePage = (props: PropsType) => {
           </>
         ) : (
           <>
-            <Button size="lg" onClick={() => navigate("/login")}>
+            <Button size="xl" onClick={() => navigate("/login")}>
               Login
             </Button>
-            <Button size="lg" onClick={() => navigate("/register")}>
+            <Button size="xl" onClick={() => navigate("/register")}>
               Register
             </Button>
           </>
@@ -159,6 +151,7 @@ export const HomePage = (props: PropsType) => {
         <GuestContainer>
           <P>or play as guest</P>
           <TextInput
+            size="lg"
             label="Username"
             placeholder="guest"
             value={playerName}
@@ -173,18 +166,21 @@ export const HomePage = (props: PropsType) => {
       <GuestContainer>
         <ButtonContainer>
           <Button
+            size="lg"
             disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
             onClick={() => handleGuestJoin("/publicGames")}
           >
             Join Public Game
           </Button>
           <Button
+            size="lg"
             disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
             onClick={() => handleGuestJoin("/enterGameId")}
           >
             Join Private Game
           </Button>
           <Button
+            size="lg"
             disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
             onClick={() => handleGuestJoin("/configureGame")}
           >

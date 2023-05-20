@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
-import { useStompClient, useSubscription } from "react-stomp-hooks";
+import { useSubscription } from "react-stomp-hooks";
 import { useState } from "react";
 
 import { Button } from "@mantine/core";
@@ -89,8 +89,9 @@ export const GameEnd = (props: PropsType) => {
     []
   );
   const [wrongGuesses, setWrongGuesses] = useState<number[]>([]);
+  const [playAgainTimer, setPlayAgainTimer] = useState<number>(10);
 
-  const stompClient = useStompClient();
+  console.log("currentPlayer: ", currentPlayer);
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
@@ -104,17 +105,22 @@ export const GameEnd = (props: PropsType) => {
         .totalTimeUntilCorrectGuess as number[];
       const totalWrongGuesses = JSON.parse(message.body)
         .totalWrongGuesses as number[];
-      console.log("Message from server: ", playerNames);
-      console.log("Message from server: ", totalGameScores);
-      console.log("Message from server: ", totalCorrectGuesses);
-      console.log("Message from server: ", totalTimeUntilCorrectGuess);
-      console.log("Message from server: ", totalWrongGuesses);
       setPlayerNames(playerNames);
       setPlayerScores(totalGameScores);
       setCorrectGuesses(totalCorrectGuesses);
       setTimeUntilCorrectGuess(totalTimeUntilCorrectGuess);
       setWrongGuesses(totalWrongGuesses);
       setIsLoading(false);
+    }
+  );
+
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/timer-play-again`,
+    (message: any) => {
+      const parsedMessage = JSON.parse(message.body);
+      const { time } = parsedMessage;
+      console.log(time);
+      setPlayAgainTimer(time);
     }
   );
 
@@ -210,15 +216,22 @@ export const GameEnd = (props: PropsType) => {
           )}
 
           <ButtonContainer>
-            <Button disabled={false} onClick={() => navigate("/playAgain")}>
-              Play again
-            </Button>
             <Button
-              disabled={true}
-              onClick={() => navigate("/register-save-stats")}
+              size="xl"
+              disabled={playAgainTimer === 0}
+              onClick={() => navigate("/playAgain")}
             >
-              Register to save your stats
+              Play again {playAgainTimer}
             </Button>
+            <Button size="xl" onClick={() => navigate("/")}>
+              Home
+            </Button>
+
+            {!currentPlayer?.permanent && (
+              <Button size="xl" onClick={() => navigate("/saveStatsRegister")}>
+                Register to save your stats
+              </Button>
+            )}
           </ButtonContainer>
         </Application>
       )}

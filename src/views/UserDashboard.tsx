@@ -6,7 +6,6 @@ import { notifications } from "@mantine/notifications";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import Player from "../models/Player";
-import { get } from "http";
 
 const Container = styled.div`
   display: flex;
@@ -32,9 +31,7 @@ type PropsType = {
 };
 
 export const UserDashboard = (props: PropsType) => {
-  const playerName = sessionStorage.getItem("currentPlayer");
-  const playerId = sessionStorage.getItem("currentPlayerId");
-  const { player, setPlayer } = props;
+  const { setPlayer, player } = props;
   const [nRoundsPlayed, setNRoundsPlayed] = useState(0);
   const [
     overallTotalNumberOfCorrectGuesses,
@@ -48,7 +45,6 @@ export const UserDashboard = (props: PropsType) => {
     overallTotalTimeUntilCorrectGuess,
     setOverallTotalTimeUntilCorrectGuess,
   ] = useState(0);
-  const [permanent, setPermanent] = useState(false);
   const [ratioOfCorrectGuesses, setRatioOfCorrectGuesses] = useState(0);
   const [ratioOfWrongGuesses, setRatioOfWrongGuesses] = useState(0);
   const [guessingSpeed, setGuessingSpeed] = useState(0);
@@ -62,22 +58,15 @@ export const UserDashboard = (props: PropsType) => {
 
   const getUserStats = async () => {
     try {
-      const response = await httpGet(`/players/${playerId}`, {
+      const response = await httpGet(`/players/${player?.id}`, {
         headers: {
           Authorization: sessionStorage.getItem("FlagManiaToken"),
         },
       });
       setNRoundsPlayed(response.data.nRoundsPlayed);
-      setOverallTotalNumberOfCorrectGuesses(
-        response.data.totalCorrectGuesses
-      );
-      setOverallTotalNumberOfWrongGuesses(
-        response.data.numWrongGuesses
-      );
-      setOverallTotalTimeUntilCorrectGuess(
-        response.data.timeUntilCorrectGuess
-      );
-      setPermanent(response.data.isPermanent);
+      setOverallTotalNumberOfCorrectGuesses(response.data.totalCorrectGuesses);
+      setOverallTotalNumberOfWrongGuesses(response.data.numWrongGuesses);
+      setOverallTotalTimeUntilCorrectGuess(response.data.timeUntilCorrectGuess);
 
       // calculate ration of correct guesses
       setRatioOfCorrectGuesses(
@@ -97,13 +86,12 @@ export const UserDashboard = (props: PropsType) => {
       } else {
         setGuessingSpeed(
           Math.round(
-            response.data.timeUntilCorrectGuess /
-              response.data.nRoundsPlayed
+            response.data.timeUntilCorrectGuess / response.data.nRoundsPlayed
           )
         );
       }
     } catch (error: any) {
-      console.log(error.response.data.message);
+      console.error(error.response.data.message);
       notifications.show({
         title: "Error",
         message: "User stats could not be loaded",
@@ -162,27 +150,10 @@ export const UserDashboard = (props: PropsType) => {
     link: "/configureGame" | "/enterGameId" | "/publicGames",
     isCreator: boolean
   ) => {
-    const password = "";
-
     try {
       if (link === "/configureGame") {
         isCreator = true;
       }
-
-      // get player data from session storage
-      const playerId = sessionStorage.getItem("currentPlayerId");
-      const playerName = sessionStorage.getItem("currentPlayer");
-      const loggedIn = sessionStorage.getItem("loggedIn");
-
-      const playerInfo = {
-        playerNId: playerId,
-        playerName: playerName,
-        loggedIn: loggedIn,
-        isCreator: isCreator,
-      };
-
-      const player = new Player(playerInfo);
-      setPlayer(player);
 
       // navigate to the next page
       navigate(link);
@@ -248,7 +219,7 @@ export const UserDashboard = (props: PropsType) => {
     // get player id from session storage
     const playerId = sessionStorage.getItem("currentPlayerId");
     try {
-      const res = await httpPost(
+      await httpPost(
         "/players/" + playerId + "/logout" + "?playerId=" + playerId,
         {},
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
@@ -259,7 +230,6 @@ export const UserDashboard = (props: PropsType) => {
       sessionStorage.setItem("currentPlayer", "");
       sessionStorage.setItem("currentPlayerId", "");
       sessionStorage.setItem("FlagManiaToken", "");
-      console.log(res);
       navigate("/");
     } catch (error: any) {
       notifications.show({
@@ -267,13 +237,13 @@ export const UserDashboard = (props: PropsType) => {
         message: "Something went wrong, the player could not be logged out",
         color: "red",
       });
-      console.log(error);
+      console.error(error);
     }
   };
 
   return (
     <Container>
-      <h1>Welcome {playerName}</h1>
+      <h1>Welcome {player?.playerName}</h1>
       <UserStats userData={userData} />
       <p>
         <i>Compare yourself to others by clicking one of the statistics</i>
@@ -283,19 +253,19 @@ export const UserDashboard = (props: PropsType) => {
           Compare to other players
         </Button> */}
         <Button
-          disabled={!playerName}
+          disabled={!player?.playerName}
           onClick={() => handleUserJoin("/publicGames", false)}
         >
           Join Public Game
         </Button>
         <Button
-          disabled={!playerName}
+          disabled={!player?.playerName}
           onClick={() => handleUserJoin("/enterGameId", false)}
         >
           Join Private Game
         </Button>
         <Button
-          disabled={!playerName}
+          disabled={!player?.playerName}
           onClick={() => handleUserJoin("/configureGame", true)}
         >
           Create New Game

@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
-import { handleError, httpPost } from "../helpers/httpService";
+import { httpPost } from "../helpers/httpService";
 import Lobby from "../models/Lobby";
 import { notifications } from "@mantine/notifications";
 import { Button as MantineButton } from "@mantine/core";
@@ -15,7 +15,9 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 100px;
+  padding: 50px;
+  min-height: 100vh;
+  background-color: #dba11c;
 `;
 const Application = styled.div`
   display: flex;
@@ -23,9 +25,11 @@ const Application = styled.div`
   align-items: center;
   width: 464px;
   font-size: 20px;
-  border: 2px solid rgb(216, 216, 216);
+  border: 2px solid black;
+  //border: 2px solid rgb(216, 216, 216);
   border-radius: 10px;
   padding: 16px 32px;
+  background-color: #f5f7f9;
 `;
 
 const RangeOptions = styled.div`
@@ -34,18 +38,6 @@ const RangeOptions = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-type props = {
-  isActive: boolean;
-};
-const Button = styled.button<props>`
-  cursor: pointer;
-  background-color: ${(props) => (props.isActive ? "lightgray" : "white")};
-  text-align: center;
-  border: 3px solid lightgray;
-  padding: 8px 16px;
-`;
-
 type StartButtonProps = {
   isActive: boolean;
 };
@@ -186,11 +178,14 @@ export const ConfigureGame = (props: PropsType) => {
     <Container>
       <Application>
         <h1>Configure your Game</h1>
-        <FloatingTextInput
-          label="Name"
-          value={lobbyName}
-          onChange={(newVal: string) => setLobbyName(newVal)}
-        />
+        <div style={{ marginBottom: "32px" }}>
+          <FloatingTextInput
+            label="Game Name"
+            value={lobbyName}
+            onChange={(newVal: string) => setLobbyName(newVal)}
+          />
+        </div>
+
         <BiSelect
           labelA={"BASIC"}
           labelB={"ADVANCED"}
@@ -199,7 +194,10 @@ export const ConfigureGame = (props: PropsType) => {
         />
 
         <div style={{ marginTop: "32px" }}>
-          <MantineButton onClick={() => setShowSettings(!showSettings)}>
+          <MantineButton
+            size="xl"
+            onClick={() => setShowSettings(!showSettings)}
+          >
             {showSettings ? "Hide " : "Show "} Settings{"  "}
             {showSettings ? "▲" : "▼"}
           </MantineButton>

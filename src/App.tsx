@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HomePage } from "./views/HomePage";
 import { ActiveGameOverview } from "./views/ActiveGamesOverview";
 import { FlagManiaGuard } from "./components/routing/FlagManiaGuard";
@@ -17,7 +12,7 @@ import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoard } from "./views/ScoreBoard";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Player from "./models/Player";
 import Lobby from "./models/Lobby";
 import FlagLogo from "./icons/DALL-E_FlagMania_Logo.png";
@@ -32,12 +27,13 @@ import { PlayerSettings } from "./views/PlayerSettings";
 import styled from "styled-components";
 import { PlayAgain } from "./views/PlayAgain";
 import { ErrorPage } from "./views/ErrorPage";
+import { RegisterToSaveStats } from "./views/RegisterToSaveStats";
 
 const FlagmaniaLogo = styled.img`
   top: 10px;
   left: 10px;
   padding: 10px;
-  width: 130px;
+  width: 180px;
   height: auto;
   position: absolute;
   z-index: 1;
@@ -63,8 +59,9 @@ export const App = () => {
   const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
-  console.log("currentGameRound: ", currentGameRound);
-  console.log("lobby: ", lobby);
+  useEffect(() => {
+    console.log("player was updated: ", player);
+  }, [player]);
 
   return (
     <>
@@ -106,7 +103,7 @@ export const App = () => {
             path="/register"
             element={
               <LoginGuard>
-                <Register />
+                <Register setPlayer={setPlayer} />
               </LoginGuard>
             }
             errorElement={<ErrorPage />}
@@ -115,7 +112,7 @@ export const App = () => {
             path="/login"
             element={
               <LoginGuard>
-                <Login />
+                <Login setPlayer={setPlayer} />
               </LoginGuard>
             }
             errorElement={<ErrorPage />}
@@ -135,12 +132,7 @@ export const App = () => {
             path="/lobbies/:lobbyId"
             element={
               <FlagManiaGuard shouldPreventReload={true}>
-                <GameLobby
-                  player={player}
-                  setPlayer={setPlayer}
-                  setLobby={setLobby}
-                  lobby={lobby}
-                />
+                <GameLobby player={player} setPlayer={setPlayer} />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}
@@ -161,7 +153,9 @@ export const App = () => {
           />
           <Route
             path="/lobbies/:lobbyId/join"
-            element={<ExternalGameJoin setLobby={setLobby} />}
+            element={
+              <ExternalGameJoin setLobby={setLobby} setPlayer={setPlayer} />
+            }
             errorElement={<ErrorPage />}
           />
           <Route
@@ -202,7 +196,7 @@ export const App = () => {
             errorElement={<ErrorPage />}
           />
           <Route
-            path="playAgain"
+            path="/playAgain"
             element={
               <PlayAgain
                 setLobby={setLobby}
@@ -211,6 +205,11 @@ export const App = () => {
               />
             }
           />
+          <Route
+            path="/saveStatsRegister"
+            element={<RegisterToSaveStats setPlayer={setPlayer} />}
+          />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Router>
     </>

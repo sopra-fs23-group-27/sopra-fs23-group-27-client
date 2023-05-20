@@ -163,19 +163,20 @@ export const GameRound = (props: PropsType) => {
 
   const stompClient = useStompClient();
 
+  /*
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/round-start`,
     (message: any) => {
       console.log("round has started");
     }
   );
+  */
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/hints-in-round`,
     (message: any) => {
       let latestHint = JSON.parse(message.body).hint as string;
       latestHint = latestHint.replace("=", ": ");
-      console.log(latestHint);
       setLatestHint(latestHint);
       setLatestGlobalGuess("");
     }
@@ -186,7 +187,6 @@ export const GameRound = (props: PropsType) => {
     (message: any) => {
       const attributeURL = JSON.parse(message.body).url;
       const flagURL = attributeURL.split("=")[1] as string;
-      console.log("flag URL: ", flagURL);
       setIsLoading(false);
       setFlagURL(flagURL);
       setCurrentGameRound(currentGameRound + 1);
@@ -196,27 +196,18 @@ export const GameRound = (props: PropsType) => {
     const latestGlobalGuess = JSON.parse(message.body).guess as string;
     const latestGlobalGuessOrigin = JSON.parse(message.body)
       .playerName as string;
-    console.log(
-      "latest Global Guess: ",
-      latestGlobalGuess,
-      " from: ",
-      latestGlobalGuessOrigin
-    );
     setLatestGlobalGuess(latestGlobalGuess);
   });
 
   useSubscription(`/user/queue/lobbies/${lobbyId}/timer`, (message: any) => {
     const time = JSON.parse(message.body).time as number;
-    console.log(time);
     setTimeLeft(time);
   });
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/round-end`,
     (message: any) => {
-      console.log("time is up");
       setTimeout(() => {
-        console.log("now timeout function gets executed");
         if (currentGameRound === numRounds) {
           navigate(`/game/${lobbyId}/gameEnd`);
         } else {
@@ -232,7 +223,6 @@ export const GameRound = (props: PropsType) => {
     (message: any) => {
       const parsedMessage = JSON.parse(message.body);
       const correctCountry = parsedMessage.correctGuess;
-      console.log("correct country: ", correctCountry);
       setCorrectCountry(correctCountry);
     }
   );
@@ -278,7 +268,6 @@ export const GameRound = (props: PropsType) => {
         destination: `/app/games/${lobbyId}/guess`,
         body: JSON.stringify({ guess: guessInput, playerName }),
       });
-      console.log("guess was sent");
       setGuessInput("");
     } else {
       console.error("Error: could not send message");

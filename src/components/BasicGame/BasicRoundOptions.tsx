@@ -63,14 +63,12 @@ export const BasicRoundOptions = (props: PropsType) => {
   const lowercaseCorrectCountry = correctCountry
     .toLowerCase()
     .replace(/\s/g, "");
-  const lowercaseUserSelection = userSelection.toLowerCase().replace(/\s/g, "");
+  const lowercaseUserSelection = userSelection
+    ? userSelection.toLowerCase().replace(/\s/g, "")
+    : "";
   const parsedCountryOptions = countryOptions.map((o) =>
-    o.toLowerCase().replace(/\s/g, "")
+    o ? o.toLowerCase().replace(/\s/g, "") : ""
   );
-
-  console.log("countryOptions: ", countryOptions);
-  console.log("user selection: ", userSelection);
-  console.log("correct country: ", correctCountry);
 
   if (userSelection && !correctCountry) {
     return <ChosenOption>{userSelection}</ChosenOption>;
@@ -78,28 +76,17 @@ export const BasicRoundOptions = (props: PropsType) => {
 
   return (
     <OptionsGuessBox>
-      {parsedCountryOptions.map((o, ind) => {
-        console.log("currentOption: ", o);
-        console.log(
-          "is correct: ",
-          lowercaseCorrectCountry === o.toLowerCase()
-        );
-        console.log(
-          "is selected: ",
-          lowercaseUserSelection === o.toLowerCase()
-        );
-
-        return (
-          <Option
-            correct={lowercaseCorrectCountry === o.toLowerCase()}
-            userSelection={lowercaseUserSelection === o.toLowerCase()}
-            onClick={() => submitOptionGuess(countryOptions[ind])}
-            clickable={!userSelection && !correctCountry}
-          >
-            <OptionText>{countryOptions[ind]}</OptionText>
-          </Option>
-        );
-      })}
+      {parsedCountryOptions.map((o, ind) => (
+        <Option
+          key={ind}
+          correct={o ? lowercaseCorrectCountry === o.toLowerCase() : false}
+          userSelection={o ? lowercaseUserSelection === o.toLowerCase() : false}
+          onClick={() => submitOptionGuess(countryOptions[ind])}
+          clickable={!userSelection && !correctCountry}
+        >
+          <OptionText>{countryOptions[ind]}</OptionText>
+        </Option>
+      ))}
     </OptionsGuessBox>
   );
 };

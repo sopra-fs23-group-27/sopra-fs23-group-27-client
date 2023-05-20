@@ -53,10 +53,11 @@ type props = {
 
 type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
 };
 
 export const ExternalGameJoin = (props: PropsType) => {
-  const { setLobby } = props;
+  const { setLobby, setPlayer } = props;
   const [playerName, setPlayerName] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [nameInput, setNameInput] = useState("");
@@ -106,6 +107,7 @@ export const ExternalGameJoin = (props: PropsType) => {
         {
           playerName: playerName,
           password: password,
+          permanent: false,
         },
         { headers: {} }
       );
@@ -113,7 +115,7 @@ export const ExternalGameJoin = (props: PropsType) => {
 
       // Create a new Player instance from the JSON data in the response
       const player = new Player(response.data);
-      console.log(player);
+      setPlayer(player);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
@@ -165,6 +167,8 @@ export const ExternalGameJoin = (props: PropsType) => {
         },
         { headers: {} }
       );
+
+      setPlayer(res.data);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);

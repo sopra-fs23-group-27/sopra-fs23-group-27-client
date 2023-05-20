@@ -23,7 +23,7 @@ export const PlayAgain = (props: PropsType) => {
         destination: `/app/games/${lobby?.lobbyId}/play-again`,
         body: JSON.stringify({ playerName }),
       });
-      setCurrentGameRound(1);
+      setCurrentGameRound(0);
       navigate("/lobbies/" + lobby?.lobbyId);
     } else {
       console.error("Error: could not send message");
