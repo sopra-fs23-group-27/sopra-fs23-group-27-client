@@ -41,16 +41,16 @@ export const ScoreBoard = (props: PropsType) => {
   // get the player name from local storage
   const playerName = sessionStorage.getItem("playerName");
 
-  useEffectOnce(() => {
-    if (stompClient) {
-      stompClient.publish({
-        destination: "/app/authentication",
-        body: JSON.stringify({ playerToken }),
-      });
-    } else {
-      console.error("Error: Could not send message");
-    }
-  });
+  // useEffectOnce(() => {
+  //   if (stompClient) {
+  //     stompClient.publish({
+  //       destination: "/app/authentication",
+  //       body: JSON.stringify({ playerToken }),
+  //     });
+  //   } else {
+  //     console.error("Error: Could not send message");
+  //   }
+  // });
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,

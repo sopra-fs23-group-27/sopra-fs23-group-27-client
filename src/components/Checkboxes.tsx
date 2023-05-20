@@ -7,8 +7,12 @@ import {
   createStyles,
   rem,
 } from '@mantine/core';
-import { useUncontrolled } from '@mantine/hooks';
-import FlagLogo from "../icons/DALL-E_FlagMania_Logo.png";
+import Africa from "../icons/Africa.png";
+import Asia from "../icons/Asia.png";
+import Europe from "../icons/Europe.png";
+import Americas from "../icons/Americas.png";
+import Oceania from "../icons/Oceania.png";
+import { useEffect, useState } from 'react';
 
 const useStyles = createStyles((theme, { checked }: { checked: boolean }) => ({
   button: {
@@ -42,35 +46,50 @@ interface ImageCheckboxProps {
   checked?: boolean;
   defaultChecked?: boolean;
   onChange?(checked: boolean): void;
-  setRegion?: Function;
+  setContinent(continents: string[]): void;
   title: string;
   description: string;
   image: string;
 }
 
 export function ImageCheckbox({
-  checked,
-  defaultChecked,
+  checked = true,
   onChange,
+  setContinent,
   title,
   description,
   className,
   image,
   ...others
 }: ImageCheckboxProps & Omit<React.ComponentPropsWithoutRef<'button'>, keyof ImageCheckboxProps>) {
-  const [value, handleChange] = useUncontrolled({
-    value: checked,
-    defaultValue: defaultChecked,
-    finalValue: false,
-    onChange,
-  });
+  const [value, setValue] = useState(checked);
+
+  const handleChange = () => {
+    const updatedValue = !value;
+    setValue(updatedValue);
+    updateContinents(updatedValue);
+  };
 
   const { classes, cx } = useStyles({ checked: value });
+
+  const updateContinents = (checked: boolean) => {
+    setContinent((prevContinents: string[]) => {
+      if (checked) {
+        return [...prevContinents, title];
+      } else {
+        return prevContinents.filter((continent: string) => continent !== title);
+      }
+    });
+  };
+
+  useEffect(() => {
+    updateContinents(value);
+  }, []);
 
   return (
     <UnstyledButton
       {...others}
-      onClick={() => handleChange(!value)}
+      onClick={handleChange}
       className={cx(classes.button, className)}
     >
       <Image src={image} alt={title} width={40} />
@@ -95,16 +114,19 @@ export function ImageCheckbox({
 }
 
 const regions = [
-  { description: 'Region 1', title: 'World', image: FlagLogo },
-  { description: 'Region 2', title: 'Asia', image: FlagLogo },
-  { description: 'Region 3', title: 'Europe', image: FlagLogo },
-  { description: 'Region 4', title: 'Africa', image: FlagLogo },
-  { description: 'Region 5', title: 'Oceania', image: FlagLogo },
-  { description: 'Region 6', title: 'Americas', image: FlagLogo },
+  { description: 'Region 1', title: 'Asia', image: Asia },
+  { description: 'Region 2', title: 'Europe', image: Europe },
+  { description: 'Region 3', title: 'Africa', image: Africa },
+  { description: 'Region 4', title: 'Oceania', image: Oceania },
+  { description: 'Region 5', title: 'Americas', image: Americas },
 ];
 
-export function ImageCheckboxes({ setRegion }: { setRegion: Function }) {
-  const items = regions.map((item) => <ImageCheckbox {...item} key={item.title} setRegion={setRegion} />);
+const continents: string[] = regions.map((region) => region.title);
+
+export function ImageCheckboxes({ setContinent }: { setContinent: (continent: string[]) => void }) {
+  const items = regions.map((item) => (
+    <ImageCheckbox {...item} key={item.title} setContinent={setContinent} />
+  ));
   return (
     <SimpleGrid
       cols={2}

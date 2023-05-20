@@ -67,7 +67,7 @@ const StartButton = styled.button<StartButtonProps>`
 
 interface PostBody {
   //commmon fields
-  continent: string;
+  continent: string[];
   isPublic: boolean;
   numRounds: number;
   numSeconds: number;
@@ -107,8 +107,15 @@ export const ConfigureGame = (props: PropsType) => {
   const [numOptions, setNumOptions] = useState(4);
   const [isPublic, setIsPublic] = useState(true);
 
-  // Region
-  const [continent, setContinent] = useState("Europe");
+  // CONTINENTS
+  const continents = [
+    "Africa",
+    "Asia",
+    "Europe",
+    "Americas",
+    "Oceania",
+  ];
+  const [continent, setContinent] = useState(continents);
   
   const changeGameMode = (updatedGameModeIsBasic: boolean) => {
     if (updatedGameModeIsBasic === isBasic) {
@@ -139,6 +146,8 @@ export const ConfigureGame = (props: PropsType) => {
     } else {
       body.numOptions = numOptions;
     }
+
+    alert(continent);
 
     try {
       // get token of current player from local storage
@@ -271,7 +280,7 @@ export const ConfigureGame = (props: PropsType) => {
 
         <h2>Select Region</h2>
 
-        <ImageCheckboxes setRegion={setContinent} />
+        <ImageCheckboxes setContinent={setContinent} />
 
         <div style={{ marginTop: "36px" }}>
           <BiSelect
