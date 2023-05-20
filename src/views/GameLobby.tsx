@@ -17,7 +17,7 @@ import { LobbySettingsBasic } from "../components/LobbySettingsBasic";
 const Container = styled.div`
   min-height: 100vh;
   width: 100vw;
-  background-color: #dba11c;
+  // background-color: #dba11c;
 `;
 const Application = styled.div`
   display: flex;

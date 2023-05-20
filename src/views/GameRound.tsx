@@ -20,7 +20,7 @@ const Application = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  background-color: #dba11c;
+  // background-color: #dba11c;
 `;
 
 const AdditionalBoxes = styled.div`

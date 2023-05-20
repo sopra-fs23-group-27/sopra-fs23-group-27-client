@@ -22,38 +22,8 @@ const Application = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f7f9;
+  // background-color: #f5f7f9;
 `;
-
-// const Container = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-
-//   border: 2px solid rgb(216, 216, 216);
-//   border-radius: 10px;
-//   padding: 16px 32px;
-// `;
-
-type props = {
-  isActive: boolean;
-};
-// const Button = styled.button<props>`
-// display: flex;
-// width: 100%;  
-// cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-//   text-align: center;
-//   border: none;
-//   padding: 16px 64px;
-//   margin: 32px 0;
-//   color: ${(props) => (props.isActive ? "white" : "gray")};
-
-//   background-color: ${(props) =>
-//     props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
-//   &:hover {
-//     background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
-//   }
-// `;
 
 type PropsType = {
   setPlayer: React.Dispatch<React.SetStateAction<Player | undefined>>;

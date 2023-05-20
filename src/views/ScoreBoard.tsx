@@ -13,7 +13,7 @@ const Application = styled.div`
   align-items: center;
   width: 100vw;
   min-height: 100vh;
-  background-color: #dba11c;
+  // background-color: #dba11c;
   padding-top: 100px;
 `;
 const LeaderBoardContainer = styled.div`

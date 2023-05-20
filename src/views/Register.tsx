@@ -24,33 +24,8 @@ const Application = styled.div`
   justify-content: center;
   align-items: center;
   //background-color: #f5f7f9;
-  background-color: #dba11c;
+  // background-color: #dba11c;
 `;
-// const Container = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   border: 2px solid rgb(216, 216, 216);
-//   border-radius: 10px;
-//   padding: 32px 64px;
-//   align-items: center;
-// `;
-type props = {
-  isActive: boolean;
-};
-// const Button = styled.button<props>`
-//   cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-//   background-color: ${(props) =>
-//     props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
-//   color: ${(props) => (props.isActive ? "white" : "gray")};
-//   border: none;
-//   text-align: center;
-//   padding: 16px 64px;
-//   margin: 30px 0 50px;
-
-//   &:hover {
-//     background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
-//   }
-// `;
 
 type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
