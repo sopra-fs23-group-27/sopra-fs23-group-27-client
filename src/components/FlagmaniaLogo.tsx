@@ -59,8 +59,10 @@ export const FlagmaniaLogo = () => {
       sessionStorage.removeItem("lobbyId");
       sessionStorage.removeItem("lobbyName");
       navigate("/");
-    } else {
+    } else if (sessionStorage.getItem("loggedIn") === "false") {
       handleLogout();
+    } else {
+      navigate("/");
     }
   };
 

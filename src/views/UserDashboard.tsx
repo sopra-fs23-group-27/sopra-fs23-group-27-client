@@ -78,7 +78,14 @@ export const UserDashboard = (props: PropsType) => {
         )
       );
 
-      setRatioOfWrongGuesses(100 - ratioOfCorrectGuesses);
+      setRatioOfWrongGuesses(
+        Math.round(
+          (response.data.numWrongGuesses /
+            (response.data.totalCorrectGuesses +
+              response.data.numWrongGuesses)) *
+            100
+        )
+      );
 
       // guessing speed
       if (response.data.nRoundsPlayed === 0) {
