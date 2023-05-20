@@ -59,7 +59,30 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ## Illustrations
-![image](https://user-images.githubusercontent.com/81575342/120933872-9b0b6b00-c6f5-11eb-9b0a-9b8b0b8b5b9a.png)
+In the following, you see the main landing page and entry point for a player to FlagMania. You can choose to login or register a user if you want to have your scores tracked. Alternatively, you can also play as a guest without registering.
+![image](.//img/Main_Page.png)
+
+If you click "Create New Game" you will be directed to the game creation page. Here you can choose a name for your lobby and select the game mode you want to play. You can either play the Basic Game, where you will be presented with a set of preselected flags and options to choose from, or the Public Game, where you can submit your own guesses for a set of flags. Once you have created your lobby, you will be redirected to the lobby page.
+![image](.//img/Main_Page.png)
+
+On the lobby page, you can see the lobby name, the game mode, and the players that have joined the lobby. You can also copy the lobby code and send it to your friends to invite them to join your lobby. Once you are ready to start the game, you can click "Start Game" and you will be redirected to the game page:
+![image](.//img/Main_Page.png)
+
+Now you are in the game! You can below see the layout of the basic mode. In the basic mode you can select your guess by clicking on it. After all players have submitted their guess, the correct guess will light in green.
+![image](.//img/Main_Page.png)
+
+You can below see the layout of the advanced mode. In the advanced mode you can submit your guess by typing it into the submission field. On the right, you can see the wrong guesses other players have submitted:
+![image](.//img/Main_Page.png)
+
+Once you finished the round you get redirected to the scoreboard. It is displayed below. You can see each players current ranking with individual statistics for each player. Don't know what these statistics mean? Click the "Explain Stats" button and get your answers:
+![image](.//img/Main_Page.png)
+
+Congrats, you made it through the whole game! You are now displayed the final leaderboard below. Want to play another game? Then click "Play Again". Are you currently not logged in but still want to save your stats? Click "Register to Save Stats". Want to play a new game with a different lobby? Click "Go to Home":
+![image](.//img/Main_Page.png)
+
+If you navigate to your login screen, you see your overall statistics of all the games you have played:
+![image](.//img/Main_Page.png)
+
 
 ## Roadmap
 There are several features a new developer, who is desperate to contribute could add.
