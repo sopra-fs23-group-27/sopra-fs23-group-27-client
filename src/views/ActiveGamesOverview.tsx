@@ -145,6 +145,7 @@ export const ActiveGameOverview = (props: PropsType) => {
       const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
         headers,
       });
+      setIsLoading(false);
       if (response.status === 204) {
         setLobby(lobby.data);
         navigate("/lobbies/" + lobbyId);
@@ -164,12 +165,6 @@ export const ActiveGameOverview = (props: PropsType) => {
   useEffectOnce(() => {
     getLobbies();
   });
-
-  useEffect(() => {
-    setTimeout(() => {
-      //setIsLoading(false);
-    }, 2000);
-  }, []);
 
   return (
     <Container>
