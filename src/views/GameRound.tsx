@@ -165,6 +165,17 @@ export const GameRound = (props: PropsType) => {
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/round-end`,
     (message: any) => {
+      if (currentGameRound === numRounds) {
+        navigate(`/game/${lobbyId}/gameEnd`);
+      } else {
+        navigate(`/game/${lobbyId}/leaderBoard`);
+      }
+    }
+  );
+  /*
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/round-end`,
+    (message: any) => {
       setTimeout(() => {
         if (currentGameRound === numRounds) {
           navigate(`/game/${lobbyId}/gameEnd`);
@@ -174,6 +185,7 @@ export const GameRound = (props: PropsType) => {
       }, 4500);
     }
   );
+  */
 
   // Get correct guess after each round
   useSubscription(

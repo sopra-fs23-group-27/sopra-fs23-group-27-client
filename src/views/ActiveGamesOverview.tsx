@@ -127,6 +127,7 @@ export const ActiveGameOverview = (props: PropsType) => {
     try {
       const games = (await httpGet("/lobbies", playerToken))
         .data as unknown as game[];
+      setIsLoading(false);
       setGames(games);
     } catch (e: any) {
       console.error(e);
@@ -164,12 +165,6 @@ export const ActiveGameOverview = (props: PropsType) => {
   useEffectOnce(() => {
     getLobbies();
   });
-
-  useEffect(() => {
-    setTimeout(() => {
-      //setIsLoading(false);
-    }, 2000);
-  }, []);
 
   return (
     <Container>
