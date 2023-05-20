@@ -15,43 +15,17 @@ import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { useEffect, useState } from "react";
 import Player from "./models/Player";
 import Lobby from "./models/Lobby";
-import FlagLogo from "./icons/DALL-E_FlagMania_Logo.png";
 
 import { PlayerGuard } from "./components/routing/PlayerGuard";
 import { LoginGuard } from "./components/routing/LoginGuard";
 import { UserDashboard } from "./views/UserDashboard";
 import { GameEnd } from "./views/GameEnd";
 
-import "./App.css";
 import { PlayerSettings } from "./views/PlayerSettings";
-import styled from "styled-components";
 import { PlayAgain } from "./views/PlayAgain";
 import { ErrorPage } from "./views/ErrorPage";
 import { RegisterToSaveStats } from "./views/RegisterToSaveStats";
-
-const FlagmaniaLogo = styled.img`
-  top: 10px;
-  left: 10px;
-  padding: 10px;
-  width: 180px;
-  height: auto;
-  position: absolute;
-  z-index: 1;
-  cursor: pointer;
-  transition: transform 200ms ease-in-out;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-  @media (max-width: 700px) {
-    width: 100px;
-  }
-  @media (max-width: 550px) {
-    top: 5px;
-    left: 5px;
-    width: 70px;
-  }
-`;
+import { FlagmaniaLogo } from "./components/FlagmaniaLogo";
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -65,11 +39,8 @@ export const App = () => {
 
   return (
     <>
-      <a href="/">
-        <FlagmaniaLogo src={FlagLogo} />
-      </a>
-
       <Router>
+        <FlagmaniaLogo />
         <Routes>
           <Route
             path="/"

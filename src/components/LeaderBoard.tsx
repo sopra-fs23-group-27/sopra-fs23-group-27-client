@@ -65,7 +65,7 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
 
   return (
     <ScrollArea>
-      <Table>
+      <Table fontSize="lg" horizontalSpacing="lg">
         <thead>
           <tr>
             <th>Rank</th>

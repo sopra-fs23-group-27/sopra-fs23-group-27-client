@@ -39,26 +39,6 @@ const JoinButton = styled.button`
   }
 `;
 
-const ReloadButton = styled.button`
-  background-color: #19376d;
-  border: 3px solid transparent;
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  padding: 10px 18px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: lightgray;
-    color: #19376d;
-    border: 3px solid #19376d;
-  }
-`;
-
-const Td = styled.td`
-  padding: 12px 10px;
-`;
-
 type PublicGameProps = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
   game: game;
@@ -107,15 +87,30 @@ export const PublicGame = (props: PublicGameProps) => {
   );
 };
 
+const Container = styled.div`
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #dba11c;
+  display: flex;
+  justify-content: center;
+`;
 const Application = styled.div`
   padding: 50px;
-  margin-top: 120px;
+  margin-top: 150px;
+  width: 1200px;
 `;
-const GameList = styled.ul`
+const H1 = styled.h1`
+  font-size: 40px;
+`;
+const ButtonTh = styled.th`
+  width: 100px;
+`;
+const Td = styled.td`
+  padding: 12px 10px;
+`;
+const ButtonTd = styled(Td)`
   display: flex;
-  flex-direction: column;
-  gap: 22px;
-  list-style-type: none;
+  justify-content: flex-end;
 `;
 
 type PropsType = {
@@ -172,44 +167,51 @@ export const ActiveGameOverview = (props: PropsType) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
+      //setIsLoading(false);
     }, 2000);
   }, []);
 
   return (
-    <Application>
-      {isLoading ? (
-        <RainbowLoader />
-      ) : (
-        <>
-          <h1>Public Games</h1>
-          <Button onClick={() => getLobbies()} style={{ marginBottom: "36px" }}>
-            Reload
-          </Button>
-          {!games[0] && <p>Currently, No public games are open to join</p>}
-          <Table miw={800} verticalSpacing="sm">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th># Players</th>
-                <th>Mode</th>
-                <th></th>
-                <th />
-              </tr>
-              {games.map((g, ind) => (
+    <Container>
+      <Application>
+        {isLoading ? (
+          <RainbowLoader />
+        ) : (
+          <>
+            <H1>Public Games</H1>
+            <Button
+              size="md"
+              onClick={() => getLobbies()}
+              style={{ marginBottom: "36px" }}
+            >
+              Reload
+            </Button>
+            {!games[0] && <p>Currently, No public games are open to join</p>}
+            <Table miw={600} verticalSpacing="lg" fontSize="xl">
+              <thead>
                 <tr>
-                  <Td>{g.lobbyName}</Td>
-                  <Td>{g.joinedPlayerNames.length}</Td>
-                  <Td>{g.mode}</Td>
-                  <Td>
-                    <Button onClick={() => joinGame(g.lobbyId)}>Join</Button>
-                  </Td>
+                  <th>Name</th>
+                  <th># Players</th>
+                  <th>Mode</th>
+                  <ButtonTh />
                 </tr>
-              ))}
-            </thead>
-          </Table>
-        </>
-      )}
-    </Application>
+                {games.map((g, ind) => (
+                  <tr key={ind}>
+                    <Td>{g.lobbyName}</Td>
+                    <Td>{g.joinedPlayerNames.length}</Td>
+                    <Td>{g.mode}</Td>
+                    <ButtonTd>
+                      <Button size="lg" onClick={() => joinGame(g.lobbyId)}>
+                        Join
+                      </Button>
+                    </ButtonTd>
+                  </tr>
+                ))}
+              </thead>
+            </Table>
+          </>
+        )}
+      </Application>
+    </Container>
   );
 };
