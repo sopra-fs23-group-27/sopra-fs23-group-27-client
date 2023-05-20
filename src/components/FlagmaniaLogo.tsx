@@ -61,10 +61,9 @@ export const FlagmaniaLogo = () => {
       navigate("/");
     } else {
       handleLogout();
-      navigate("/");
     }
   };
 
 
-  return <FlagManiaLogo onClick={() => handleClickedLogo} src={FlagLogo} />;
+  return <FlagManiaLogo onClick={() => handleClickedLogo()} src={FlagLogo} />;
 };
