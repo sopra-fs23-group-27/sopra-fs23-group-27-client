@@ -1,11 +1,27 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Dispatch, SetStateAction } from "react";
 import { httpPost } from "../helpers/httpService";
 import Player from "../models/Player";
 import { notifications } from "@mantine/notifications";
-import { Button, TextInput } from "@mantine/core";
+import { Button, TextInput, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
+import { IconInfoCircle } from "@tabler/icons-react";
+
+const ICON_SIZE = rem(60);
+
+const useStyles = createStyles((theme) => ({
+  icon: {
+    position: "absolute",
+    top: `calc(5% - ${ICON_SIZE} / 2)`,
+    left: `calc(95% - ${ICON_SIZE} / 2)`,
+  },
+
+  title: {
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+    lineHeight: 1,
+  },
+}));
 
 const Application = styled.div`
   display: flex;
@@ -53,7 +69,9 @@ type PropsType = {
 };
 
 export const HomePage = (props: PropsType) => {
+  const { classes } = useStyles();
   const { isLoggedIn, setPlayer } = props;
+  const { lobbyId } = useParams();
 
   const [playerName, setPlayerName] = useInputState("");
   const navigate = useNavigate();
@@ -119,12 +137,15 @@ export const HomePage = (props: PropsType) => {
 
   return (
     <Application>
+      <ThemeIcon className={classes.icon} size={ICON_SIZE} radius={ICON_SIZE}>
+        <IconInfoCircle size="2rem" stroke={1.5} onClick={() => navigate("/gameInfo")} style={{ cursor: "pointer" }} />
+      </ThemeIcon>
       <H1>FlagMania</H1>
       <p>Learn about the flags of the world!</p>
 
       <UserContainer>
         {isLoggedIn ? (
-          <>
+          <>leaderBoard
             <Button size="xl" onClick={() => navigate("/profile")}>
               Show Your Profile
             </Button>
