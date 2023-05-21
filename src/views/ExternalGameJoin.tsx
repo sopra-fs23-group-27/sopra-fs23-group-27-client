@@ -215,6 +215,7 @@ export const ExternalGameJoin = (props: PropsType) => {
       body,
       { headers }
     );
+    console.log("put response: ", response);
     if (response.status === 204) {
       setCurrentGameRound(0);
       navigate("/lobbies/" + lobbyId);
