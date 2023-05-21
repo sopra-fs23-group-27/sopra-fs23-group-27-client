@@ -62,6 +62,7 @@ const UserContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 20px;
   height: 80vh;
   font-size: 38px;
 `;
@@ -233,11 +234,11 @@ export const GameLobby = (props: PropsType) => {
     // delete lobby from session storage
     sessionStorage.removeItem("lobbyId");
     sessionStorage.removeItem("lobbyName");
-    // for non-permanent users, flush session storage
-    if (!sessionStorage.getItem("loggedIn") === true) {
-      sessionStorage.clear();
-    }
-    navigate("/");
+    // // for non-permanent users, flush session storage
+    // if (!sessionStorage.getItem("loggedIn") === true) {
+    //   sessionStorage.clear();
+    // }
+    navigate("/publicGames");
   });
 
   useEffectOnce(() => {
@@ -353,30 +354,30 @@ export const GameLobby = (props: PropsType) => {
                 backgroundColor: "white",
               }}
             />
-
-            {gameMode === "ADVANCED" ? (
-              <LobbySettingsAdvanced
-                lobbyId={lobbyId}
-                lobbyName={lobbyName}
-                continent={continent}
-                numberOfPlayers={numberOfPlayers}
-                numberOfRounds={lobby?.numRounds}
-                showFirstHintAfter={firstHintAfter}
-                hintsInterval={hintsInterval}
-                timeLimitPerRound={timeLimitPerRound}
-              />
-            ) : (
-              <LobbySettingsBasic
-                lobbyId={lobbyId}
-                lobbyName={lobbyName}
-                continent={continent}
-                numberOfPlayers={numberOfPlayers}
-                numberOfRounds={lobby?.numRounds}
-                numberOfOptions={numberOfOptions}
-                timeLimitPerRound={timeLimitPerRound}
-              />
-            )}
-
+            <UserContainer>
+              {gameMode === "ADVANCED" ? (
+                <LobbySettingsAdvanced
+                  lobbyId={lobbyId}
+                  lobbyName={lobbyName}
+                  continent={continent}
+                  numberOfPlayers={numberOfPlayers}
+                  numberOfRounds={lobby?.numRounds}
+                  showFirstHintAfter={firstHintAfter}
+                  hintsInterval={hintsInterval}
+                  timeLimitPerRound={timeLimitPerRound}
+                />
+              ) : (
+                <LobbySettingsBasic
+                  lobbyId={lobbyId}
+                  lobbyName={lobbyName}
+                  continent={continent}
+                  numberOfPlayers={numberOfPlayers}
+                  numberOfRounds={lobby?.numRounds}
+                  numberOfOptions={numberOfOptions}
+                  timeLimitPerRound={timeLimitPerRound}
+                />
+              )}
+            </UserContainer>
             <h3>Players in lobby:</h3>
 
             <UserContainer>

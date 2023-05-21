@@ -59,7 +59,7 @@ const StartButton = styled.button<StartButtonProps>`
 
 interface PostBody {
   //commmon fields
-  // continent: string[];
+  continent: string[];
   isPublic: boolean;
   numRounds: number;
   numSeconds: number;
@@ -100,14 +100,10 @@ export const ConfigureGame = (props: PropsType) => {
   const [isPublic, setIsPublic] = useState(true);
 
   // CONTINENTS
-  const continents = [
-    "Africa",
-    "Asia",
-    "Europe",
-    "Americas",
-    "Oceania",
+  const defaultContinents = [
+    "World",
   ];
-  const [continent, setContinent] = useState(continents);
+  const [continent, setContinent] = useState(defaultContinents);
   
   const changeGameMode = (updatedGameModeIsBasic: boolean) => {
     if (updatedGameModeIsBasic === isBasic) {
@@ -121,11 +117,14 @@ export const ConfigureGame = (props: PropsType) => {
     }
     setIsBasic(updatedGameModeIsBasic);
   };
+  
   const createLobby = async () => {
     const mode = isBasic ? "basic" : "advanced";
 
+    console.log(continent)
+    
     const body: PostBody = {
-      // continent,
+      continent,
       isPublic,
       numRounds,
       numSeconds,
@@ -289,7 +288,7 @@ export const ConfigureGame = (props: PropsType) => {
 
         <StartButton
           isActive={!!lobbyName}
-          disabled={!lobbyName}
+          disabled={!lobbyName || continent.length === 0}
           onClick={() => createLobby()}
         >
           OPEN

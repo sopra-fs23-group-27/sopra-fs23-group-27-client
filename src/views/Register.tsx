@@ -15,7 +15,7 @@ import {
   Container,
   Button,
   Group,
-} from '@mantine/core';
+} from "@mantine/core";
 
 const Application = styled.div`
   display: flex;
@@ -38,15 +38,21 @@ export const Register = (props: PropsType) => {
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
   const navigate = useNavigate();
 
-  const handleNameInputChange = (event: { currentTarget: { value: SetStateAction<string>; }; }) => {
+  const handleNameInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
     setNameInput(event.currentTarget.value);
   };
 
-  const handlePasswordInputChange = (event: { currentTarget: { value: SetStateAction<string>; }; }) => {
+  const handlePasswordInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
     setPasswordInput(event.currentTarget.value);
   };
 
-  const handlePasswordRepetitionInputChange = (event: { currentTarget: { value: SetStateAction<string>; }; }) => {
+  const handlePasswordRepetitionInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
     setPasswordRepetitionInput(event.currentTarget.value);
   };
 
@@ -111,67 +117,70 @@ export const Register = (props: PropsType) => {
     }
   };
 
-return (
-  <Application>
-    <Container size="xl" my={40}>
-      <Title
-        align="center"
-        sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
-      >
-        Register to join the party!
-      </Title>
-      <Text color="dimmed" size="xl" align="center" mt={5}>
-        Already have an account?{' '}
-        <Anchor size="xl" component="button" onClick={() => navigate("/login")}>
-          Sign in
-        </Anchor>
-      </Text>
-
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput
-          label="Username"
-          placeholder="Username"
-          value={nameInput}
-          onChange={handleNameInputChange}
-          size="xl"
-          required
-        />
-        <Text color="dimmed" size="md" align="center" mt={5}>
-          Minimum password length: 6 characters
-        </Text>
-        <PasswordInput
-          label="Password"
-          placeholder="Password"
-          value={passwordInput}
-          onChange={handlePasswordInputChange}
-          size="xl"
-          required
-          mt="md"
-        />
-        <PasswordInput
-          label="Password"
-          placeholder="repeat Password"
-          value={passwordRepetitionInput}
-          onChange={handlePasswordRepetitionInputChange}
-          size="xl"
-          required
-          mt="md"
-        />
-        <Group position="apart" mt="lg">
-          {/* <Anchor component="button" size="sm">
-            Forgot password?
-          </Anchor> */}
-        </Group>
-        <Button
-          onClick={registerUser}
-          disabled={!isFormFilledOut}
-          fullWidth
-          size="xl"
+  return (
+    <Application>
+      <Container size="xl" my={40}>
+        <Title
+          align="center"
+          sx={(theme) => ({
+            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            fontWeight: 900,
+          })}
         >
-          Register
-        </Button>
-      </Paper>
-    </Container>
-  </Application>
-);
+          Register to join the party!
+        </Title>
+        <Text color="dimmed" size="xl" align="center" mt={5}>
+          Already have an account?{" "}
+          <Anchor
+            size="xl"
+            component="button"
+            onClick={() => navigate("/login")}
+          >
+            Sign in
+          </Anchor>
+        </Text>
+
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <TextInput
+            label="Username"
+            placeholder="Username"
+            value={nameInput}
+            onChange={handleNameInputChange}
+            size="xl"
+            required
+          />
+          <Text color="dimmed" size="md" align="center" mt={5}>
+            Minimum password length: 6 characters
+          </Text>
+          <PasswordInput
+            label="Password"
+            placeholder="Password"
+            value={passwordInput}
+            onChange={handlePasswordInputChange}
+            size="xl"
+            required
+            mt="md"
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="repeat Password"
+            value={passwordRepetitionInput}
+            onChange={handlePasswordRepetitionInputChange}
+            size="xl"
+            required
+            mt="md"
+          />
+          <Group position="apart" mt="lg"></Group>
+          <Button
+            onClick={registerUser}
+            disabled={!isFormFilledOut}
+            fullWidth
+            size="xl"
+          >
+            Register
+          </Button>
+        </Paper>
+      </Container>
+    </Application>
+  );
 };

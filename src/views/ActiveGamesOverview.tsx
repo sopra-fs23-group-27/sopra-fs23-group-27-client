@@ -49,9 +49,19 @@ export const PublicGame = (props: PublicGameProps) => {
   const { lobbyName, joinedPlayerNames, mode, lobbyId } = props.game;
 
   const joinGame = async (lobbyId: number) => {
-    const lobby = await httpGet("/lobbies/" + lobbyId, {});
+    const res = await httpGet("/lobbies/" + lobbyId, {});
 
-    if (lobby.status === 200) {
+    // Create a new Lobby instance from the JSON data in the response
+    const lobby = new Lobby(res.data);
+    setLobby(lobby);
+
+    // Store the name of the lobby into the local storage.
+    sessionStorage.setItem("lobbyName", lobby.lobbyName);
+
+    // Store the ID of the current game in sessionStorage
+    sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
+
+    if (res.status === 200) {
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
@@ -60,7 +70,17 @@ export const PublicGame = (props: PublicGameProps) => {
         headers,
       });
       if (response.status === 204) {
-        setLobby(lobby.data);
+        // Create a new Lobby instance from the JSON data in the response
+        const lobby = new Lobby(response.data);
+        setLobby(lobby);
+
+        // Store the name of the lobby into the local storage.
+        sessionStorage.setItem("lobbyName", lobby.lobbyName);
+
+        // Store the ID of the current game in sessionStorage
+        sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
+
+        // Navigate to the lobby page
         navigate("/lobbies/" + lobbyId);
       } else {
         notifications.show({
@@ -149,8 +169,18 @@ export const ActiveGameOverview = (props: PropsType) => {
       });
       if (response.status === 204) {
         setCurrentGameRound(0);
-        console.log("set lobby: ", lobby.data);
-        setLobby(lobby.data);
+        console.log("set lobby: ", response.data);
+        // Create a new Lobby instance from the JSON data in the response
+        const lobby = new Lobby(response.data);
+        setLobby(lobby);
+
+        // Store the name of the lobby into the local storage.
+        sessionStorage.setItem("lobbyName", lobby.lobbyName);
+
+        // Store the ID of the current game in sessionStorage
+        sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
+        
+        // Navigate to the lobby page
         navigate("/lobbies/" + lobbyId);
       } else {
         notifications.show({
