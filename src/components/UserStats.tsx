@@ -1,10 +1,8 @@
 import { RingProgress, Text, SimpleGrid, Paper, Center, Group } from '@mantine/core';
 import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
 
 interface UserStatsProps {
   userData: {
-    link: string;
     label: string;
     stats: number | string;
     progress: number;
@@ -19,12 +17,11 @@ const icons = {
 };
 
 export function UserStats({ userData }: UserStatsProps) {
-  const navigate = useNavigate();
   const stats = userData.map((stat) => {
     const Icon = icons[stat.icon];
     return (
       <Paper withBorder radius="md" p="xs" key={stat.label}>
-        <Group onClick={() => navigate(stat.link)} position="center" style={{ cursor: 'pointer' }}>
+        <Group position="center">
           <RingProgress
             size={80}
             roundCaps
