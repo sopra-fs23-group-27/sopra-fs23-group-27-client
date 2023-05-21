@@ -13,6 +13,7 @@ import Player from "../models/Player";
 import { ButtonCopy } from "../components/ClipboardButton";
 import { LobbySettingsAdvanced } from "../components/LobbySettingsAdvanced";
 import { LobbySettingsBasic } from "../components/LobbySettingsBasic";
+import Lobby from "../models/Lobby";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -68,9 +69,10 @@ const UserContainer = styled.div`
 type PropsType = {
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  lobby: Lobby | undefined;
 };
 export const GameLobby = (props: PropsType) => {
-  const { player, setPlayer } = props;
+  const { player, setPlayer, lobby } = props;
 
   const [currentAdmin, setCurrentAdmin] = useState("");
 
@@ -89,7 +91,6 @@ export const GameLobby = (props: PropsType) => {
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
   const [continent, setContinent] = useState("");
-  const [numberOfRounds, setNumberOfRounds] = useState(0);
   const [firstHintAfter, setFirstHintAfter] = useState(0);
   const [hintsInterval, setHintsInterval] = useState(0);
   const [timeLimitPerRound, setTimeLimitPerRound] = useState(0);
@@ -118,13 +119,12 @@ export const GameLobby = (props: PropsType) => {
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
       setIsLoading(false);
+      console.log("Lobby settings: ", JSON.parse(message.body));
       // get the lobby name and joined player names from the message
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
       const continent = JSON.parse(message.body).continent as string;
-      const newNumberOfRounds = JSON.parse(message.body).numRounds as number;
-      //TODO: num rounds and continent not working
       const newFirstHintAfter = JSON.parse(message.body)
         .numSecondsUntilHint as number;
       const newHintsInterval = JSON.parse(message.body).hintInterval as number;
@@ -207,7 +207,6 @@ export const GameLobby = (props: PropsType) => {
       setLobbyname(newLobbyName);
       setJoinedPlayerNames(newJoinedPlayerNames);
       setContinent(continent);
-      setNumberOfRounds(newNumberOfRounds);
       setFirstHintAfter(newFirstHintAfter);
       setHintsInterval(newHintsInterval);
       setTimeLimitPerRound(newTimeLimitPerRound);
@@ -296,7 +295,10 @@ export const GameLobby = (props: PropsType) => {
       sessionStorage.removeItem("lobbyId");
       sessionStorage.removeItem("lobbyName");
       // for non-permanent users, flush session storage
-      if (!sessionStorage.getItem("loggedIn") || sessionStorage.getItem("loggedIn") === "false") {
+      if (
+        !sessionStorage.getItem("loggedIn") ||
+        sessionStorage.getItem("loggedIn") === "false"
+      ) {
         sessionStorage.clear();
       }
       navigate("/");
@@ -358,7 +360,7 @@ export const GameLobby = (props: PropsType) => {
                 lobbyName={lobbyName}
                 continent={continent}
                 numberOfPlayers={numberOfPlayers}
-                numberOfRounds={numberOfRounds}
+                numberOfRounds={lobby?.numRounds}
                 showFirstHintAfter={firstHintAfter}
                 hintsInterval={hintsInterval}
                 timeLimitPerRound={timeLimitPerRound}
@@ -369,7 +371,7 @@ export const GameLobby = (props: PropsType) => {
                 lobbyName={lobbyName}
                 continent={continent}
                 numberOfPlayers={numberOfPlayers}
-                numberOfRounds={numberOfRounds}
+                numberOfRounds={lobby?.numRounds}
                 numberOfOptions={numberOfOptions}
                 timeLimitPerRound={timeLimitPerRound}
               />

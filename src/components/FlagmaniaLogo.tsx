@@ -40,6 +40,7 @@ export const FlagmaniaLogo = () => {
         {},
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
+
       // reset the session storage
       sessionStorage.clear();
       navigate("/");
@@ -60,7 +61,6 @@ export const FlagmaniaLogo = () => {
       navigate("/");
     } else if (sessionStorage.getItem("loggedIn") === "false") {
       handleLogout();
-      navigate("/");
     } else {
       navigate("/");
     }

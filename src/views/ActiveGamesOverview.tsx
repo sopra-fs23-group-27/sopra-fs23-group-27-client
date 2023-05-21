@@ -115,9 +115,10 @@ const ButtonTd = styled(Td)`
 
 type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  setCurrentGameRound: Dispatch<SetStateAction<number>>;
 };
 export const ActiveGameOverview = (props: PropsType) => {
-  const { setLobby } = props;
+  const { setLobby, setCurrentGameRound } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [games, setGames] = useState<game[]>([]);
   const navigate = useNavigate();
@@ -147,6 +148,8 @@ export const ActiveGameOverview = (props: PropsType) => {
         headers,
       });
       if (response.status === 204) {
+        setCurrentGameRound(0);
+        console.log("set lobby: ", lobby.data);
         setLobby(lobby.data);
         navigate("/lobbies/" + lobbyId);
       } else {
