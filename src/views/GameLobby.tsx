@@ -234,11 +234,11 @@ export const GameLobby = (props: PropsType) => {
     // delete lobby from session storage
     sessionStorage.removeItem("lobbyId");
     sessionStorage.removeItem("lobbyName");
-    // for non-permanent users, flush session storage
-    if (!sessionStorage.getItem("loggedIn") === true) {
-      sessionStorage.clear();
-    }
-    navigate("/");
+    // // for non-permanent users, flush session storage
+    // if (!sessionStorage.getItem("loggedIn") === true) {
+    //   sessionStorage.clear();
+    // }
+    navigate("/publicGames");
   });
 
   useEffectOnce(() => {

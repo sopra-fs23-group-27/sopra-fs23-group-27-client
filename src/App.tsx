@@ -28,7 +28,8 @@ import { ErrorPage } from "./views/ErrorPage";
 import { RegisterToSaveStats } from "./views/RegisterToSaveStats";
 import { FlagmaniaLogo } from "./components/FlagmaniaLogo";
 import styled from "styled-components";
-import useSubscription from "react-stomp-hooks/dist/hooks/useSubscription";
+import { GameInfo } from "./views/GameInfo";
+import { ScoreInfo } from "./views/ScoreInfo";
 
 const BackgroundImageContainer = styled.div`
   position: fixed;
@@ -222,6 +223,19 @@ export const App = () => {
           <Route
             path="/saveStatsRegister"
             element={<RegisterToSaveStats setPlayer={setPlayer} />}
+          />
+          <Route
+            path="/gameInfo"
+            element={<GameInfo />}
+          />
+          <Route
+            path="/game/:lobbyId/scoreInfo"
+            element={
+              <FlagManiaGuard shouldPreventReload={true}>
+                <ScoreInfo />
+              </FlagManiaGuard>
+            }
+            errorElement={<ErrorPage />}
           />
           <Route path="*" element={<ErrorPage />} />
         </Routes>

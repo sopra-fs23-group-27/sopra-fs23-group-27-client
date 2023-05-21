@@ -89,11 +89,20 @@ export const ExternalGameJoin = (props: PropsType) => {
           Authorization: sessionStorage.getItem("FlagManiaToken"),
         };
         // get lobby
-        const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
+        const response = await httpGet("/lobbies/" + lobbyId, { headers });
+
+        // Create a new Lobby instance from the JSON data in the response
+        const lobby = new Lobby(response.data);
+        setLobby(lobby);
+
+        // Store the name of the lobby into the local storage.
+        sessionStorage.setItem("lobbyName", lobby.lobbyName);
+
+        // Store the ID of the current game in sessionStorage
+        sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
 
         // join game
-        setLobby(lobby.data);
-        joinGame(lobby.data.privateLobbyKey);
+        joinGame(lobby.privateLobbyKey);
       };
       playerJoin();
     }
@@ -134,11 +143,20 @@ export const ExternalGameJoin = (props: PropsType) => {
       };
 
       // get lobby
-      const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
+      const res = await httpGet("/lobbies/" + lobbyId, { headers });
+
+      // Create a new Lobby instance from the JSON data in the response
+      const lobby = new Lobby(res.data);
+      setLobby(lobby);
+
+      // Store the name of the lobby into the local storage.
+      sessionStorage.setItem("lobbyName", lobby.lobbyName);
+
+      // Store the ID of the current game in sessionStorage
+      sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
 
       // join game
-      setLobby(lobby.data);
-      joinGame(lobby.data.privateLobbyKey);
+      joinGame(lobby.privateLobbyKey);
 
       // catch errors
     } catch (error: any) {
@@ -189,7 +207,7 @@ export const ExternalGameJoin = (props: PropsType) => {
       };
 
       // get lobby
-      const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
+      const response = await httpGet("/lobbies/" + lobbyId, { headers });
 
       // show notification that player has successfully logged in
       notifications.show({
@@ -198,9 +216,19 @@ export const ExternalGameJoin = (props: PropsType) => {
         color: "green",
       });
 
+      // Create a new Lobby instance from the JSON data in the response
+      const lobby = new Lobby(response.data);
+      setLobby(lobby);
+
+      // Store the name of the lobby into the local storage.
+      sessionStorage.setItem("lobbyName", lobby.lobbyName);
+
+      // Store the ID of the current game in sessionStorage
+      sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
+
       // join game
-      setLobby(lobby.data);
-      joinGame(lobby.data.privateLobbyKey);
+      joinGame(lobby.privateLobbyKey);
+
     } catch (err: any) {
       notifications.show({
         title: "Error",

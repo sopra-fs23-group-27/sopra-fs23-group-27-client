@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import FlagLogo from "../icons/DALL-E_FlagMania_Logo.png";
-import { useNavigate } from "react-router-dom";
-import { httpPost } from "../helpers/httpService";
+import { useNavigate, useParams } from "react-router-dom";
+import { httpPost, httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 
 const FlagManiaLogo = styled.img`
@@ -30,6 +30,30 @@ const FlagManiaLogo = styled.img`
 
 export const FlagmaniaLogo = () => {
   const navigate = useNavigate();
+  const { lobbyId } = useParams();
+
+  const handleLeaveLobby = async () => {
+    try {
+      await httpPut(
+        "/lobbies/" + lobbyId + "/leave",
+        {},
+        { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
+      );
+      // delete lobby from session storage
+      sessionStorage.removeItem("lobbyId");
+      sessionStorage.removeItem("lobbyName");
+
+      // navigate to dashboard
+      navigate("/");
+    } catch (error: any) {
+      notifications.show({
+        title: "Error",
+        message: error.response.data.message,
+        color: "red",
+      });
+      console.error(error);
+    }
+  };
 
   const handleLogout = async () => {
     // get player id from session storage
@@ -56,9 +80,7 @@ export const FlagmaniaLogo = () => {
 
   const handleClickedLogo = () => {
     if (sessionStorage.getItem("loggedIn") === "true") {
-      sessionStorage.removeItem("lobbyId");
-      sessionStorage.removeItem("lobbyName");
-      navigate("/");
+      handleLeaveLobby();
     } else if (sessionStorage.getItem("loggedIn") === "false") {
       handleLogout();
     } else {

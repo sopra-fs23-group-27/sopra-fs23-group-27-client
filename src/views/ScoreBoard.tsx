@@ -4,8 +4,24 @@ import { useStompClient, useSubscription } from "react-stomp-hooks";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import styled from "styled-components";
 import { LeaderBoard } from "../components/LeaderBoard";
-import { Button } from "@mantine/core";
+import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
 import Player from "../models/Player";
+import { IconInfoCircle } from "@tabler/icons-react";
+
+const ICON_SIZE = rem(60);
+
+const useStyles = createStyles((theme) => ({
+  icon: {
+    position: "absolute",
+    top: `calc(5% - ${ICON_SIZE} / 2)`,
+    left: `calc(95% - ${ICON_SIZE} / 2)`,
+  },
+
+  title: {
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+    lineHeight: 1,
+  },
+}));
 
 const Application = styled.div`
   display: flex;
@@ -33,6 +49,7 @@ type PropsType = {
 };
 
 export const ScoreBoard = (props: PropsType) => {
+  const { classes } = useStyles();
   const { player } = props;
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
@@ -52,17 +69,6 @@ export const ScoreBoard = (props: PropsType) => {
 
   // get the player name from local storage
   const playerName = sessionStorage.getItem("playerName");
-
-  // useEffectOnce(() => {
-  //   if (stompClient) {
-  //     stompClient.publish({
-  //       destination: "/app/authentication",
-  //       body: JSON.stringify({ playerToken }),
-  //     });
-  //   } else {
-  //     console.error("Error: Could not send message");
-  //   }
-  // });
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
@@ -146,6 +152,14 @@ export const ScoreBoard = (props: PropsType) => {
 
   return (
     <Application>
+      <ThemeIcon className={classes.icon} size={ICON_SIZE} radius={ICON_SIZE}>
+        <IconInfoCircle
+          size="2rem"
+          stroke={1.5}
+          onClick={() => navigate("/game/" + lobbyId + "/scoreInfo")}
+          style={{ cursor: "pointer" }}
+        />
+      </ThemeIcon>
       <LeaderBoardContainer>
         <h1>ScoreBoard</h1>
         <LeaderBoard playerData={playerData} />
