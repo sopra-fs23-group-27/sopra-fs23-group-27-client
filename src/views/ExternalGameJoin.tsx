@@ -125,6 +125,9 @@ export const ExternalGameJoin = (props: PropsType) => {
       // Store the Name of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayer", player.playerName);
 
+      // Store login status of the current user
+      sessionStorage.setItem("loggedIn", "false");
+
       // define header and body
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
