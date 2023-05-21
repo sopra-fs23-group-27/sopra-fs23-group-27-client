@@ -119,7 +119,7 @@ export const UserDashboard = (props: PropsType) => {
 
   const userData: UserStatsProps["userData"] = [
     {
-      label: "Games Played",
+      label: "Rounds Played",
       stats: nRoundsPlayed,
       progress: 100,
       color: "blue",
@@ -140,7 +140,7 @@ export const UserDashboard = (props: PropsType) => {
       icon: "down",
     },
     {
-      label: "Guessing Speed",
+      label: "Avg Guessing Speed",
       stats: guessingSpeed + "s",
       progress: 100,
       color: "blue",
