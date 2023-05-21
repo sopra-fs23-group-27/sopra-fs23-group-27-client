@@ -54,10 +54,11 @@ type props = {
 type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  setCurrentGameRound: Dispatch<SetStateAction<number>>;
 };
 
 export const ExternalGameJoin = (props: PropsType) => {
-  const { setLobby, setPlayer } = props;
+  const { setLobby, setPlayer, setCurrentGameRound } = props;
   const [playerName, setPlayerName] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [nameInput, setNameInput] = useState("");
@@ -89,10 +90,10 @@ export const ExternalGameJoin = (props: PropsType) => {
         };
         // get lobby
         const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
-        console.log("set lobby: ", lobby.data);
-        setLobby(lobby.data);
 
         // join game
+        setLobby(lobby.data);
+        console.log("set lobby: ", lobby.data);
         joinGame(lobby.data.privateLobbyKey);
       };
       playerJoin();
@@ -133,10 +134,10 @@ export const ExternalGameJoin = (props: PropsType) => {
 
       // get lobby
       const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
-      console.log("set lobby: ", lobby.data);
-      setLobby(lobby.data);
 
       // join game
+      setLobby(lobby.data);
+      console.log("set lobby: ", lobby.data);
       joinGame(lobby.data.privateLobbyKey);
 
       // catch errors
@@ -189,8 +190,6 @@ export const ExternalGameJoin = (props: PropsType) => {
 
       // get lobby
       const lobby = await httpGet("/lobbies/" + lobbyId, { headers });
-      console.log("set lobby: ", lobby.data);
-      setLobby(lobby.data);
 
       // show notification that player has successfully logged in
       notifications.show({
@@ -200,6 +199,8 @@ export const ExternalGameJoin = (props: PropsType) => {
       });
 
       // join game
+      setLobby(lobby.data);
+      console.log("set lobby: ", lobby.data);
       joinGame(lobby.data.privateLobbyKey);
     } catch (err: any) {
       notifications.show({
@@ -218,7 +219,9 @@ export const ExternalGameJoin = (props: PropsType) => {
       body,
       { headers }
     );
+    console.log("put response: ", response);
     if (response.status === 204) {
+      setCurrentGameRound(0);
       navigate("/lobbies/" + lobbyId);
     } else {
       notifications.show({
