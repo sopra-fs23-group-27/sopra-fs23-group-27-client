@@ -1,10 +1,21 @@
 import styled from "styled-components";
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
-import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 import Player from "../models/Player";
+
+import {
+  TextInput,
+  PasswordInput,
+  Anchor,
+  Paper,
+  Title,
+  Text,
+  Container,
+  Button,
+  Group,
+} from "@mantine/core";
 
 const Application = styled.div`
   display: flex;
@@ -13,31 +24,31 @@ const Application = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 2px solid rgb(216, 216, 216);
-  border-radius: 10px;
-  padding: 32px 64px;
-  align-items: center;
-`;
-type props = {
-  isActive: boolean;
-};
-const Button = styled.button<props>`
-  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-  background-color: ${(props) =>
-    props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
-  color: ${(props) => (props.isActive ? "white" : "gray")};
-  border: none;
-  text-align: center;
-  padding: 16px 64px;
-  margin: 30px 0 50px;
+// const Container = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   border: 2px solid rgb(216, 216, 216);
+//   border-radius: 10px;
+//   padding: 32px 64px;
+//   align-items: center;
+// `;
+// type props = {
+//   isActive: boolean;
+// };
+// const Button = styled.button<props>`
+//   cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
+//   background-color: ${(props) =>
+//     props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
+//   color: ${(props) => (props.isActive ? "white" : "gray")};
+//   border: none;
+//   text-align: center;
+//   padding: 16px 64px;
+//   margin: 30px 0 50px;
 
-  &:hover {
-    background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
-  }
-`;
+//   &:hover {
+//     background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
+//   }
+// `;
 
 type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
@@ -50,6 +61,24 @@ export const RegisterToSaveStats = (props: PropsType) => {
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
   const navigate = useNavigate();
+
+  const handleNameInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setNameInput(event.currentTarget.value);
+  };
+
+  const handlePasswordInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setPasswordInput(event.currentTarget.value);
+  };
+
+  const handlePasswordRepetitionInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setPasswordRepetitionInput(event.currentTarget.value);
+  };
 
   useEffect(() => {
     const formCheck = () => {
@@ -117,35 +146,103 @@ export const RegisterToSaveStats = (props: PropsType) => {
     }
   };
 
+  //   return (
+  //     <Application>
+  //       <Container>
+  //         <h1>Register</h1>
+  //         <FloatingTextInput
+  //           label="Name"
+  //           value={nameInput}
+  //           onChange={setNameInput}
+  //         />
+  //         <p>
+  //           Minimum password length: <br />6 characters
+  //         </p>
+  //         <FloatingTextInput
+  //           label="Password"
+  //           value={passwordInput}
+  //           onChange={setPasswordInput}
+  //         />
+  //         <FloatingTextInput
+  //           label="repeat Password"
+  //           value={passwordRepetitionInput}
+  //           onChange={setPasswordRepetitionInput}
+  //         />
+  //         <Button
+  //           isActive={isFormFilledOut}
+  //           disabled={!isFormFilledOut}
+  //           onClick={registerUser}
+  //         >
+  //           Register
+  //         </Button>
+  //       </Container>
+  //     </Application>
+  //   );
+  // };
+
   return (
     <Application>
-      <Container>
-        <h1>Register</h1>
-        <FloatingTextInput
-          label="Name"
-          value={nameInput}
-          onChange={setNameInput}
-        />
-        <p>
-          Minimum password length: <br />6 characters
-        </p>
-        <FloatingTextInput
-          label="Password"
-          value={passwordInput}
-          onChange={setPasswordInput}
-        />
-        <FloatingTextInput
-          label="repeat Password"
-          value={passwordRepetitionInput}
-          onChange={setPasswordRepetitionInput}
-        />
-        <Button
-          isActive={isFormFilledOut}
-          disabled={!isFormFilledOut}
-          onClick={registerUser}
+      <Container size="xl" my={40}>
+        <Title
+          align="center"
+          sx={(theme) => ({
+            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            fontWeight: 900,
+          })}
         >
-          Register
-        </Button>
+          Register to join the party!
+        </Title>
+        <Text color="dimmed" size="xl" align="center" mt={5}>
+          Already have an account?{" "}
+          <Anchor
+            size="xl"
+            component="button"
+            onClick={() => navigate("/login")}
+          >
+            Sign in
+          </Anchor>
+        </Text>
+
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <TextInput
+            label="Username"
+            placeholder="Username"
+            value={nameInput}
+            onChange={handleNameInputChange}
+            size="xl"
+            required
+          />
+          <Text color="dimmed" size="md" align="center" mt={5}>
+            Minimum password length: 6 characters
+          </Text>
+          <PasswordInput
+            label="Password"
+            placeholder="Password"
+            value={passwordInput}
+            onChange={handlePasswordInputChange}
+            size="xl"
+            required
+            mt="md"
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="repeat Password"
+            value={passwordRepetitionInput}
+            onChange={handlePasswordRepetitionInputChange}
+            size="xl"
+            required
+            mt="md"
+          />
+          <Group position="apart" mt="lg"></Group>
+          <Button
+            onClick={registerUser}
+            disabled={!isFormFilledOut}
+            fullWidth
+            size="xl"
+          >
+            Register
+          </Button>
+        </Paper>
       </Container>
     </Application>
   );

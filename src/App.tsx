@@ -41,12 +41,23 @@ const BackgroundImageContainer = styled.div`
 
 const FlagManiaBackground = styled.img`
   position: absolute;
-  width: 100%;
-  height: auto;
   z-index: -0.5;
   opacity: 0.1;
-  transform: translateY(-150px);
+
+  @media (orientation: landscape) and (min-aspect-ratio: 1/1) {
+    width: 100%;
+    height: auto;
+    transform: translateY(-150px);
+  }
+
+  @media (orientation: portrait) and (max-width: 768px) {
+    width: auto;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 `;
+
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

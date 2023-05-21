@@ -69,7 +69,7 @@ export function LobbySettingsBasic(props: basicProps) {
         {lobbyName}
       </Text>
       <Text c="dimmed" ta="center" fz="sm">
-        {continent} (Basic Mode)
+        Basic Mode
       </Text>
 
       <Group position="apart" mt="xs">
