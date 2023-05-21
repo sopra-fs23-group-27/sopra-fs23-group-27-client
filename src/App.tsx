@@ -53,9 +53,10 @@ export const App = () => {
   const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
-  useEffect(() => {
-    console.log("player was updated: ", player);
-  }, [player]);
+  console.log("currentGameRound: ", currentGameRound);
+  if (lobby) {
+    console.log("roundAmount: ", lobby?.numRounds);
+  }
 
   return (
     <>
@@ -84,7 +85,10 @@ export const App = () => {
             path="/publicGames"
             element={
               <FlagManiaGuard shouldPreventReload={false}>
-                <ActiveGameOverview setLobby={setLobby} />
+                <ActiveGameOverview
+                  setLobby={setLobby}
+                  setCurrentGameRound={setCurrentGameRound}
+                />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}
@@ -149,7 +153,11 @@ export const App = () => {
           <Route
             path="/lobbies/:lobbyId/join"
             element={
-              <ExternalGameJoin setLobby={setLobby} setPlayer={setPlayer} />
+              <ExternalGameJoin
+                setLobby={setLobby}
+                setPlayer={setPlayer}
+                setCurrentGameRound={setCurrentGameRound}
+              />
             }
             errorElement={<ErrorPage />}
           />
