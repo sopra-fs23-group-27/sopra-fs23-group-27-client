@@ -93,7 +93,6 @@ export const ExternalGameJoin = (props: PropsType) => {
 
         // join game
         setLobby(lobby.data);
-        console.log("set lobby: ", lobby.data);
         joinGame(lobby.data.privateLobbyKey);
       };
       playerJoin();
@@ -112,7 +111,6 @@ export const ExternalGameJoin = (props: PropsType) => {
         },
         { headers: {} }
       );
-      console.log(response.data);
 
       // Create a new Player instance from the JSON data in the response
       const player = new Player(response.data);
@@ -137,7 +135,6 @@ export const ExternalGameJoin = (props: PropsType) => {
 
       // join game
       setLobby(lobby.data);
-      console.log("set lobby: ", lobby.data);
       joinGame(lobby.data.privateLobbyKey);
 
       // catch errors
@@ -200,7 +197,6 @@ export const ExternalGameJoin = (props: PropsType) => {
 
       // join game
       setLobby(lobby.data);
-      console.log("set lobby: ", lobby.data);
       joinGame(lobby.data.privateLobbyKey);
     } catch (err: any) {
       notifications.show({
@@ -219,7 +215,6 @@ export const ExternalGameJoin = (props: PropsType) => {
       body,
       { headers }
     );
-    console.log("put response: ", response);
     if (response.status === 204) {
       setCurrentGameRound(0);
       navigate("/lobbies/" + lobbyId);

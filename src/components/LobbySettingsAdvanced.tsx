@@ -1,18 +1,27 @@
-import { createStyles, ThemeIcon, Progress, Text, Group, Badge, Paper, rem } from '@mantine/core';
-import { IconLoader } from '@tabler/icons-react';
+import {
+  createStyles,
+  ThemeIcon,
+  Progress,
+  Text,
+  Group,
+  Badge,
+  Paper,
+  rem,
+} from "@mantine/core";
+import { IconLoader } from "@tabler/icons-react";
 
 const ICON_SIZE = rem(60);
 
 const useStyles = createStyles((theme) => ({
   card: {
-    position: 'relative',
-    overflow: 'visible',
+    position: "relative",
+    overflow: "visible",
     padding: theme.spacing.xl,
     paddingTop: `calc(${theme.spacing.xl} * 1.5 + ${ICON_SIZE} / 3)`,
   },
 
   icon: {
-    position: 'absolute',
+    position: "absolute",
     top: `calc(-${ICON_SIZE} / 3)`,
     left: `calc(50% - ${ICON_SIZE} / 2)`,
   },
@@ -28,7 +37,7 @@ interface advancedProps {
   lobbyName: string | undefined;
   continent: string | undefined;
   numberOfPlayers: number;
-  numberOfRounds: number;
+  numberOfRounds: number | undefined;
   showFirstHintAfter: number;
   hintsInterval: number;
   timeLimitPerRound: number;
@@ -36,19 +45,33 @@ interface advancedProps {
 
 export function LobbySettingsAdvanced(props: advancedProps) {
   const { classes } = useStyles();
-  const { lobbyId, lobbyName, continent, numberOfPlayers, numberOfRounds, showFirstHintAfter, hintsInterval, timeLimitPerRound } = props;
+  const {
+    lobbyId,
+    lobbyName,
+    continent,
+    numberOfPlayers,
+    numberOfRounds,
+    showFirstHintAfter,
+    hintsInterval,
+    timeLimitPerRound,
+  } = props;
 
   return (
-    <Paper radius="md" withBorder className={classes.card} mt={`calc(${ICON_SIZE} / 3)`}>
+    <Paper
+      radius="md"
+      withBorder
+      className={classes.card}
+      mt={`calc(${ICON_SIZE} / 3)`}
+    >
       <ThemeIcon className={classes.icon} size={ICON_SIZE} radius={ICON_SIZE}>
         <IconLoader size="2rem" stroke={1.5} />
       </ThemeIcon>
 
       <Text ta="center" fw={700} className={classes.title}>
-        Game Lobby {lobbyId}: {lobbyName}
+        {lobbyName}
       </Text>
       <Text c="dimmed" ta="center" fz="sm">
-      {continent} (Advanced Mode)
+        {continent} (Advanced Mode)
       </Text>
 
       <Group position="apart" mt="xs">
@@ -60,18 +83,21 @@ export function LobbySettingsAdvanced(props: advancedProps) {
         </Text>
       </Group>
 
-      <Progress value={62} mt={6} />
+      <Progress
+        value={numberOfRounds ? (numberOfRounds / 12) * 100 : 50}
+        mt={6}
+      />
 
       <Group position="apart" mt="xs">
         <Text fz="sm" color="dimmed">
-          First hint after 
+          First hint after
         </Text>
         <Text fz="sm" color="dimmed">
           {showFirstHintAfter}
         </Text>
       </Group>
 
-      <Progress value={62} mt={5} />
+      <Progress value={(showFirstHintAfter / 15) * 100} mt={5} />
 
       <Group position="apart" mt="xs">
         <Text fz="sm" color="dimmed">
@@ -82,7 +108,7 @@ export function LobbySettingsAdvanced(props: advancedProps) {
         </Text>
       </Group>
 
-      <Progress value={62} mt={5} />
+      <Progress value={(hintsInterval / 10) * 100} mt={5} />
 
       <Group position="apart" mt="xs">
         <Text fz="sm" color="dimmed">
@@ -93,7 +119,7 @@ export function LobbySettingsAdvanced(props: advancedProps) {
         </Text>
       </Group>
 
-      <Progress value={62} mt={5} />
+      <Progress value={(timeLimitPerRound / 120) * 100} mt={5} />
 
       <Group position="apart" mt="md">
         <Text fz="sm">{numberOfPlayers} joined</Text>
