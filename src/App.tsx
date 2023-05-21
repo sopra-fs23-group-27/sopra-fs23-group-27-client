@@ -12,7 +12,7 @@ import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoard } from "./views/ScoreBoard";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Player from "./models/Player";
 import Lobby from "./models/Lobby";
 import FlagBackground from "./icons/Background_Flagmania.png";
@@ -28,6 +28,7 @@ import { ErrorPage } from "./views/ErrorPage";
 import { RegisterToSaveStats } from "./views/RegisterToSaveStats";
 import { FlagmaniaLogo } from "./components/FlagmaniaLogo";
 import styled from "styled-components";
+import useSubscription from "react-stomp-hooks/dist/hooks/useSubscription";
 
 const BackgroundImageContainer = styled.div`
   position: fixed;
@@ -52,11 +53,6 @@ export const App = () => {
   const [player, setPlayer] = useState<Player | undefined>();
   const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
-
-  console.log("currentGameRound: ", currentGameRound);
-  if (lobby) {
-    console.log("roundAmount: ", lobby?.numRounds);
-  }
 
   return (
     <>
@@ -131,7 +127,11 @@ export const App = () => {
             path="/lobbies/:lobbyId"
             element={
               <FlagManiaGuard shouldPreventReload={true}>
-                <GameLobby player={player} setPlayer={setPlayer} />
+                <GameLobby
+                  player={player}
+                  setPlayer={setPlayer}
+                  lobby={lobby}
+                />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}
