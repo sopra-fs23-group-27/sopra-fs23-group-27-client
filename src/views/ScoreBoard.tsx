@@ -5,7 +5,7 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import styled from "styled-components";
 import { LeaderBoard } from "../components/LeaderBoard";
 import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 const ICON_SIZE = rem(60);

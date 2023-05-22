@@ -7,7 +7,7 @@ import { httpGet, httpPut } from "../helpers/httpService";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 import { useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
-import Lobby from "../models/Lobby";
+import { Lobby } from "../types/Lobby";
 import { Button, Table } from "@mantine/core";
 
 const GameContainer = styled.li`
@@ -52,14 +52,13 @@ export const PublicGame = (props: PublicGameProps) => {
     const res = await httpGet("/lobbies/" + lobbyId, {});
 
     // Create a new Lobby instance from the JSON data in the response
-    const lobby = new Lobby(res.data);
-    setLobby(lobby);
+    setLobby(res.data);
 
     // Store the name of the lobby into the local storage.
-    sessionStorage.setItem("lobbyName", lobby.lobbyName);
+    sessionStorage.setItem("lobbyName", res.data.lobbyName);
 
     // Store the ID of the current game in sessionStorage
-    sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
+    sessionStorage.setItem("lobbyId", res.data.lobbyId.toString());
 
     if (res.status === 200) {
       const headers = {
@@ -71,14 +70,12 @@ export const PublicGame = (props: PublicGameProps) => {
       });
       if (response.status === 204) {
         // Create a new Lobby instance from the JSON data in the response
-        const lobby = new Lobby(response.data);
-        setLobby(lobby);
 
         // Store the name of the lobby into the local storage.
-        sessionStorage.setItem("lobbyName", lobby.lobbyName);
+        sessionStorage.setItem("lobbyName", res.data.lobbyName);
 
         // Store the ID of the current game in sessionStorage
-        sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
+        sessionStorage.setItem("lobbyId", res.data.lobbyId.toString());
 
         // Navigate to the lobby page
         navigate("/lobbies/" + lobbyId);
@@ -156,10 +153,11 @@ export const ActiveGameOverview = (props: PropsType) => {
   };
 
   const joinGame = async (lobbyId: number) => {
-    const lobby = await httpGet("/lobbies/" + lobbyId, {});
+    const res = await httpGet("/lobbies/" + lobbyId, {});
+    const lobby = res.data as Lobby;
 
     console.log("lobby from join: ", lobby);
-    if (lobby.status === 200) {
+    if (res.status === 200) {
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
@@ -167,19 +165,19 @@ export const ActiveGameOverview = (props: PropsType) => {
       const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
         headers,
       });
+      console.log("response: ", response);
       if (response.status === 204) {
         setCurrentGameRound(0);
         console.log("set lobby: ", response.data);
         // Create a new Lobby instance from the JSON data in the response
-        const lobby = new Lobby(response.data);
-        setLobby(lobby);
+        setLobby(response.data);
 
         // Store the name of the lobby into the local storage.
         sessionStorage.setItem("lobbyName", lobby.lobbyName);
 
         // Store the ID of the current game in sessionStorage
         sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
-        
+
         // Navigate to the lobby page
         navigate("/lobbies/" + lobbyId);
       } else {

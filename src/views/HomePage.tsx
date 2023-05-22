@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { Dispatch, SetStateAction } from "react";
 import { httpPost } from "../helpers/httpService";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { notifications } from "@mantine/notifications";
 import { Button, TextInput, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
@@ -100,7 +100,7 @@ export const HomePage = (props: PropsType) => {
         console.log("new guest player created: ", response.data);
 
         // Create a new Player instance from the JSON data in the response
-        const player = new Player(response.data);
+        const player = response.data;
         setPlayer(player);
         console.log("new guest player created: ", player);
 
@@ -138,14 +138,20 @@ export const HomePage = (props: PropsType) => {
   return (
     <Application>
       <ThemeIcon className={classes.icon} size={ICON_SIZE} radius={ICON_SIZE}>
-        <IconInfoCircle size="2rem" stroke={1.5} onClick={() => navigate("/gameInfo")} style={{ cursor: "pointer" }} />
+        <IconInfoCircle
+          size="2rem"
+          stroke={1.5}
+          onClick={() => navigate("/gameInfo")}
+          style={{ cursor: "pointer" }}
+        />
       </ThemeIcon>
       <H1>FlagMania</H1>
       <p>Learn about the flags of the world!</p>
 
       <UserContainer>
         {isLoggedIn ? (
-          <>leaderBoard
+          <>
+            leaderBoard
             <Button size="xl" onClick={() => navigate("/profile")}>
               Show Your Profile
             </Button>

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { UserCardImage } from "../components/UserCard";
 
 type PropsType = {
@@ -8,7 +8,6 @@ type PropsType = {
 };
 
 export const PlayerSettings = () => {
-
   // get player data from session storage
   const playerId = sessionStorage.getItem("currentPlayerId");
   const playerName = sessionStorage.getItem("currentPlayer");

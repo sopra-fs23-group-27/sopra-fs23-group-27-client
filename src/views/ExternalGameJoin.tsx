@@ -8,10 +8,10 @@ import {
   httpPost,
   httpPut,
 } from "../helpers/httpService";
-import Player from "../models/Player";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import Lobby from "../models/Lobby";
+import { Lobby } from "../types/Lobby";
+import { Player } from "../types/Player";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 
 const Container = styled.div`
@@ -92,7 +92,7 @@ export const ExternalGameJoin = (props: PropsType) => {
         const response = await httpGet("/lobbies/" + lobbyId, { headers });
 
         // Create a new Lobby instance from the JSON data in the response
-        const lobby = new Lobby(response.data);
+        const lobby = response.data;
         setLobby(lobby);
 
         // Store the name of the lobby into the local storage.
@@ -123,7 +123,7 @@ export const ExternalGameJoin = (props: PropsType) => {
       );
 
       // Create a new Player instance from the JSON data in the response
-      const player = new Player(response.data);
+      const player = response.data;
       setPlayer(player);
 
       // Store the token into the session storage.
@@ -147,7 +147,7 @@ export const ExternalGameJoin = (props: PropsType) => {
       const res = await httpGet("/lobbies/" + lobbyId, { headers });
 
       // Create a new Lobby instance from the JSON data in the response
-      const lobby = new Lobby(res.data);
+      const lobby = res.data;
       setLobby(lobby);
       console.log("set lobby: ", lobby);
 
@@ -220,7 +220,7 @@ export const ExternalGameJoin = (props: PropsType) => {
       });
 
       // Create a new Lobby instance from the JSON data in the response
-      const lobby = new Lobby(response.data);
+      const lobby = response.data;
       setLobby(lobby);
       console.log("set lobby: ", lobby);
       // Store the name of the lobby into the local storage.

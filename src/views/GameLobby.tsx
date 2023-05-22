@@ -9,11 +9,11 @@ import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Button, CloseButton } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { ButtonCopy } from "../components/ClipboardButton";
 import { LobbySettingsAdvanced } from "../components/LobbySettingsAdvanced";
 import { LobbySettingsBasic } from "../components/LobbySettingsBasic";
-import Lobby from "../models/Lobby";
+import { Lobby } from "../types/Lobby";
 
 const Container = styled.div`
   min-height: 100vh;

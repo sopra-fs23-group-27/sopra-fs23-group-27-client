@@ -4,7 +4,7 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
 import { httpPost } from "../helpers/httpService";
-import Lobby from "../models/Lobby";
+import {Lobby} from "../types/Lobby";
 import { notifications } from "@mantine/notifications";
 import { Button as MantineButton } from "@mantine/core";
 import { BiSelect } from "../components/BiSelect";
@@ -16,7 +16,6 @@ const Container = styled.div`
   align-items: center;
   padding: 50px;
   min-height: 100vh;
-  // background-color: #dba11c;
 `;
 const Application = styled.div`
   display: flex;
@@ -25,7 +24,6 @@ const Application = styled.div`
   width: 464px;
   font-size: 20px;
   border: 2px solid black;
-  //border: 2px solid rgb(216, 216, 216);
   border-radius: 10px;
   padding: 16px 32px;
   background-color: #f5f7f9;
@@ -100,11 +98,9 @@ export const ConfigureGame = (props: PropsType) => {
   const [isPublic, setIsPublic] = useState(true);
 
   // CONTINENTS
-  const defaultContinents = [
-    "World",
-  ];
+  const defaultContinents = ["World"];
   const [continent, setContinent] = useState(defaultContinents);
-  
+
   const changeGameMode = (updatedGameModeIsBasic: boolean) => {
     if (updatedGameModeIsBasic === isBasic) {
       return;
@@ -117,12 +113,12 @@ export const ConfigureGame = (props: PropsType) => {
     }
     setIsBasic(updatedGameModeIsBasic);
   };
-  
+
   const createLobby = async () => {
     const mode = isBasic ? "basic" : "advanced";
 
-    console.log(continent)
-    
+    console.log(continent);
+
     const body: PostBody = {
       continent,
       isPublic,
@@ -137,7 +133,7 @@ export const ConfigureGame = (props: PropsType) => {
     } else {
       body.numOptions = numOptions;
     }
-    
+
     try {
       // get token of current player from local storage
       const headers = {
@@ -147,7 +143,7 @@ export const ConfigureGame = (props: PropsType) => {
       const response = await httpPost("/lobbies/" + mode, body, { headers });
 
       // Create a new Lobby instance from the JSON data in the response
-      const lobby = new Lobby(response.data);
+      const lobby = response.data;
       setLobby(lobby);
 
       // Store the name of the lobby into the local storage.

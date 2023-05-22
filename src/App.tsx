@@ -12,9 +12,10 @@ import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoard } from "./views/ScoreBoard";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
-import { useState } from "react";
-import Player from "./models/Player";
-import Lobby from "./models/Lobby";
+import { useEffect, useState } from "react";
+import { Lobby } from "./types/Lobby";
+import { Player } from "./types/Player";
+
 import FlagBackground from "./icons/Background_Flagmania.png";
 
 import { PlayerGuard } from "./components/routing/PlayerGuard";
@@ -61,9 +62,18 @@ const FlagManiaBackground = styled.img`
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // only playerId, flagmaniaToken is stored in sessionStorage
+  // tell backend to create a GET endpoint where we can get the player object with a given playerId
+
   const [player, setPlayer] = useState<Player | undefined>();
   const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("playerId") && !player) {
+      //get request to fetch player object
+    }
+  }, []);
 
   return (
     <>

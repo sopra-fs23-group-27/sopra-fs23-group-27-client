@@ -13,8 +13,7 @@ import { notifications } from "@mantine/notifications";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useStompClient } from "react-stomp-hooks";
-import Player from "../models/Player";
-
+import { Player } from "../types/Player";
 
 type PropsType = {
   data: { name: string; role: string }[];
@@ -87,13 +86,13 @@ export function UsersRolesTable(props: PropsType) {
       <td>
         {currentPlayer !== item.name && player?.isCreator ? (
           <ActionIcon
-          variant="outline"
-          color="red"
-          radius="xl"
-          onClick={() => handleKickingUser(item.name)}
-        >
-          <IconTrash />
-        </ActionIcon>
+            variant="outline"
+            color="red"
+            radius="xl"
+            onClick={() => handleKickingUser(item.name)}
+          >
+            <IconTrash />
+          </ActionIcon>
         ) : (
           ""
         )}

@@ -120,6 +120,9 @@ export const GameRound = (props: PropsType) => {
   const [flagURL, setFlagURL] = useState("");
   const [correctCountry, setCorrectCountry] = useState("");
 
+  console.log("isBasic: ", isBasic);
+  console.log("correctCountry: ", correctCountry);
+
   // BASIC Mode
   const [guessOptions, setGuessOptions] = useState<string[]>([]);
   const [chosenOption, setChosenOption] = useState("");

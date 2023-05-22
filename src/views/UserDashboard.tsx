@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 
 const Container = styled.div`
   display: flex;
@@ -248,7 +248,10 @@ export const UserDashboard = (props: PropsType) => {
       >
         Player Settings{" "}
       </Button>
-      <Button color="red" onClick={() => handleLogout()}> Logout </Button>
+      <Button color="red" onClick={() => handleLogout()}>
+        {" "}
+        Logout{" "}
+      </Button>
     </Container>
   );
 };

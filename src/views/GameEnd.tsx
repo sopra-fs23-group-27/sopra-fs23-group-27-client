@@ -4,7 +4,7 @@ import { useSubscription } from "react-stomp-hooks";
 import { useState } from "react";
 
 import { Button } from "@mantine/core";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Table } from "@mantine/core";
 import "animate.css";

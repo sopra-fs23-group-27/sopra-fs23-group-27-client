@@ -3,7 +3,7 @@ import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 
 import {
   TextInput,
