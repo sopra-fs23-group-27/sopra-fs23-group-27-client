@@ -94,42 +94,49 @@ export const ScoreInfo = () => {
         <Text className={classes.description} color="dimmed">
           Are you confused with the numbers that are displayed? Here is what
           they mean: For each player you see their overall current rank, current
-          total score, current total number of currently correct guessed
-          countries (round won) as well as the summed-up time each player got
-          during the previous rounds and an answer distribution:{" "}
+          total score, current total number of correct guessed countries, the
+          time each player had to submit their first guess (right or wrong)
+          during the previous round and an answer distribution:{" "}
           <ol>
             <li>
               The current overall rank is entirely determined by the current
               score.
             </li>
             <li>
-              The current score is computed as follows: (10 * the number of
-              consecutively correct guesses * 1) + (100 / the time until the
-              correct guess in the previous round * 2) - (the number of times you
-              have not guessed correctly). After each round, the score of the
-              last round is added to the score of the previous rounds.
+              The current score is computed as follows: - If the player did not
+              manage to identify the flag correctly, the score is 0. - If the
+              player did manage to identify the flag correctly, the score is
+              computed as follows: (10 * the number of consecutively correct
+              guesses*1) + (100 / the time until the first guess*2) - (the
+              number of times you have not guessed correctly). After each round,
+              the score of the last round is added to the score of the previous
+              rounds.
             </li>
             <li>
               If you have guessed the country correctly, you are awarded one
               point in the "correct guesses" column, else 0.
             </li>
             <li>
-              In the column "Time Until Correct Guess" you see the overall time
-              you had until the correct guess! If you have not guessed the
-              country correctly, you get the full length (in seconds) of the
-              last round assigned! So better guess correctly!
+              In the column "Time Until Correct Guess" you see the time until
+              each player submitted their first guess (right or wrong). If no
+              guess was submitted, the full length (in seconds) of the last
+              round is assigned!
             </li>
             <li>
               The answer distribution displays the number of countries guessed
               correctly relative to the number of rounds played!
             </li>
+            <li>
+              The flame icon indicates the player has guesses two or more
+              countries correctly in a row.
+            </li>
           </ol>
           <i>
             *1: For example, if you guessed the country correctly in the last 2
-            rounds, you get 10 * 2 = 20 points here; If you have guessed the country
-            correctly in the round before the last round but have not guessed it
-            correctly in the previous round, you get 0 points here as the
-            guesses must be correct consecutively!
+            rounds, you get 10 * 2 = 20 points here; If you have guessed the
+            country correctly in the round before the last round but have not
+            guessed it correctly in the previous round, you get 0 points here as
+            the guesses must be correct consecutively!
           </i>
           <br />
           <i>

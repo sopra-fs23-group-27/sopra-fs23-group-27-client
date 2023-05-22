@@ -286,7 +286,7 @@ export const UserDashboard = (props: PropsType) => {
         <IconInfoCircle
           size="2rem"
           stroke={1.5}
-          onClick={() => navigate("/gameInfo")}
+          onClick={() => navigate("/gameInfoDashboard")}
           style={{ cursor: "pointer" }}
         />
       </ThemeIcon>

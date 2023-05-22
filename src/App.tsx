@@ -31,6 +31,7 @@ import styled from "styled-components";
 import { GameInfo } from "./views/GameInfo";
 import { ScoreInfo } from "./views/ScoreInfo";
 import { httpGet } from "./helpers/httpService";
+import { GameInfoDashboard } from "./views/GameInfoDashboard";
 
 const BackgroundImageContainer = styled.div`
   position: fixed;
@@ -70,22 +71,25 @@ export const App = () => {
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
   useEffect(() => {
-    getPlayer();    
+    getPlayer();
   }, [player]);
 
   const getPlayer = async () => {
     if (sessionStorage.getItem("currentPlayerId") && !player) {
       // get player object from backend
       try {
-        const response = await httpGet(`/players/${sessionStorage.getItem("currentPlayerId")}`, {
-          headers: {
-            Authorization: sessionStorage.getItem("FlagManiaToken"),
-          },
-        });
+        const response = await httpGet(
+          `/players/${sessionStorage.getItem("currentPlayerId")}`,
+          {
+            headers: {
+              Authorization: sessionStorage.getItem("FlagManiaToken"),
+            },
+          }
+        );
         if (response.status === 200) {
           console.log(response.data);
-          setPlayer(response.data);  
-          console.log(player)      
+          setPlayer(response.data);
+          console.log(player);
         }
       } catch (error) {
         console.log(error);
@@ -212,7 +216,10 @@ export const App = () => {
             path="/game/:lobbyId/leaderBoard"
             element={
               <FlagManiaGuard shouldPreventReload={true} player={player}>
-                <ScoreBoard player={player} currentGameRound={currentGameRound} />
+                <ScoreBoard
+                  player={player}
+                  currentGameRound={currentGameRound}
+                />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}
@@ -272,7 +279,16 @@ export const App = () => {
               </FlagManiaGuard>
             }
           />
-          <Route path="/gameInfo" element={<GameInfo />} />
+          <Route path="/gameInfo" element={<GameInfo />} errorElement={<ErrorPage />} />
+          <Route
+            path="/gameInfoDashboard"
+            element={
+              <PlayerGuard isLoggedIn={isLoggedIn}>
+                <GameInfoDashboard />
+              </PlayerGuard>
+            }
+            errorElement={<ErrorPage />}
+          />
           <Route
             path="/game/:lobbyId/scoreInfo"
             element={
