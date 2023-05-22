@@ -3,9 +3,39 @@ import { UserStats } from "../components/UserStats";
 import { httpGet, httpPost } from "../helpers/httpService";
 import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
-import { Button } from "@mantine/core";
+import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
+import { IconInfoCircle } from "@tabler/icons-react";
+
+const ICON_SIZE = rem(60);
+
+const useStyles = createStyles((theme) => ({
+  icon: {
+    position: "absolute",
+    top: `calc(5% - ${ICON_SIZE} / 2)`,
+    left: `calc(95% - ${ICON_SIZE} / 2)`,
+  },
+
+  title: {
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+    lineHeight: 1,
+  },
+}));
+
+const Application = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 38px;
+  color: black;
+  // color: white;
+  text-align: center;
+  //background-color: #f5f7f9;
+  //background-color: #dba11c;
+`;
 
 const Container = styled.div`
   display: flex;
@@ -31,6 +61,7 @@ type PropsType = {
 };
 
 export const UserDashboard = (props: PropsType) => {
+  const { classes } = useStyles();
   const { setPlayer, player } = props;
   const [nRoundsPlayed, setNRoundsPlayed] = useState(0);
   const [
@@ -41,10 +72,8 @@ export const UserDashboard = (props: PropsType) => {
     overallTotalNumberOfWrongGuesses,
     setOverallTotalNumberOfWrongGuesses,
   ] = useState(0);
-  const [
-    overallTotalTimeUntilCorrectGuess,
-    setOverallTotalTimeUntilCorrectGuess,
-  ] = useState(0);
+  const [unansweredFlags, setUnansweredFlags] = useState(0);
+  const [ratioOfUnansweredFlags, setRatioOfUnansweredFlags] = useState(0);
   const [ratioOfCorrectGuesses, setRatioOfCorrectGuesses] = useState(0);
   const [ratioOfWrongGuesses, setRatioOfWrongGuesses] = useState(0);
   const [guessingSpeed, setGuessingSpeed] = useState(0);
@@ -66,14 +95,34 @@ export const UserDashboard = (props: PropsType) => {
       setNRoundsPlayed(response.data.nRoundsPlayed);
       setOverallTotalNumberOfCorrectGuesses(response.data.totalCorrectGuesses);
       setOverallTotalNumberOfWrongGuesses(response.data.numWrongGuesses);
-      setOverallTotalTimeUntilCorrectGuess(response.data.timeUntilCorrectGuess);
+
+      // calculate number of unanswered flags
+      setUnansweredFlags(
+        response.data.nRoundsPlayed -
+          response.data.totalCorrectGuesses -
+          response.data.numWrongGuesses
+      );
+
+      // calculate ratio of unanswered flags
+      setRatioOfUnansweredFlags(
+        Math.round(
+          ((response.data.nRoundsPlayed -
+            response.data.totalCorrectGuesses -
+            response.data.numWrongGuesses) /
+            response.data.nRoundsPlayed) *
+            100
+        )
+      );
 
       // calculate ration of correct guesses
       setRatioOfCorrectGuesses(
         Math.round(
           (response.data.totalCorrectGuesses /
             (response.data.totalCorrectGuesses +
-              response.data.numWrongGuesses)) *
+              response.data.numWrongGuesses +
+              (response.data.nRoundsPlayed -
+                response.data.totalCorrectGuesses -
+                response.data.numWrongGuesses))) *
             100
         )
       );
@@ -82,7 +131,10 @@ export const UserDashboard = (props: PropsType) => {
         Math.round(
           (response.data.numWrongGuesses /
             (response.data.totalCorrectGuesses +
-              response.data.numWrongGuesses)) *
+              response.data.numWrongGuesses +
+              (response.data.nRoundsPlayed -
+                response.data.totalCorrectGuesses -
+                response.data.numWrongGuesses))) *
             100
         )
       );
@@ -137,6 +189,13 @@ export const UserDashboard = (props: PropsType) => {
       stats: overallTotalNumberOfWrongGuesses,
       progress: ratioOfWrongGuesses,
       color: "red",
+      icon: "down",
+    },
+    {
+      label: "Unanswered Flags",
+      stats: unansweredFlags,
+      progress: ratioOfUnansweredFlags,
+      color: "orange",
       icon: "down",
     },
     {
@@ -212,16 +271,18 @@ export const UserDashboard = (props: PropsType) => {
   };
 
   return (
-    <Container>
+    <Application>
+      <ThemeIcon className={classes.icon} size={ICON_SIZE} radius={ICON_SIZE}>
+        <IconInfoCircle
+          size="2rem"
+          stroke={1.5}
+          onClick={() => navigate("/gameInfo")}
+          style={{ cursor: "pointer" }}
+        />
+      </ThemeIcon>
       <h1>Welcome {player?.playerName}</h1>
       <UserStats userData={userData} />
-      {/* <p>
-        <i>Compare yourself to others by clicking one of the statistics</i>
-      </p> */}
       <ButtonContainer>
-        {/* <Button onClick={() => handleCompareStats()}>
-          Compare to other players
-        </Button> */}
         <Button
           disabled={!player?.playerName}
           onClick={() => handleUserJoin("/publicGames", false)}
@@ -248,7 +309,10 @@ export const UserDashboard = (props: PropsType) => {
       >
         Player Settings{" "}
       </Button>
-      <Button color="red" onClick={() => handleLogout()}> Logout </Button>
-    </Container>
+      <Button color="red" onClick={() => handleLogout()}>
+        {" "}
+        Logout{" "}
+      </Button>
+    </Application>
   );
 };

@@ -4,9 +4,9 @@ import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
 import { httpPost } from "../helpers/httpService";
-import Lobby from "../models/Lobby";
+import { Lobby } from "../types/Lobby";
 import { notifications } from "@mantine/notifications";
-import { Button as MantineButton } from "@mantine/core";
+import { Button as MantineButton, TextInput, Title } from "@mantine/core";
 import { BiSelect } from "../components/BiSelect";
 import { ImageCheckboxes } from "../components/Checkboxes";
 
@@ -22,7 +22,7 @@ const Application = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 464px;
+  width: 768px;
   font-size: 20px;
   border: 2px solid black;
   //border: 2px solid rgb(216, 216, 216);
@@ -104,6 +104,12 @@ export const ConfigureGame = (props: PropsType) => {
     "World",
   ];
   const [continent, setContinent] = useState(defaultContinents);
+
+  const handleLobbyNameInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setLobbyName(event.currentTarget.value);
+  };
   
   const changeGameMode = (updatedGameModeIsBasic: boolean) => {
     if (updatedGameModeIsBasic === isBasic) {
@@ -139,22 +145,16 @@ export const ConfigureGame = (props: PropsType) => {
     }
     
     try {
-      // get token of current player from local storage
+      // get token of current player from session storage
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
 
       const response = await httpPost("/lobbies/" + mode, body, { headers });
 
-      // Create a new Lobby instance from the JSON data in the response
-      const lobby = new Lobby(response.data);
+      // Set the lobby state to the response data.
+      const lobby = response.data as Lobby;
       setLobby(lobby);
-
-      // Store the name of the lobby into the local storage.
-      sessionStorage.setItem("lobbyName", lobby.lobbyName);
-
-      // Store the ID of the current game in sessionStorage
-      sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
 
       // navigate to lobby
       navigate("/lobbies/" + lobby.lobbyId);
@@ -174,12 +174,13 @@ export const ConfigureGame = (props: PropsType) => {
   return (
     <Container>
       <Application>
-        <h1>Configure your Game</h1>
+        <Title>Configure Game</Title>
         <div style={{ marginBottom: "32px" }}>
-          <FloatingTextInput
+          <TextInput
             label="Game Name"
             value={lobbyName}
-            onChange={(newVal: string) => setLobbyName(newVal)}
+            onChange={handleLobbyNameInputChange}
+            style={{ width: "100%" }}
           />
         </div>
 

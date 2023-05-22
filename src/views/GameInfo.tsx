@@ -5,7 +5,6 @@ import {
   Button,
   Group,
   rem,
-  ThemeIcon,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
@@ -145,11 +144,11 @@ export const GameInfo = () => {
               >
                 Advanced Mode:{" "}
               </Text>
-              Advanced Mode: Are you already a real flag expert? Then try the
-              Advanced Mode! Here you must type the correct country directly
-              into an input field. To the right you can even see the wrong
-              guesses of the other players. The round ends when the first player
-              has guessed the correct country.
+              Are you already a real flag expert? Then try the Advanced Mode!
+              Here you must type the correct country directly into an input
+              field. To the right you can even see the wrong guesses of the
+              other players. The round ends when the first player has guessed
+              the correct country.
             </li>
           </ul>
           Can you hold your own against the other players? Do you already have a

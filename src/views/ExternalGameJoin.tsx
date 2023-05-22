@@ -1,26 +1,20 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { FloatingTextInput } from "../components/FloatingTextInput";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import {
-  handleError,
-  httpGet,
-  httpPost,
-  httpPut,
-} from "../helpers/httpService";
-import Player from "../models/Player";
-import { Button } from "@mantine/core";
+import { httpGet, httpPost, httpPut } from "../helpers/httpService";
+import { Player } from "../types/Player";
+import { Container, Button, Switch, TextInput, Title, Paper } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import Lobby from "../models/Lobby";
+import { Lobby } from "../types/Lobby";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
 
-const Container = styled.div`
+const Application = styled.div`
+  width: 100%;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80vh;
-  font-size: 38px;
+  // background-color: #f5f7f9;
 `;
 
 const ButtonContainer = styled.div`
@@ -53,12 +47,14 @@ type props = {
 
 type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   setCurrentGameRound: Dispatch<SetStateAction<number>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
 export const ExternalGameJoin = (props: PropsType) => {
-  const { setLobby, setPlayer, setCurrentGameRound } = props;
+  const { setLobby, player, setPlayer, setCurrentGameRound, setIsLoggedIn } = props;
   const [playerName, setPlayerName] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [nameInput, setNameInput] = useState("");
@@ -81,8 +77,8 @@ export const ExternalGameJoin = (props: PropsType) => {
   }, [nameInput, passwordInput]);
 
   useEffectOnce(() => {
-    // check if user is already logged in
-    if (sessionStorage.getItem("loggedIn") === "true") {
+    // check if user is logged in
+    if (player) {
       const playerJoin = async () => {
         // define header and body
         const headers = {
@@ -91,15 +87,9 @@ export const ExternalGameJoin = (props: PropsType) => {
         // get lobby
         const response = await httpGet("/lobbies/" + lobbyId, { headers });
 
-        // Create a new Lobby instance from the JSON data in the response
-        const lobby = new Lobby(response.data);
+        // Set the lobby state variable using the data returned from the API
+        const lobby = response.data as Lobby;
         setLobby(lobby);
-
-        // Store the name of the lobby into the local storage.
-        sessionStorage.setItem("lobbyName", lobby.lobbyName);
-
-        // Store the ID of the current game in sessionStorage
-        sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
 
         // join game
         joinGame(lobby.privateLobbyKey);
@@ -107,6 +97,24 @@ export const ExternalGameJoin = (props: PropsType) => {
       playerJoin();
     }
   });
+
+  const handleSetPlayerName = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setPlayerName(event.currentTarget.value);
+  };
+
+  const handleNameInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setNameInput(event.currentTarget.value);
+  };
+
+  const handlePasswordInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setPasswordInput(event.currentTarget.value);
+  };
 
   const handleUserJoin = async (link: string) => {
     const password = "";
@@ -121,21 +129,16 @@ export const ExternalGameJoin = (props: PropsType) => {
         { headers: {} }
       );
 
-      // Create a new Player instance from the JSON data in the response
-      const player = new Player(response.data);
+      // Set the player state variable using the data returned from the API
+      const player = response.data as Player;
       setPlayer(player);
+      setIsLoggedIn(false);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
 
       // Store the ID of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayerId", player.id.toString());
-
-      // Store the Name of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayer", player.playerName);
-
-      // Store login status of the current user
-      sessionStorage.setItem("loggedIn", "false");
 
       // define header and body
       const headers = {
@@ -145,11 +148,11 @@ export const ExternalGameJoin = (props: PropsType) => {
       // get lobby
       const res = await httpGet("/lobbies/" + lobbyId, { headers });
 
-      // Create a new Lobby instance from the JSON data in the response
-      const lobby = new Lobby(res.data);
+      // Set the lobby state variable using the data returned from the API
+      const lobby = res.data as Lobby;
       setLobby(lobby);
 
-      // Store the name of the lobby into the local storage.
+      // Store the name of the lobby into the session storage.
       sessionStorage.setItem("lobbyName", lobby.lobbyName);
 
       // Store the ID of the current game in sessionStorage
@@ -188,18 +191,13 @@ export const ExternalGameJoin = (props: PropsType) => {
       );
 
       setPlayer(res.data);
+      setIsLoggedIn(true);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
 
       // Store the ID of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayerId", res.data.id);
-
-      // Store the Name of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
-
-      // Store login status of the current user
-      sessionStorage.setItem("loggedIn", "true");
 
       // define header and body
       const headers = {
@@ -216,19 +214,12 @@ export const ExternalGameJoin = (props: PropsType) => {
         color: "green",
       });
 
-      // Create a new Lobby instance from the JSON data in the response
-      const lobby = new Lobby(response.data);
+      // Set the lobby state variable using the data returned from the API
+      const lobby = response.data as Lobby;
       setLobby(lobby);
-
-      // Store the name of the lobby into the local storage.
-      sessionStorage.setItem("lobbyName", lobby.lobbyName);
-
-      // Store the ID of the current game in sessionStorage
-      sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
 
       // join game
       joinGame(lobby.privateLobbyKey);
-
     } catch (err: any) {
       notifications.show({
         title: "Error",
@@ -261,44 +252,42 @@ export const ExternalGameJoin = (props: PropsType) => {
   }
 
   return (
-    <Container>
-      <h1>FlagMania</h1>
-      <p>Welcome to Flagmania, are you ready to join the game?</p>
-      <ButtonContainer>
-        <Button
+    <Application>
+      <Container size="xl" my={40}>
+        <Title>FlagMania</Title>
+        <p>Welcome to Flagmania, are you ready to join the game?</p>
+        <Switch
           onClick={() => handleLoginJoin()}
-          radius="md"
-          mt="xl"
-          size="md"
-          style={{ display: "block", margin: "0 auto" }}
+          size="xl"
+          label="Toggle Login and Join"
         >
           Toggle Login and Join
-        </Button>
+        </Switch>
         {showLogin ? (
-          <Container>
-            <FloatingTextInput
+          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+            <TextInput
               label="Name"
               value={nameInput}
-              onChange={setNameInput}
+              onChange={handleNameInputChange}
             />
-            <FloatingTextInput
+            <TextInput
               label="Password"
               value={passwordInput}
-              onChange={setPasswordInput}
+              onChange={handlePasswordInputChange}
             />
             <LoginButton
               isActive={isFormFilledOut}
-              onClick={loginUserJoin}
               disabled={!isFormFilledOut}
+              onClick={loginUserJoin}
             >
               Login and Join
             </LoginButton>
-          </Container>
+          </Paper>
         ) : (
-          <Container>
-            <FloatingTextInput
+          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+            <TextInput
               label="Name"
-              onChange={(newVal: string) => setPlayerName(newVal)}
+              onChange={handleSetPlayerName}
               value={playerName}
             />
             <Button
@@ -307,9 +296,9 @@ export const ExternalGameJoin = (props: PropsType) => {
             >
               Join Game
             </Button>
-          </Container>
+          </Paper>
         )}
-      </ButtonContainer>
-    </Container>
+      </Container>
+    </Application>
   );
 };

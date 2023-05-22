@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Dispatch, SetStateAction } from "react";
 import { httpPost } from "../helpers/httpService";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { notifications } from "@mantine/notifications";
 import { Button, TextInput, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
@@ -66,12 +66,12 @@ type PropsType = {
   isLoggedIn: boolean;
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
 export const HomePage = (props: PropsType) => {
   const { classes } = useStyles();
-  const { isLoggedIn, setPlayer } = props;
-  const { lobbyId } = useParams();
+  const { isLoggedIn, setPlayer, setIsLoggedIn } = props;
 
   const [playerName, setPlayerName] = useInputState("");
   const navigate = useNavigate();
@@ -99,9 +99,10 @@ export const HomePage = (props: PropsType) => {
         }
         console.log("new guest player created: ", response.data);
 
-        // Create a new Player instance from the JSON data in the response
-        const player = new Player(response.data);
+        // Set player to the response data
+        const player = response.data as Player;
         setPlayer(player);
+        setIsLoggedIn(false);
         console.log("new guest player created: ", player);
 
         // Store the token into the session storage.
@@ -112,12 +113,6 @@ export const HomePage = (props: PropsType) => {
 
         // Store the ID of the currently logged-in user in sessionStorage
         sessionStorage.setItem("currentPlayerId", player.id.toString());
-
-        // Store the Name of the currently logged-in user in sessionStorage
-        sessionStorage.setItem("currentPlayer", player.playerName);
-
-        // Store login status of the current user
-        sessionStorage.setItem("loggedIn", "false");
       }
 
       // navigate to respective view
@@ -138,14 +133,20 @@ export const HomePage = (props: PropsType) => {
   return (
     <Application>
       <ThemeIcon className={classes.icon} size={ICON_SIZE} radius={ICON_SIZE}>
-        <IconInfoCircle size="2rem" stroke={1.5} onClick={() => navigate("/gameInfo")} style={{ cursor: "pointer" }} />
+        <IconInfoCircle
+          size="2rem"
+          stroke={1.5}
+          onClick={() => navigate("/gameInfo")}
+          style={{ cursor: "pointer" }}
+        />
       </ThemeIcon>
       <H1>FlagMania</H1>
       <p>Learn about the flags of the world!</p>
 
       <UserContainer>
         {isLoggedIn ? (
-          <>leaderBoard
+          <>
+            leaderBoard
             <Button size="xl" onClick={() => navigate("/profile")}>
               Show Your Profile
             </Button>

@@ -9,11 +9,11 @@ import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Button, CloseButton } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { ButtonCopy } from "../components/ClipboardButton";
 import { LobbySettingsAdvanced } from "../components/LobbySettingsAdvanced";
 import { LobbySettingsBasic } from "../components/LobbySettingsBasic";
-import Lobby from "../models/Lobby";
+import { Lobby } from "../types/Lobby";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -55,6 +55,7 @@ const QrBox = styled.div`
   align-items: center;
   gap: 20px;
   height: 80vh;
+  background-color: transparent;
 `;
 
 const UserContainer = styled.div`
@@ -83,7 +84,7 @@ export const GameLobby = (props: PropsType) => {
   const { lobbyId } = useParams();
   const navigate = useNavigate();
 
-  // get the player token from local storage
+  // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
   const stompClient = useStompClient();
@@ -350,7 +351,7 @@ export const GameLobby = (props: PropsType) => {
               }}
             />
 
-            <UserContainer>
+            <UserContainer style={{ marginTop: "25px" }}>
               {gameMode === "ADVANCED" ? (
                 <LobbySettingsAdvanced
                   lobbyId={lobbyId}

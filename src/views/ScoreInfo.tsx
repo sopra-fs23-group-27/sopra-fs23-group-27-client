@@ -5,9 +5,8 @@ import {
   Button,
   Group,
   rem,
-  ThemeIcon,
 } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -75,6 +74,7 @@ const useStyles = createStyles((theme) => ({
 export const ScoreInfo = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
+  const { lobbyId } = useParams();
 
   return (
     <div className={classes.wrapper}>
@@ -143,7 +143,7 @@ export const ScoreInfo = () => {
             className={classes.control}
             variant="gradient"
             gradient={{ from: "blue", to: "cyan" }}
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/game/" + lobbyId + "/leaderBoard")}
           >
             Back to Game
           </Button>

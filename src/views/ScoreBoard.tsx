@@ -5,7 +5,7 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import styled from "styled-components";
 import { LeaderBoard } from "../components/LeaderBoard";
 import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 const ICON_SIZE = rem(60);
@@ -64,10 +64,10 @@ export const ScoreBoard = (props: PropsType) => {
   const [wrongGuesses, setWrongGuesses] = useState<number[]>([]);
   const [winner, setWinner] = useState("");
 
-  // get the player token from local storage
+  // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
-  // get the player name from local storage
+  // get the player name from session storage
   const playerName = sessionStorage.getItem("playerName");
 
   useSubscription(

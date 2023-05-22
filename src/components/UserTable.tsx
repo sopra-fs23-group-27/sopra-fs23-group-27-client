@@ -13,7 +13,7 @@ import { notifications } from "@mantine/notifications";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useStompClient } from "react-stomp-hooks";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 
 
 type PropsType = {

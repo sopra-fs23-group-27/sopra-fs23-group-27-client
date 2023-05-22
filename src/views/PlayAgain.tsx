@@ -3,7 +3,7 @@ import { useStompClient } from "react-stomp-hooks";
 import { useNavigate } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
-import Lobby from "../models/Lobby";
+import { Lobby } from "../types/Lobby";
 import { SetStateAction, Dispatch } from "react";
 
 type PropsType = {

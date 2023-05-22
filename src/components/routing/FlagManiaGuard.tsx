@@ -1,22 +1,23 @@
 import { notifications } from "@mantine/notifications";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Player } from "../../types/Player";
 
-interface Props {
+type PropsType = {
   shouldPreventReload: boolean;
   children: React.ReactNode;
+  player: Player | undefined;
 }
 
-export const FlagManiaGuard = ({ shouldPreventReload, children }: Props) => {
+export const FlagManiaGuard = (props: PropsType) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { lobbyId } = useParams();
+  const { shouldPreventReload, children, player } = props;
 
   const handleNotLoggedIn = () => {
     if (
-      sessionStorage.getItem("FlagManiaToken")
-    //   sessionStorage.getItem("lobbyId") === lobbyId
+      player?.id // player is logged in
     ) {
       return children;
     }
@@ -44,11 +45,8 @@ export const FlagManiaGuard = ({ shouldPreventReload, children }: Props) => {
   };
 
   const handleUnload = () => {
-    // delete lobby from session storage
-    sessionStorage.removeItem("lobbyId");
-    sessionStorage.removeItem("lobbyName");
     // for non-permanent users, flush session storage
-    if (!sessionStorage.getItem("loggedIn") || sessionStorage.getItem("loggedIn") === "false") {
+    if (!player?.permanent) {
       sessionStorage.clear();
     }
     navigate("/");

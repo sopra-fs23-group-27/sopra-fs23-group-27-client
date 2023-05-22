@@ -12,9 +12,10 @@ import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoard } from "./views/ScoreBoard";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
-import { useState } from "react";
-import Player from "./models/Player";
-import Lobby from "./models/Lobby";
+import { useEffect, useState } from "react";
+import { Lobby } from "./types/Lobby";
+import { Player } from "./types/Player";
+
 import FlagBackground from "./icons/Background_Flagmania.png";
 
 import { PlayerGuard } from "./components/routing/PlayerGuard";
@@ -59,12 +60,20 @@ const FlagManiaBackground = styled.img`
   }
 `;
 
-
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // only playerId, flagmaniaToken is stored in sessionStorage
+  // tell backend to create a GET endpoint where we can get the player object with a given playerId
+
   const [player, setPlayer] = useState<Player | undefined>();
   const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("playerId") && !player) {
+      //get request to fetch player object
+    }
+  }, []);
 
   return (
     <>
@@ -83,6 +92,7 @@ export const App = () => {
                   player={player}
                   setPlayer={setPlayer}
                   isLoggedIn={isLoggedIn}
+                  setIsLoggedIn={setIsLoggedIn}
                 />
               </LoginGuard>
             }
@@ -92,7 +102,7 @@ export const App = () => {
           <Route
             path="/publicGames"
             element={
-              <FlagManiaGuard shouldPreventReload={false}>
+              <FlagManiaGuard shouldPreventReload={false} player={player}>
                 <ActiveGameOverview
                   setLobby={setLobby}
                   setCurrentGameRound={setCurrentGameRound}
@@ -110,7 +120,7 @@ export const App = () => {
             path="/register"
             element={
               <LoginGuard>
-                <Register setPlayer={setPlayer} />
+                <Register setPlayer={setPlayer} setIsLoggedIn={setIsLoggedIn} />
               </LoginGuard>
             }
             errorElement={<ErrorPage />}
@@ -119,16 +129,12 @@ export const App = () => {
             path="/login"
             element={
               <LoginGuard>
-                <Login setPlayer={setPlayer} />
+                <Login setPlayer={setPlayer} setIsLoggedIn={setIsLoggedIn} />
               </LoginGuard>
             }
             errorElement={<ErrorPage />}
           />
-          <Route
-            path="/newGameLogin"
-            element={<NewGameLogin />}
-            errorElement={<ErrorPage />}
-          />
+
           <Route
             path="/enterGameId"
             element={<GameIdInput />}
@@ -138,7 +144,7 @@ export const App = () => {
           <Route
             path="/lobbies/:lobbyId"
             element={
-              <FlagManiaGuard shouldPreventReload={true}>
+              <FlagManiaGuard shouldPreventReload={true} player={player}>
                 <GameLobby
                   player={player}
                   setPlayer={setPlayer}
@@ -151,7 +157,7 @@ export const App = () => {
           <Route
             path="/game/:lobbyId"
             element={
-              <FlagManiaGuard shouldPreventReload={true}>
+              <FlagManiaGuard shouldPreventReload={true} player={player}>
                 <GameRound
                   currentGameRound={currentGameRound}
                   setCurrentGameRound={setCurrentGameRound}
@@ -167,8 +173,10 @@ export const App = () => {
             element={
               <ExternalGameJoin
                 setLobby={setLobby}
+                player={player}
                 setPlayer={setPlayer}
                 setCurrentGameRound={setCurrentGameRound}
+                setIsLoggedIn={setIsLoggedIn}
               />
             }
             errorElement={<ErrorPage />}
@@ -176,7 +184,7 @@ export const App = () => {
           <Route
             path="/game/:lobbyId/leaderBoard"
             element={
-              <FlagManiaGuard shouldPreventReload={true}>
+              <FlagManiaGuard shouldPreventReload={true} player={player}>
                 <ScoreBoard player={player} />
               </FlagManiaGuard>
             }
@@ -204,7 +212,7 @@ export const App = () => {
           <Route
             path="/game/:lobbyId/gameEnd"
             element={
-              <FlagManiaGuard shouldPreventReload={true}>
+              <FlagManiaGuard shouldPreventReload={true} player={player}>
                 <GameEnd player={player} />
               </FlagManiaGuard>
             }
@@ -213,25 +221,31 @@ export const App = () => {
           <Route
             path="/playAgain"
             element={
-              <PlayAgain
-                setLobby={setLobby}
-                lobby={lobby}
-                setCurrentGameRound={setCurrentGameRound}
-              />
+              <FlagManiaGuard shouldPreventReload={true} player={player}>
+                <PlayAgain
+                  setLobby={setLobby}
+                  lobby={lobby}
+                  setCurrentGameRound={setCurrentGameRound}
+                />
+              </FlagManiaGuard>
             }
           />
           <Route
             path="/saveStatsRegister"
-            element={<RegisterToSaveStats setPlayer={setPlayer} />}
+            element={
+              <FlagManiaGuard shouldPreventReload={true} player={player}>
+                <RegisterToSaveStats
+                  setPlayer={setPlayer}
+                  setIsLoggedIn={setIsLoggedIn}
+                />
+              </FlagManiaGuard>
+            }
           />
-          <Route
-            path="/gameInfo"
-            element={<GameInfo />}
-          />
+          <Route path="/gameInfo" element={<GameInfo />} />
           <Route
             path="/game/:lobbyId/scoreInfo"
             element={
-              <FlagManiaGuard shouldPreventReload={true}>
+              <FlagManiaGuard shouldPreventReload={true} player={player}>
                 <ScoreInfo />
               </FlagManiaGuard>
             }
