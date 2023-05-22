@@ -7,6 +7,7 @@ import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
 import { BasicRoundOptions } from "../components/BasicGame/BasicRoundOptions";
 import { GuessHistory } from "../components/GuessHistory";
+import { Player } from "../types/Player";
 
 const P = styled.p`
   padding: 0;
@@ -110,11 +111,13 @@ const GuessButton = styled.button`
 type PropsType = {
   currentGameRound: number;
   setCurrentGameRound: Dispatch<SetStateAction<number>>;
+  player: Player | undefined;
   gameMode: "BASIC" | "ADVANCED" | undefined;
   numRounds: number | undefined;
 };
 export const GameRound = (props: PropsType) => {
-  const { currentGameRound, setCurrentGameRound, gameMode, numRounds } = props;
+  const { currentGameRound, setCurrentGameRound, player, gameMode, numRounds } =
+    props;
   const isBasic = gameMode === "BASIC";
 
   const { lobbyId } = useParams();
@@ -228,7 +231,7 @@ export const GameRound = (props: PropsType) => {
   );
 
   const submitInputGuess = () => {
-    const playerName = sessionStorage.getItem("currentPlayer");
+    const playerName = player?.playerName;
     if (stompClient) {
       stompClient.publish({
         destination: `/app/games/${lobbyId}/guess`,
@@ -243,7 +246,7 @@ export const GameRound = (props: PropsType) => {
     if (chosenOption) {
       return;
     }
-    const playerName = sessionStorage.getItem("currentPlayer");
+    const playerName = player?.playerName;
     if (stompClient) {
       stompClient.publish({
         destination: `/app/games/${lobbyId}/guess`,

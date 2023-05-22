@@ -1,5 +1,5 @@
 import { game } from "../types/databaseTypes";
-import { useState, useEffect, SetStateAction, Dispatch } from "react";
+import { useState, SetStateAction, Dispatch } from "react";
 
 import styled from "styled-components";
 import { RainbowLoader } from "../components/RainbowLoader";
@@ -51,34 +51,29 @@ export const PublicGame = (props: PublicGameProps) => {
   const joinGame = async (lobbyId: number) => {
     const res = await httpGet("/lobbies/" + lobbyId, {});
 
-    // Create a new Lobby instance from the JSON data in the response
-    setLobby(res.data);
-
-    // Store the name of the lobby into the local storage.
-    sessionStorage.setItem("lobbyName", res.data.lobbyName);
-
-    // Store the ID of the current game in sessionStorage
-    sessionStorage.setItem("lobbyId", res.data.lobbyId.toString());
+    // Set the lobby state to the lobby that was returned from the server
+    const lobby = res.data as Lobby;
+    setLobby(lobby);
 
     if (res.status === 200) {
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
       const body = {};
-      const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
-        headers,
-      });
+      const response = await httpPut(
+        "/lobbies/" + lobby.lobbyId + "/join",
+        body,
+        {
+          headers,
+        }
+      );
       if (response.status === 204) {
-        // Create a new Lobby instance from the JSON data in the response
-
-        // Store the name of the lobby into the local storage.
-        sessionStorage.setItem("lobbyName", res.data.lobbyName);
-
-        // Store the ID of the current game in sessionStorage
-        sessionStorage.setItem("lobbyId", res.data.lobbyId.toString());
+        // Set the lobby state to the lobby that was returned from the server
+        const lobby = response.data as Lobby;
+        setLobby(lobby);
 
         // Navigate to the lobby page
-        navigate("/lobbies/" + lobbyId);
+        navigate("/lobbies/" + lobby.lobbyId);
       } else {
         notifications.show({
           title: "Error",
@@ -168,16 +163,6 @@ export const ActiveGameOverview = (props: PropsType) => {
       console.log("response: ", response);
       if (response.status === 204) {
         setCurrentGameRound(0);
-        console.log("set lobby: ", response.data);
-        // Create a new Lobby instance from the JSON data in the response
-        setLobby(response.data);
-
-        // Store the name of the lobby into the local storage.
-        sessionStorage.setItem("lobbyName", lobby.lobbyName);
-
-        // Store the ID of the current game in sessionStorage
-        sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
-
         // Navigate to the lobby page
         navigate("/lobbies/" + lobbyId);
       } else {

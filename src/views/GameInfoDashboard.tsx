@@ -71,7 +71,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const GameInfo = () => {
+export const GameInfoDashboard = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
 
@@ -104,8 +104,7 @@ export const GameInfo = () => {
           had no idea which country it belonged to? Well, improve your knowledge
           now playfully with FlagMania! Here is what you can do: First decide if
           you want to play with your friends or with strangers from around the
-          world. If you only want to play with your friends, choose a username
-          and click{" "}
+          world. If you only want to play with your friends click{" "}
         </Text>
         <h3>
           <Text
@@ -153,37 +152,94 @@ export const GameInfo = () => {
           </ul>
           Can you hold your own against the other players? Do you already have a
           user login? If no, then register as soon as possible! There are great
-          advantages waiting for you. For example, you can protect your username
-          and view your overall statistics. To do so, go to the register page on
-          the homepage and log in. Alternatively, you can also register after
-          playing a round!
+          advantages waiting for you. Specifically, the permanent metrics
+          collectively provide insights into a user's overall performance,
+          engagement, accuracy, learning progress, and speed while playing
+          FlagMania. Analyzing these metrics can help users track their flag
+          learning progress, set goals, and strive for improvement in different
+          aspects of the game. Did you not really understand those metrics? Here
+          is what they mean:
+          <ul>
+            <li>
+              <Text
+                component="span"
+                variant="gradient"
+                gradient={{ from: "blue", to: "cyan" }}
+                inherit
+              >
+                ROUNDS PLAYED:{" "}
+              </Text>
+              This metric represents the total number of rounds that a permanent
+              user has participated in while playing FlagMania. If a player
+              leaves a game lobby early, the played rounds until leave are added
+              to this metric.
+            </li>
+            <li>
+              <Text
+                component="span"
+                variant="gradient"
+                gradient={{ from: "blue", to: "cyan" }}
+                inherit
+              >
+                CORRECT GUESSES:{" "}
+              </Text>
+              This metric counts the number of correct guesses made by a
+              permanent user while playing FlagMania.
+            </li>
+            <li>
+              <Text
+                component="span"
+                variant="gradient"
+                gradient={{ from: "blue", to: "cyan" }}
+                inherit
+              >
+                WRONG GUESSES:{" "}
+              </Text>
+              This metric counts the number of wrong guesses made by a permanent
+              user while playing FlagMania.
+            </li>
+            <li>
+              <Text
+                component="span"
+                variant="gradient"
+                gradient={{ from: "blue", to: "cyan" }}
+                inherit
+              >
+                UNANSWERED FLAGS:{" "}
+              </Text>
+              This metric deducts the number of unanswered flags by a permanent
+              user while playing FlagMania.
+            </li>
+            <li>
+              <Text
+                component="span"
+                variant="gradient"
+                gradient={{ from: "blue", to: "cyan" }}
+                inherit
+              >
+                GUESSING SPEED:{" "}
+              </Text>
+              Guessing speed represents the average time taken to make a guess
+              or provide an answer for a flag in FlagMania. Guessing speed must
+              be understood in accordance with the number of correct guesses. A
+              quick guessing speed while submitting many wrong guesses indicates
+              that the player randomly guessed countries to optimize the
+              guessing speed metric. A quick guessing speed while submitting
+              many correct answers on the other hand indicates that the player
+              is proficient with country flags and knows the answers by heart.
+              Props on you!
+            </li>
+          </ul>
         </Text>
         <Group className={classes.controls}>
           <Button
             size="xl"
             className={classes.control}
-            color="gray"
-            onClick={() => navigate("/")}
-          >
-            Back to home
-          </Button>
-          <Button
-            size="xl"
-            className={classes.control}
             variant="gradient"
             gradient={{ from: "blue", to: "cyan" }}
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/dashboard")}
           >
-            Login
-          </Button>
-          <Button
-            size="xl"
-            className={classes.control}
-            variant="gradient"
-            gradient={{ from: "blue", to: "cyan" }}
-            onClick={() => navigate("/register")}
-          >
-            Register
+            Back to dashboard
           </Button>
         </Group>
       </Container>

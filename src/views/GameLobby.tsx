@@ -55,6 +55,7 @@ const QrBox = styled.div`
   align-items: center;
   gap: 20px;
   height: 80vh;
+  background-color: transparent;
 `;
 
 const UserContainer = styled.div`
@@ -71,9 +72,10 @@ type PropsType = {
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   lobby: Lobby | undefined;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
 };
 export const GameLobby = (props: PropsType) => {
-  const { player, setPlayer, lobby } = props;
+  const { player, setPlayer, lobby, setLobby } = props;
 
   const [currentAdmin, setCurrentAdmin] = useState("");
 
@@ -83,7 +85,7 @@ export const GameLobby = (props: PropsType) => {
   const { lobbyId } = useParams();
   const navigate = useNavigate();
 
-  // get the player token from local storage
+  // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
   const stompClient = useStompClient();
@@ -121,6 +123,8 @@ export const GameLobby = (props: PropsType) => {
     (message: any) => {
       setIsLoading(false);
       console.log("Lobby settings: ", JSON.parse(message.body));
+      // set the lobby to the new lobby settings
+      setLobby(JSON.parse(message.body));
       // get the lobby name and joined player names from the message
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
@@ -152,7 +156,7 @@ export const GameLobby = (props: PropsType) => {
       if (newPlayerNames.length > 0) {
         // show notification for each player that joined
         newPlayerNames.forEach((playerName: string) => {
-          if (playerName !== sessionStorage.getItem("currentPlayer")) {
+          if (playerName !== player?.playerName) {
             notifications.show({
               title: "Player joined",
               message: playerName,
@@ -166,7 +170,7 @@ export const GameLobby = (props: PropsType) => {
       if (leftPlayerNames.length > 0) {
         // show notification for each player that joined
         leftPlayerNames.forEach((playerName: string) => {
-          if (playerName !== sessionStorage.getItem("currentPlayer")) {
+          if (playerName !== player?.playerName) {
             notifications.show({
               title: "Player left",
               message: playerName,
@@ -231,13 +235,9 @@ export const GameLobby = (props: PropsType) => {
       message: "You were removed from the lobby",
       color: "red",
     });
-    // delete lobby from session storage
-    sessionStorage.removeItem("lobbyId");
-    sessionStorage.removeItem("lobbyName");
-    // // for non-permanent users, flush session storage
-    // if (!sessionStorage.getItem("loggedIn") === true) {
-    //   sessionStorage.clear();
-    // }
+    // set lobby to undefined
+    setLobby(undefined);
+    // navigate to the public games page
     navigate("/publicGames");
   });
 
@@ -292,17 +292,11 @@ export const GameLobby = (props: PropsType) => {
         {},
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
-      // delete lobby from session storage
-      sessionStorage.removeItem("lobbyId");
-      sessionStorage.removeItem("lobbyName");
-      // for non-permanent users, flush session storage
-      if (
-        !sessionStorage.getItem("loggedIn") ||
-        sessionStorage.getItem("loggedIn") === "false"
-      ) {
-        sessionStorage.clear();
-      }
-      navigate("/");
+      // set lobby to undefined
+      setLobby(undefined);
+
+      // navigate to public games
+      navigate("/publicGames");
     } catch (error: any) {
       notifications.show({
         title: "Error",
@@ -354,7 +348,8 @@ export const GameLobby = (props: PropsType) => {
                 backgroundColor: "white",
               }}
             />
-            <UserContainer>
+
+            <UserContainer style={{ marginTop: "25px" }}>
               {gameMode === "ADVANCED" ? (
                 <LobbySettingsAdvanced
                   lobbyId={lobbyId}
@@ -381,7 +376,11 @@ export const GameLobby = (props: PropsType) => {
             <h3>Players in lobby:</h3>
 
             <UserContainer>
-              <UsersRolesTable data={playerNamesAndRoles} player={player} />
+              <UsersRolesTable
+                data={playerNamesAndRoles}
+                player={player}
+                lobby={lobby}
+              />
             </UserContainer>
 
             <ButtonContainer>

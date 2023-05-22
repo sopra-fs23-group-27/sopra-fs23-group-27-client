@@ -1,42 +1,37 @@
 import {
-  Avatar,
   Badge,
   Table,
   Group,
   Text,
   ActionIcon,
-  Anchor,
   ScrollArea,
-  useMantineTheme,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
+import { IconTrash } from "@tabler/icons-react";
 import { useStompClient } from "react-stomp-hooks";
 import { Player } from "../types/Player";
+import { Lobby } from "../types/Lobby";
 
 type PropsType = {
   data: { name: string; role: string }[];
   player: Player | undefined;
+  lobby: Lobby | undefined;
 };
 
 export function UsersRolesTable(props: PropsType) {
-  const navigate = useNavigate();
-  const lobbyId = sessionStorage.getItem("lobbyId");
-  const currentPlayer = sessionStorage.getItem("currentPlayer");
   const stompClient = useStompClient();
 
   // get props
-  const { data, player } = props;
+  const { data, player, lobby } = props;
 
   // kick user from lobby
   const handleKickingUser = (name: string) => {
     if (stompClient) {
       console.log("kicking user");
-      console.log("lobbyId: ", lobbyId);
+      console.log("lobbyId: ", lobby?.lobbyId);
       try {
         stompClient.publish({
-          destination: `/app/games/${lobbyId}/remove`,
+          destination: `/app/games/${lobby?.lobbyId}/remove`,
           body: JSON.stringify({ playerName: name }),
         });
       } catch (error: any) {
@@ -84,7 +79,7 @@ export function UsersRolesTable(props: PropsType) {
         )}
       </td>
       <td>
-        {currentPlayer !== item.name && player?.isCreator ? (
+        {player?.playerName !== item.name && player?.isCreator ? (
           <ActionIcon
             variant="outline"
             color="red"
