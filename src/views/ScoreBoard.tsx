@@ -6,6 +6,7 @@ import { LeaderBoard } from "../components/LeaderBoard";
 import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { Player } from "../types/Player";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { RainbowLoader } from "../components/RainbowLoader";
 
 const ICON_SIZE = rem(60);
 
@@ -54,6 +55,8 @@ export const ScoreBoard = (props: PropsType) => {
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
   const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(true);
   const [playerNames, setPlayerNames] = useState<string[]>([]);
   const [playerScores, setPlayerScores] = useState<number[]>([]);
   const [correctGuesses, setCorrectGuesses] = useState<number[]>([]);
@@ -84,6 +87,7 @@ export const ScoreBoard = (props: PropsType) => {
         body.totalCorrectGuessesInARow as number[];
       console.log(totalCorrectGuessesInARow);
 
+      setIsLoading(false);
       setPlayerNames(playerNames);
       setPlayerScores(totalGameScores);
       setCorrectGuesses(totalCorrectGuesses);
@@ -156,30 +160,40 @@ export const ScoreBoard = (props: PropsType) => {
   });
 
   return (
-    <Application>
-      <ThemeIcon className={classes.icon} size={ICON_SIZE} radius={ICON_SIZE}>
-        <IconInfoCircle
-          size="2rem"
-          stroke={1.5}
-          onClick={() => navigate("/game/" + lobbyId + "/scoreInfo")}
-          style={{ cursor: "pointer" }}
-        />
-      </ThemeIcon>
-      <LeaderBoardContainer>
-        <h1>Leaderboard of round {currentGameRound}</h1>
-        <LeaderBoard playerData={playerData} />
-        {player?.isCreator && (
-          <Button
-            size="xl"
-            onClick={startNextRound}
-            style={{ marginTop: "65px" }}
+    <>
+      {isLoading ? (
+        <RainbowLoader />
+      ) : (
+        <Application>
+          <ThemeIcon
+            className={classes.icon}
+            size={ICON_SIZE}
+            radius={ICON_SIZE}
           >
-            Start Next Round
-          </Button>
-        )}
+            <IconInfoCircle
+              size="2rem"
+              stroke={1.5}
+              onClick={() => navigate("/game/" + lobbyId + "/scoreInfo")}
+              style={{ cursor: "pointer" }}
+            />
+          </ThemeIcon>
+          <LeaderBoardContainer>
+            <h1>Leaderboard of round {currentGameRound}</h1>
+            <LeaderBoard playerData={playerData} />
+            {player?.isCreator && (
+              <Button
+                size="xl"
+                onClick={startNextRound}
+                style={{ marginTop: "65px" }}
+              >
+                Start Next Round
+              </Button>
+            )}
 
-        {/* <Button onClick={anotherGame}>Another Game</Button> */}
-      </LeaderBoardContainer>
-    </Application>
+            {/* <Button onClick={anotherGame}>Another Game</Button> */}
+          </LeaderBoardContainer>
+        </Application>
+      )}
+    </>
   );
 };
