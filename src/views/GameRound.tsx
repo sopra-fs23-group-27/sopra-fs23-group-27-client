@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
 import { BasicRoundOptions } from "../components/BasicGame/BasicRoundOptions";
+import { GuessHistory } from "../components/GuessHistory";
 
 const P = styled.p`
   padding: 0;
@@ -20,7 +21,6 @@ const Application = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  // background-color: #dba11c;
 `;
 
 const AdditionalBoxes = styled.div`
@@ -35,17 +35,22 @@ const AdditionalBoxes = styled.div`
 `;
 const Time = styled(AdditionalBoxes)`
   right: 50px;
-  width: 122px;
+  width: 140px;
   background-color: #f5f7f9;
 `;
-const GlobalGuess = styled.div`
-  position: absolute;
-  top: 200px;
-  right: 100px;
-
+const GuessHistoryBox = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 12px;
+  position: absolute;
+  top: 200px;
+  right: 15px;
+  background-color: white;
+  border-radius: 10px;
+  border: 2px solid black;
+  padding: 8px 0;
+  width: 240px;
+  overflow: hidden;
 `;
 const Main = styled.div`
   width: 900px;
@@ -60,11 +65,10 @@ const Main = styled.div`
   background-color: #f5f7f9;
 `;
 const FlagContainer = styled.div`
-  margin-top: -2px;
+  margin-top: -1px;
   position: relative;
 `;
 const Flag = styled.img`
-  //margin-top: -2px;
   width: 600px;
   height: 400px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -129,7 +133,8 @@ export const GameRound = (props: PropsType) => {
 
   // ADVANCED Mode
   const [guessInput, setGuessInput] = useState("");
-  const [latestGlobalGuess, setLatestGlobalGuess] = useState("");
+  const [guessHistory, setGuessHistory] = useState<string[]>([]);
+  const [guessHistoryNames, setGuessHistoryNames] = useState<string[]>([]);
   const [latestHint, setLatestHint] = useState("");
 
   const stompClient = useStompClient();
@@ -140,7 +145,6 @@ export const GameRound = (props: PropsType) => {
       let latestHint = JSON.parse(message.body).hint as string;
       latestHint = latestHint.replace("=", ": ");
       setLatestHint(latestHint);
-      setLatestGlobalGuess("");
     }
   );
 
@@ -155,9 +159,12 @@ export const GameRound = (props: PropsType) => {
     }
   );
   useSubscription(`/user/queue/lobbies/${lobbyId}/guesses`, (message: any) => {
-    const latestGlobalGuess = JSON.parse(message.body).guess as string;
-    //const latestGlobalGuessOrigin = JSON.parse(message.body).playerName as string;
-    setLatestGlobalGuess(latestGlobalGuess);
+    const body = JSON.parse(message.body);
+
+    const newGuess = body.guess as string;
+    const newGuessPlayerName = body.playerName as string;
+    setGuessHistory([...guessHistory, newGuess]);
+    setGuessHistoryNames([...guessHistoryNames, newGuessPlayerName]);
   });
 
   useSubscription(`/user/queue/lobbies/${lobbyId}/timer`, (message: any) => {
@@ -258,11 +265,13 @@ export const GameRound = (props: PropsType) => {
             <P>Time: {timeLeft}</P>
           </Time>
 
-          {!isBasic && (
-            <GlobalGuess>
-              <P>Latest Guess:</P>
-              <P>{latestGlobalGuess}</P>
-            </GlobalGuess>
+          {!isBasic && guessHistory[0] && (
+            <GuessHistoryBox>
+              <GuessHistory
+                guesses={guessHistory}
+                playerNames={guessHistoryNames}
+              />
+            </GuessHistoryBox>
           )}
 
           <Main>
