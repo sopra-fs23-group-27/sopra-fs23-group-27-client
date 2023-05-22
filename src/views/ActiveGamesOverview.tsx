@@ -53,6 +53,7 @@ export const PublicGame = (props: PublicGameProps) => {
 
     // Set the lobby state to the lobby that was returned from the server
     const lobby = res.data as Lobby;
+    console.log("lobby from get request: ", res.data);
     setLobby(lobby);
 
     if (res.status === 200) {

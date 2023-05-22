@@ -74,10 +74,11 @@ interface PostBody {
 
 type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  setCurrentGameRound: Dispatch<SetStateAction<number>>;
 };
 
 export const ConfigureGame = (props: PropsType) => {
-  const { setLobby } = props;
+  const { setLobby, setCurrentGameRound } = props;
 
   const navigate = useNavigate();
 
@@ -150,6 +151,7 @@ export const ConfigureGame = (props: PropsType) => {
       // Set the lobby state to the response data.
       const lobby = response.data as Lobby;
       setLobby(lobby);
+      setCurrentGameRound(0);
 
       // navigate to lobby
       navigate("/lobbies/" + lobby.lobbyId);

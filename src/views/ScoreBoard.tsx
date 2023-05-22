@@ -68,7 +68,6 @@ export const ScoreBoard = (props: PropsType) => {
   // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
-  // get the player name from session storage
   const playerName = player?.playerName;
 
   useSubscription(

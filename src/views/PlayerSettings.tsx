@@ -7,19 +7,14 @@ type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
 };
 
-export const PlayerSettings = () => {
-  // get player data from session storage
-  const playerId = sessionStorage.getItem("currentPlayerId");
-  const playerName = sessionStorage.getItem("currentPlayer");
-  const loggedIn = sessionStorage.getItem("loggedIn");
-
+export const PlayerSettings = ({ player, setPlayer }: PropsType) => {
   interface UserCardImageProps {
     name: string;
     stats: { label: string; value: string }[];
   }
 
   const userCardImageProps: UserCardImageProps = {
-    name: playerName ? playerName : "",
+    name: player?.playerName ? player?.playerName : "",
     stats: [
       { label: "Wins", value: "10" },
       { label: "Losses", value: "10" },

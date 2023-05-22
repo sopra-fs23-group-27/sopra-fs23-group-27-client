@@ -8,6 +8,8 @@ import { notifications } from "@mantine/notifications";
 import { BasicRoundOptions } from "../components/BasicGame/BasicRoundOptions";
 import { GuessHistory } from "../components/GuessHistory";
 import { Player } from "../types/Player";
+import { TextInput } from "@mantine/core";
+import { useInputState } from "@mantine/hooks";
 
 const P = styled.p`
   padding: 0;
@@ -135,7 +137,7 @@ export const GameRound = (props: PropsType) => {
   const [chosenOption, setChosenOption] = useState("");
 
   // ADVANCED Mode
-  const [guessInput, setGuessInput] = useState("");
+  const [guessInput, setGuessInput] = useInputState("");
   const [guessHistory, setGuessHistory] = useState<string[]>([]);
   const [guessHistoryNames, setGuessHistoryNames] = useState<string[]>([]);
   const [latestHint, setLatestHint] = useState("");
@@ -178,6 +180,9 @@ export const GameRound = (props: PropsType) => {
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/round-end`,
     (message: any) => {
+      console.log(
+        `currentGameRound: ${currentGameRound}, numRounds: ${numRounds}`
+      );
       if (currentGameRound === numRounds) {
         navigate(`/game/${lobbyId}/gameEnd`);
       } else {
@@ -287,10 +292,13 @@ export const GameRound = (props: PropsType) => {
               <>
                 <Hint>{latestHint}</Hint>
                 <TextGuessBox>
-                  <FloatingTextInput
+                  <TextInput
+                    size="lg"
                     label="Your Guess"
+                    placeholder="Guess"
                     value={guessInput}
                     onChange={setGuessInput}
+                    style={{ marginBottom: "24px" }}
                   />
                   <GuessButton onClick={() => submitInputGuess()}>
                     Guess
