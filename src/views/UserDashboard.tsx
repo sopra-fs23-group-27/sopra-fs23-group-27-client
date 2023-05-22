@@ -58,11 +58,12 @@ const ButtonContainer = styled.div`
 type PropsType = {
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
 export const UserDashboard = (props: PropsType) => {
   const { classes } = useStyles();
-  const { setPlayer, player } = props;
+  const { setPlayer, player, setIsLoggedIn } = props;
   const [nRoundsPlayed, setNRoundsPlayed] = useState(0);
   const [
     overallTotalNumberOfCorrectGuesses,
@@ -256,6 +257,15 @@ export const UserDashboard = (props: PropsType) => {
         {},
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
+      notifications.show({
+        title: "Success",
+        message: "You have successfully logged out",
+        color: "green",
+      });
+
+      // set player to undefined and isLoggedIn in to false
+      setPlayer(undefined);
+      setIsLoggedIn(false);
 
       // reset the session storage
       sessionStorage.clear();

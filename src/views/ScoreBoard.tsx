@@ -46,11 +46,12 @@ const LeaderBoardContainer = styled.div`
 
 type PropsType = {
   player: Player | undefined;
+  currentGameRound: number;
 };
 
 export const ScoreBoard = (props: PropsType) => {
   const { classes } = useStyles();
-  const { player } = props;
+  const { player, currentGameRound } = props;
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ export const ScoreBoard = (props: PropsType) => {
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
   // get the player name from session storage
-  const playerName = sessionStorage.getItem("playerName");
+  const playerName = player?.playerName;
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
@@ -161,7 +162,7 @@ export const ScoreBoard = (props: PropsType) => {
         />
       </ThemeIcon>
       <LeaderBoardContainer>
-        <h1>ScoreBoard</h1>
+        <h1>Leaderboard of round {currentGameRound}</h1>
         <LeaderBoard playerData={playerData} />
         {player?.isCreator && (
           <Button

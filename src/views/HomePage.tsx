@@ -71,7 +71,7 @@ type PropsType = {
 
 export const HomePage = (props: PropsType) => {
   const { classes } = useStyles();
-  const { isLoggedIn, setPlayer, setIsLoggedIn } = props;
+  const { isLoggedIn, player, setPlayer, setIsLoggedIn } = props;
 
   const [playerName, setPlayerName] = useInputState("");
   const navigate = useNavigate();
@@ -182,7 +182,7 @@ export const HomePage = (props: PropsType) => {
         </GuestContainer>
       ) : (
         <GuestContainer>
-          <P>User: {sessionStorage.getItem("currentPlayer")}</P>
+          <P>User: {player?.playerName}</P>
         </GuestContainer>
       )}
       <GuestContainer>

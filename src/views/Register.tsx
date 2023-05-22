@@ -97,12 +97,6 @@ export const Register = (props: PropsType) => {
       // Store the ID of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayerId", res.data.id);
 
-      // Store the Name of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
-
-      // Store login status of the current user
-      sessionStorage.setItem("loggedIn", "true");
-
       // show notification that player has been registered
       notifications.show({
         title: "Success",

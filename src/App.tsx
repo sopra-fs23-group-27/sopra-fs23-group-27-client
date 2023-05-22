@@ -6,7 +6,6 @@ import { ConfigureGame } from "./views/ConfigureGame";
 import { Login } from "./views/Login";
 import { Register } from "./views/Register";
 import { GameLobby } from "./views/GameLobby";
-import { NewGameLogin } from "./views/NewGameLogin";
 import { GameIdInput } from "./views/EnterGameId";
 import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
@@ -31,6 +30,7 @@ import { FlagmaniaLogo } from "./components/FlagmaniaLogo";
 import styled from "styled-components";
 import { GameInfo } from "./views/GameInfo";
 import { ScoreInfo } from "./views/ScoreInfo";
+import { httpGet } from "./helpers/httpService";
 
 const BackgroundImageContainer = styled.div`
   position: fixed;
@@ -70,10 +70,28 @@ export const App = () => {
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
   useEffect(() => {
-    if (sessionStorage.getItem("playerId") && !player) {
-      //get request to fetch player object
+    getPlayer();    
+  }, [player]);
+
+  const getPlayer = async () => {
+    if (sessionStorage.getItem("currentPlayerId") && !player) {
+      // get player object from backend
+      try {
+        const response = await httpGet(`/players/${sessionStorage.getItem("currentPlayerId")}`, {
+          headers: {
+            Authorization: sessionStorage.getItem("FlagManiaToken"),
+          },
+        });
+        if (response.status === 200) {
+          console.log(response.data);
+          setPlayer(response.data);  
+          console.log(player)      
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }, []);
+  };
 
   return (
     <>
@@ -82,12 +100,19 @@ export const App = () => {
       </BackgroundImageContainer>
 
       <Router>
-        <FlagmaniaLogo />
+        <FlagmaniaLogo
+          isLoggedIn={isLoggedIn}
+          player={player}
+          lobby={lobby}
+          setPlayer={setPlayer}
+          setLobby={setLobby}
+          setIsLoggedIn={setIsLoggedIn}
+        />
         <Routes>
           <Route
             path="/"
             element={
-              <LoginGuard>
+              <LoginGuard isLoggedIn={isLoggedIn}>
                 <HomePage
                   player={player}
                   setPlayer={setPlayer}
@@ -119,7 +144,7 @@ export const App = () => {
           <Route
             path="/register"
             element={
-              <LoginGuard>
+              <LoginGuard isLoggedIn={isLoggedIn}>
                 <Register setPlayer={setPlayer} setIsLoggedIn={setIsLoggedIn} />
               </LoginGuard>
             }
@@ -128,7 +153,7 @@ export const App = () => {
           <Route
             path="/login"
             element={
-              <LoginGuard>
+              <LoginGuard isLoggedIn={isLoggedIn}>
                 <Login setPlayer={setPlayer} setIsLoggedIn={setIsLoggedIn} />
               </LoginGuard>
             }
@@ -149,6 +174,7 @@ export const App = () => {
                   player={player}
                   setPlayer={setPlayer}
                   lobby={lobby}
+                  setLobby={setLobby}
                 />
               </FlagManiaGuard>
             }
@@ -161,6 +187,7 @@ export const App = () => {
                 <GameRound
                   currentGameRound={currentGameRound}
                   setCurrentGameRound={setCurrentGameRound}
+                  player={player}
                   gameMode={lobby?.mode}
                   numRounds={lobby?.numRounds}
                 />
@@ -185,7 +212,7 @@ export const App = () => {
             path="/game/:lobbyId/leaderBoard"
             element={
               <FlagManiaGuard shouldPreventReload={true} player={player}>
-                <ScoreBoard player={player} />
+                <ScoreBoard player={player} currentGameRound={currentGameRound} />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}
@@ -194,8 +221,12 @@ export const App = () => {
           <Route
             path="/dashboard"
             element={
-              <PlayerGuard>
-                <UserDashboard player={player} setPlayer={setPlayer} />
+              <PlayerGuard isLoggedIn={isLoggedIn}>
+                <UserDashboard
+                  player={player}
+                  setPlayer={setPlayer}
+                  setIsLoggedIn={setIsLoggedIn}
+                />
               </PlayerGuard>
             }
             errorElement={<ErrorPage />}
@@ -203,7 +234,7 @@ export const App = () => {
           <Route
             path="/playerSettings/:playerId"
             element={
-              <PlayerGuard>
+              <PlayerGuard isLoggedIn={isLoggedIn}>
                 <PlayerSettings />
               </PlayerGuard>
             }

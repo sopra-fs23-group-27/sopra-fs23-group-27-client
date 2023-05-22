@@ -157,13 +157,9 @@ export const ActiveGameOverview = (props: PropsType) => {
       });
       if (response.status === 204) {
         setCurrentGameRound(0);
-        console.log("set lobby: ", response.data);
-        // Set the lobby state to the lobby that was returned from the server
-        const lobby = response.data as Lobby;
-        setLobby(lobby);
         
         // Navigate to the lobby page
-        navigate("/lobbies/" + lobby.lobbyId);
+        navigate("/lobbies/" + lobbyId);
       } else {
         notifications.show({
           title: "Error",

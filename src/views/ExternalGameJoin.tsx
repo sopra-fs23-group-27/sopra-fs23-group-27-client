@@ -152,12 +152,6 @@ export const ExternalGameJoin = (props: PropsType) => {
       const lobby = res.data as Lobby;
       setLobby(lobby);
 
-      // Store the name of the lobby into the session storage.
-      sessionStorage.setItem("lobbyName", lobby.lobbyName);
-
-      // Store the ID of the current game in sessionStorage
-      sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
-
       // join game
       joinGame(lobby.privateLobbyKey);
 

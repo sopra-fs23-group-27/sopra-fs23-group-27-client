@@ -3,8 +3,9 @@ export type Player = {
     playerName: string;
     isCreator: boolean;
     password: string;
-    lobbyId: number;
-    headers: any;
+    token: string;
+    wsConnectionId: string;
+    lobbyId: number | null;
     nRoundsPlayed: number;
     numWrongGuesses: number;
     permanent: boolean;
