@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStompClient, useSubscription } from "react-stomp-hooks";
-import { useEffectOnce } from "../customHooks/useEffectOnce";
 import styled from "styled-components";
 import { LeaderBoard } from "../components/LeaderBoard";
 import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
@@ -55,7 +54,6 @@ export const ScoreBoard = (props: PropsType) => {
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
   const [playerNames, setPlayerNames] = useState<string[]>([]);
   const [playerScores, setPlayerScores] = useState<number[]>([]);
   const [correctGuesses, setCorrectGuesses] = useState<number[]>([]);
@@ -63,33 +61,35 @@ export const ScoreBoard = (props: PropsType) => {
     []
   );
   const [wrongGuesses, setWrongGuesses] = useState<number[]>([]);
-  const [winner, setWinner] = useState("");
+  const [totalCorrectGuessesInARow, setTotalCorrectGuessesInARow] = useState<
+    number[]
+  >([]);
 
   // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
-  // get the player name from session storage
   const playerName = player?.playerName;
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
     (message: any) => {
-      setIsLoading(false);
-      const playerNames = JSON.parse(message.body).playerNames as string[];
-      const totalGameScores = JSON.parse(message.body)
-        .totalGameScores as number[];
-      const totalCorrectGuesses = JSON.parse(message.body)
-        .totalCorrectGuesses as number[];
-      const totalTimeUntilCorrectGuess = JSON.parse(message.body)
-        .totalTimeUntilCorrectGuess as number[];
-      const totalWrongGuesses = JSON.parse(message.body)
-        .totalWrongGuesses as number[];
+      const body = JSON.parse(message.body);
+      const playerNames = body.playerNames as string[];
+      const totalGameScores = body.totalGameScores as number[];
+      const totalCorrectGuesses = body.totalCorrectGuesses as number[];
+      const totalTimeUntilCorrectGuess =
+        body.totalTimeUntilCorrectGuess as number[];
+      const totalWrongGuesses = body.totalWrongGuesses as number[];
+      const totalCorrectGuessesInARow =
+        body.totalCorrectGuessesInARow as number[];
+      console.log(totalCorrectGuessesInARow);
 
       setPlayerNames(playerNames);
       setPlayerScores(totalGameScores);
       setCorrectGuesses(totalCorrectGuesses);
       setTimeUntilCorrectGuess(totalTimeUntilCorrectGuess);
       setWrongGuesses(totalWrongGuesses);
+      setTotalCorrectGuessesInARow(totalCorrectGuessesInARow);
     }
   );
 
@@ -118,6 +118,7 @@ export const ScoreBoard = (props: PropsType) => {
     correctGuesses: number;
     timeUntilCorrectGuess: number;
     wrongGuesses: number;
+    totalCorrectGuessesInARow: number;
   }
 
   interface GameData {
@@ -126,6 +127,7 @@ export const ScoreBoard = (props: PropsType) => {
     correctGuesses: number[];
     timeUntilCorrectGuess: number[];
     wrongGuesses: number[];
+    totalCorrectGuessesInARow: number[];
   }
 
   // define data for leaderboard
@@ -136,6 +138,7 @@ export const ScoreBoard = (props: PropsType) => {
       correctGuesses: correctGuesses,
       timeUntilCorrectGuess: timeUntilCorrectGuess,
       wrongGuesses: wrongGuesses,
+      totalCorrectGuessesInARow: totalCorrectGuessesInARow,
     },
   ];
 
@@ -147,6 +150,7 @@ export const ScoreBoard = (props: PropsType) => {
         correctGuesses: game.correctGuesses[index],
         timeUntilCorrectGuess: game.timeUntilCorrectGuess[index],
         wrongGuesses: game.wrongGuesses[index],
+        totalCorrectGuessesInARow: game.totalCorrectGuessesInARow[index],
       };
     });
   });

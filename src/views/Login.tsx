@@ -13,7 +13,7 @@ import {
   Text,
   Container,
   Button,
-} from '@mantine/core';
+} from "@mantine/core";
 
 const Application = styled.div`
   width: 100%;
@@ -36,11 +36,15 @@ export const Login = (props: PropsType) => {
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
   const navigate = useNavigate();
 
-  const handleNameInputChange = (event: { currentTarget: { value: SetStateAction<string>; }; }) => {
+  const handleNameInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
     setNameInput(event.currentTarget.value);
   };
 
-  const handlePasswordInputChange = (event: { currentTarget: { value: SetStateAction<string>; }; }) => {
+  const handlePasswordInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
     setPasswordInput(event.currentTarget.value);
   };
 
@@ -97,13 +101,20 @@ export const Login = (props: PropsType) => {
       <Container size="xl" my={40}>
         <Title
           align="center"
-          sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
+          sx={(theme) => ({
+            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            fontWeight: 900,
+          })}
         >
           Welcome back!
         </Title>
         <Text color="dimmed" size="xl" align="center" mt={5}>
-          Do not have an account yet?{' '}
-          <Anchor size="xl" component="button" onClick={() => navigate("/register")}>
+          Do not have an account yet?{" "}
+          <Anchor
+            size="xl"
+            component="button"
+            onClick={() => navigate("/register")}
+          >
             Create account
           </Anchor>
         </Text>

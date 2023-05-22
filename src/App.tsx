@@ -63,16 +63,17 @@ const FlagManiaBackground = styled.img`
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // only playerId, flagmaniaToken is stored in sessionStorage
-  // tell backend to create a GET endpoint where we can get the player object with a given playerId
-
   const [player, setPlayer] = useState<Player | undefined>();
   const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
+  console.log("lobby: ", lobby);
+  // only playerId, flagmaniaToken is stored in sessionStorage
+  // tell backend to create a GET endpoint where we can get the player object with a given playerId
+
   useEffect(() => {
     getPlayer();
-  }, [player]);
+  }, []);
 
   const getPlayer = async () => {
     if (sessionStorage.getItem("currentPlayerId") && !player) {
@@ -142,7 +143,12 @@ export const App = () => {
           />
           <Route
             path="/configureGame"
-            element={<ConfigureGame setLobby={setLobby} />}
+            element={
+              <ConfigureGame
+                setLobby={setLobby}
+                setCurrentGameRound={setCurrentGameRound}
+              />
+            }
             errorElement={<ErrorPage />}
           />
           <Route
@@ -175,6 +181,7 @@ export const App = () => {
             element={
               <FlagManiaGuard shouldPreventReload={true} player={player}>
                 <GameLobby
+                  setCurrentGameRound={setCurrentGameRound}
                   player={player}
                   setPlayer={setPlayer}
                   lobby={lobby}
@@ -242,7 +249,7 @@ export const App = () => {
             path="/playerSettings/:playerId"
             element={
               <PlayerGuard isLoggedIn={isLoggedIn}>
-                <PlayerSettings />
+                <PlayerSettings player={player} setPlayer={setPlayer} />
               </PlayerGuard>
             }
             errorElement={<ErrorPage />}
@@ -273,13 +280,18 @@ export const App = () => {
             element={
               <FlagManiaGuard shouldPreventReload={true} player={player}>
                 <RegisterToSaveStats
+                  player={player}
                   setPlayer={setPlayer}
                   setIsLoggedIn={setIsLoggedIn}
                 />
               </FlagManiaGuard>
             }
           />
-          <Route path="/gameInfo" element={<GameInfo />} errorElement={<ErrorPage />} />
+          <Route
+            path="/gameInfo"
+            element={<GameInfo />}
+            errorElement={<ErrorPage />}
+          />
           <Route
             path="/gameInfoDashboard"
             element={

@@ -73,9 +73,10 @@ type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   lobby: Lobby | undefined;
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  setCurrentGameRound: Dispatch<SetStateAction<number>>;
 };
 export const GameLobby = (props: PropsType) => {
-  const { player, setPlayer, lobby, setLobby } = props;
+  const { player, setPlayer, lobby, setLobby, setCurrentGameRound } = props;
 
   const [currentAdmin, setCurrentAdmin] = useState("");
 
@@ -224,6 +225,7 @@ export const GameLobby = (props: PropsType) => {
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/game-start`,
     (message: any) => {
+      setCurrentGameRound(0);
       navigate("/game/" + lobbyId);
     }
   );
@@ -373,11 +375,14 @@ export const GameLobby = (props: PropsType) => {
                 />
               )}
             </UserContainer>
-
             <h3>Players in lobby:</h3>
 
             <UserContainer>
-              <UsersRolesTable data={playerNamesAndRoles} player={player} lobby={lobby} />
+              <UsersRolesTable
+                data={playerNamesAndRoles}
+                player={player}
+                lobby={lobby}
+              />
             </UserContainer>
 
             <ButtonContainer>

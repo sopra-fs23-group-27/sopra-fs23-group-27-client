@@ -12,7 +12,6 @@ import { useStompClient } from "react-stomp-hooks";
 import { Player } from "../types/Player";
 import { Lobby } from "../types/Lobby";
 
-
 type PropsType = {
   data: { name: string; role: string }[];
   player: Player | undefined;
@@ -82,13 +81,13 @@ export function UsersRolesTable(props: PropsType) {
       <td>
         {player?.playerName !== item.name && player?.isCreator ? (
           <ActionIcon
-          variant="outline"
-          color="red"
-          radius="xl"
-          onClick={() => handleKickingUser(item.name)}
-        >
-          <IconTrash />
-        </ActionIcon>
+            variant="outline"
+            color="red"
+            radius="xl"
+            onClick={() => handleKickingUser(item.name)}
+          >
+            <IconTrash />
+          </ActionIcon>
         ) : (
           ""
         )}
