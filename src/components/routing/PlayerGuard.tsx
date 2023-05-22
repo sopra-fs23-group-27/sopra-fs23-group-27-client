@@ -2,19 +2,24 @@ import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const PlayerGuard = (props: any) => {
+type PropsType = {
+  isLoggedIn: boolean;
+  children: any;
+};
+
+export const PlayerGuard = (props: PropsType) => {
   const navigate = useNavigate();
+  const { isLoggedIn } = props;
 
   useEffect(() => {
     if (
-      !sessionStorage.getItem("loggedIn") ||
-      sessionStorage.getItem("loggedIn") === "false"
+      !isLoggedIn
     ) {
       navigate("/login");
     }
   }, [navigate]);
 
-  if (sessionStorage.getItem("loggedIn") === "true") {
+  if (isLoggedIn) {
     return props.children;
   }
   return null;

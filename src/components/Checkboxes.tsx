@@ -117,11 +117,13 @@ export function ImageCheckboxes({ setContinent }: { setContinent: (continent: st
 
   return (
     <SimpleGrid
-      cols={2}
+      cols={3}
       breakpoints={[
-        { maxWidth: 'md', cols: 2 },
-        { maxWidth: 'sm', cols: 1 },
+        { maxWidth: 'xl', cols: 3 },
+        { maxWidth: 'sm', cols: 2 },
+        { maxWidth: 'xs', cols: 1 },
       ]}
+      spacing={10}
     >
       {regions.map((item) => (
         <ImageCheckbox

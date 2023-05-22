@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { UserCardImage } from "../components/UserCard";
 
 type PropsType = {

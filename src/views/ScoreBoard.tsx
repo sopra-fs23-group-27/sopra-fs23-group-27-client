@@ -5,7 +5,7 @@ import { useEffectOnce } from "../customHooks/useEffectOnce";
 import styled from "styled-components";
 import { LeaderBoard } from "../components/LeaderBoard";
 import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 const ICON_SIZE = rem(60);
@@ -46,11 +46,12 @@ const LeaderBoardContainer = styled.div`
 
 type PropsType = {
   player: Player | undefined;
+  currentGameRound: number;
 };
 
 export const ScoreBoard = (props: PropsType) => {
   const { classes } = useStyles();
-  const { player } = props;
+  const { player, currentGameRound } = props;
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
   const navigate = useNavigate();
@@ -64,11 +65,11 @@ export const ScoreBoard = (props: PropsType) => {
   const [wrongGuesses, setWrongGuesses] = useState<number[]>([]);
   const [winner, setWinner] = useState("");
 
-  // get the player token from local storage
+  // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
-  // get the player name from local storage
-  const playerName = sessionStorage.getItem("playerName");
+  // get the player name from session storage
+  const playerName = player?.playerName;
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
@@ -161,7 +162,7 @@ export const ScoreBoard = (props: PropsType) => {
         />
       </ThemeIcon>
       <LeaderBoardContainer>
-        <h1>ScoreBoard</h1>
+        <h1>Leaderboard of round {currentGameRound}</h1>
         <LeaderBoard playerData={playerData} />
         {player?.isCreator && (
           <Button

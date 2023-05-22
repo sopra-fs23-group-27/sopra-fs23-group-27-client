@@ -1,20 +1,24 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserDashboard } from "../../views/UserDashboard";
 
-export const LoginGuard = (props: any) => {
+type PropsType = {
+  isLoggedIn: boolean;
+  children: any;
+};
+
+export const LoginGuard = (props: PropsType) => {
   const navigate = useNavigate();
+  const { isLoggedIn } = props;
 
   useEffect(() => {
-    if (sessionStorage.getItem("loggedIn") === "true") {
+    if (isLoggedIn) {
       navigate("/dashboard");
     }
   }, [navigate]);
   
   if (
-    sessionStorage.getItem("loggedIn") === "false" ||
-    sessionStorage.getItem("loggedIn") === null
+    !isLoggedIn
   ) {
     return props.children;
   } 

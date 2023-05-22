@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import {
   TextInput,
   PasswordInput,
@@ -13,7 +13,6 @@ import {
   Text,
   Container,
   Button,
-  Group,
 } from '@mantine/core';
 
 const Application = styled.div`
@@ -27,10 +26,11 @@ const Application = styled.div`
 
 type PropsType = {
   setPlayer: React.Dispatch<React.SetStateAction<Player | undefined>>;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const Login = (props: PropsType) => {
-  const { setPlayer } = props;
+  const { setPlayer, setIsLoggedIn } = props;
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
@@ -74,12 +74,6 @@ export const Login = (props: PropsType) => {
       // Store the ID of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayerId", res.data.id);
 
-      // Store the Name of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
-
-      // Store login status of the current user
-      sessionStorage.setItem("loggedIn", "true");
-
       // show notification that player has successfully logged in
       notifications.show({
         title: "Success",
@@ -87,6 +81,7 @@ export const Login = (props: PropsType) => {
         color: "green",
       });
       setPlayer(res.data);
+      setIsLoggedIn(true);
       navigate("/");
     } catch (err: any) {
       notifications.show({
@@ -131,11 +126,6 @@ export const Login = (props: PropsType) => {
             required
             mt="md"
           />
-          <Group position="apart" mt="lg">
-            {/* <Anchor component="button" size="sm">
-              Forgot password?
-            </Anchor> */}
-          </Group>
           <Button
             onClick={loginUser}
             disabled={!isFormFilledOut}

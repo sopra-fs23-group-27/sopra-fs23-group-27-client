@@ -3,6 +3,10 @@ import FlagLogo from "../icons/DALL-E_FlagMania_Logo.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { httpPost, httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
+import { modals } from "@mantine/modals";
+import { Player } from "../types/Player";
+import { Lobby } from "../types/Lobby";
+import { Dispatch, SetStateAction } from "react";
 
 const FlagManiaLogo = styled.img`
   top: 10px;
@@ -28,20 +32,53 @@ const FlagManiaLogo = styled.img`
   }
 `;
 
-export const FlagmaniaLogo = () => {
+type PropsType = {
+  isLoggedIn: boolean;
+  player: Player | undefined;
+  lobby: Lobby | undefined;
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+};
+
+export const FlagmaniaLogo = (props: PropsType) => {
   const navigate = useNavigate();
-  const { lobbyId } = useParams();
+  const { isLoggedIn, player, lobby, setPlayer, setLobby, setIsLoggedIn } =
+    props;
+
+  const userConfirmationLobby = async () => {
+    modals.openConfirmModal({
+      title: "Danger Zone",
+      children: "Are you sure you want to leave the lobby?",
+      labels: { confirm: "Confirm", cancel: "Cancel" },
+      onConfirm: async () => {
+        handleLeaveLobby();
+      },
+    });
+  };
+
+  const userConfirmationLogout = async () => {
+    modals.openConfirmModal({
+      title: "Danger Zone",
+      children:
+        "This action will log you out and delete your player account. Are you sure you want to continue?",
+      labels: { confirm: "Confirm", cancel: "Cancel" },
+      onConfirm: async () => {
+        handleLogout();
+      },
+    });
+  };
 
   const handleLeaveLobby = async () => {
     try {
       await httpPut(
-        "/lobbies/" + lobbyId + "/leave",
+        "/lobbies/" + lobby?.lobbyId + "/leave",
         {},
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
-      // delete lobby from session storage
-      sessionStorage.removeItem("lobbyId");
-      sessionStorage.removeItem("lobbyName");
+
+      // set lobby to undefined
+      setLobby(undefined);
 
       // navigate to dashboard
       navigate("/");
@@ -65,6 +102,15 @@ export const FlagmaniaLogo = () => {
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
 
+      // set player to undefined and isLoggedIn in to false
+      setPlayer(undefined);
+      setIsLoggedIn(false);
+
+      // if lobby is defined, set lobby to undefined
+      if (lobby) {
+        setLobby(undefined);
+      }
+
       // reset the session storage
       sessionStorage.clear();
       navigate("/");
@@ -79,15 +125,19 @@ export const FlagmaniaLogo = () => {
   };
 
   const handleClickedLogo = () => {
-    if (sessionStorage.getItem("loggedIn") === "true") {
+    if (isLoggedIn && lobby) {
+      console.log("leave lobby");
+      // prompt player if they really want to leave the lobby/game
       handleLeaveLobby();
-    } else if (sessionStorage.getItem("loggedIn") === "false") {
+    } else if (!isLoggedIn && player) {
+      console.log("logout");
+      // prompt player if they really want to leave the lobby/game
       handleLogout();
     } else {
+      console.log("else");
       navigate("/");
     }
   };
-
 
   return <FlagManiaLogo onClick={() => handleClickedLogo()} src={FlagLogo} />;
 };

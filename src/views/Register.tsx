@@ -3,7 +3,7 @@ import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 
 import {
   TextInput,
@@ -29,9 +29,10 @@ const Application = styled.div`
 
 type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 export const Register = (props: PropsType) => {
-  const { setPlayer } = props;
+  const { setPlayer, setIsLoggedIn } = props;
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
@@ -87,6 +88,7 @@ export const Register = (props: PropsType) => {
         { headers: {} }
       );
       setPlayer(res.data);
+      setIsLoggedIn(true);
       console.log("new permanent player created: ", res.data);
 
       // Store the token into the session storage.
@@ -94,12 +96,6 @@ export const Register = (props: PropsType) => {
 
       // Store the ID of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayerId", res.data.id);
-
-      // Store the Name of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
-
-      // Store login status of the current user
-      sessionStorage.setItem("loggedIn", "true");
 
       // show notification that player has been registered
       notifications.show({

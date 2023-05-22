@@ -3,7 +3,7 @@ import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 
 import {
   TextInput,
@@ -24,37 +24,13 @@ const Application = styled.div`
   justify-content: center;
   align-items: center;
 `;
-// const Container = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   border: 2px solid rgb(216, 216, 216);
-//   border-radius: 10px;
-//   padding: 32px 64px;
-//   align-items: center;
-// `;
-// type props = {
-//   isActive: boolean;
-// };
-// const Button = styled.button<props>`
-//   cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-//   background-color: ${(props) =>
-//     props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
-//   color: ${(props) => (props.isActive ? "white" : "gray")};
-//   border: none;
-//   text-align: center;
-//   padding: 16px 64px;
-//   margin: 30px 0 50px;
-
-//   &:hover {
-//     background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
-//   }
-// `;
 
 type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 export const RegisterToSaveStats = (props: PropsType) => {
-  const { setPlayer } = props;
+  const { setPlayer, setIsLoggedIn } = props;
   const guestName = sessionStorage.getItem("currentPlayer") || "";
   const [nameInput, setNameInput] = useState(guestName);
   const [passwordInput, setPasswordInput] = useState("");
@@ -116,6 +92,7 @@ export const RegisterToSaveStats = (props: PropsType) => {
         { headers }
       );
       setPlayer(res.data);
+      setIsLoggedIn(true);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
@@ -145,40 +122,6 @@ export const RegisterToSaveStats = (props: PropsType) => {
       console.error(err);
     }
   };
-
-  //   return (
-  //     <Application>
-  //       <Container>
-  //         <h1>Register</h1>
-  //         <FloatingTextInput
-  //           label="Name"
-  //           value={nameInput}
-  //           onChange={setNameInput}
-  //         />
-  //         <p>
-  //           Minimum password length: <br />6 characters
-  //         </p>
-  //         <FloatingTextInput
-  //           label="Password"
-  //           value={passwordInput}
-  //           onChange={setPasswordInput}
-  //         />
-  //         <FloatingTextInput
-  //           label="repeat Password"
-  //           value={passwordRepetitionInput}
-  //           onChange={setPasswordRepetitionInput}
-  //         />
-  //         <Button
-  //           isActive={isFormFilledOut}
-  //           disabled={!isFormFilledOut}
-  //           onClick={registerUser}
-  //         >
-  //           Register
-  //         </Button>
-  //       </Container>
-  //     </Application>
-  //   );
-  // };
 
   return (
     <Application>
