@@ -1,21 +1,15 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
-import { FloatingTextInput } from "../components/FloatingTextInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
 import { BasicRoundOptions } from "../components/BasicGame/BasicRoundOptions";
 import { GuessHistory } from "../components/GuessHistory";
 import { Player } from "../types/Player";
-import { TextInput } from "@mantine/core";
+import { TextInput, Button, Text, Title } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 
-const P = styled.p`
-  padding: 0;
-  margin: 0;
-  font-size: 24px;
-`;
 const Application = styled.div`
   min-height: 100vh;
   width: 100vw;
@@ -68,7 +62,6 @@ const Main = styled.div`
   background-color: #f5f7f9;
 `;
 const FlagContainer = styled.div`
-  margin-top: -1px;
   position: relative;
 `;
 const Flag = styled.img`
@@ -99,15 +92,6 @@ const CorrectCountryAdvanced = styled.div`
   font-size: 30px;
   color: black;
   background-color: lightgray;
-`;
-
-const GuessButton = styled.button`
-  cursor: pointer;
-  background-color: lightgray;
-  text-align: center;
-  border: none;
-  font-size: 24px;
-  padding: 12px 24px;
 `;
 
 type PropsType = {
@@ -270,16 +254,18 @@ export const GameRound = (props: PropsType) => {
       ) : (
         <>
           <Time>
-            <P>Time: {timeLeft}</P>
+            <Text size="xl">Time: {timeLeft}</Text>
           </Time>
 
           {!isBasic && guessHistory[0] && (
-            <GuessHistoryBox>
-              <GuessHistory
-                guesses={guessHistory}
-                playerNames={guessHistoryNames}
-              />
-            </GuessHistoryBox>
+            <>
+              <GuessHistoryBox>
+                <GuessHistory
+                  guesses={guessHistory}
+                  playerNames={guessHistoryNames}
+                />
+              </GuessHistoryBox>
+            </>
           )}
 
           <Main>
@@ -290,7 +276,7 @@ export const GameRound = (props: PropsType) => {
 
             {!isBasic && !correctCountry && (
               <>
-                <Hint>{latestHint}</Hint>
+                <Text size="xl">{latestHint}</Text>
                 <TextGuessBox>
                   <TextInput
                     size="lg"
@@ -300,17 +286,24 @@ export const GameRound = (props: PropsType) => {
                     onChange={setGuessInput}
                     style={{ marginBottom: "24px" }}
                   />
-                  <GuessButton onClick={() => submitInputGuess()}>
+                  <Button
+                    disabled={!guessInput}
+                    size="xl"
+                    onClick={submitInputGuess}
+                    style={{}}
+                  >
                     Guess
-                  </GuessButton>
+                  </Button>
                 </TextGuessBox>
               </>
             )}
             {!isBasic && correctCountry && (
               <div>
-                <p>correct country:</p>
+                <Text size="lg">correct country:</Text>
                 <CorrectCountryAdvanced>
-                  {correctCountry}
+                  <Title order={2} style={{ margin: "auto" }}>
+                    {correctCountry}
+                  </Title>
                 </CorrectCountryAdvanced>
               </div>
             )}

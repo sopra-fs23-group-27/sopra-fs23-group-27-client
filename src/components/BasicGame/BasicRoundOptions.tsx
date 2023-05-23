@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Text, Title } from "@mantine/core";
 
 const OptionsGuessBox = styled.div`
   margin-top: 40px;
@@ -35,9 +36,6 @@ const Option = styled.div<Props>`
     ${(p) => (p.clickable ? "transform: scale(1.05)" : "")};
   }
 `;
-const OptionText = styled.p`
-  margin: auto;
-`;
 const ChosenOption = styled.div`
   margin-top: 40px;
   width: 400px;
@@ -71,7 +69,13 @@ export const BasicRoundOptions = (props: PropsType) => {
   );
 
   if (userSelection && !correctCountry) {
-    return <ChosenOption>{userSelection}</ChosenOption>;
+    return (
+      <ChosenOption>
+        <Title order={2} style={{ margin: "auto" }}>
+          {userSelection}
+        </Title>
+      </ChosenOption>
+    );
   }
 
   return (
@@ -84,7 +88,9 @@ export const BasicRoundOptions = (props: PropsType) => {
           onClick={() => submitOptionGuess(countryOptions[ind])}
           clickable={!userSelection && !correctCountry}
         >
-          <OptionText>{countryOptions[ind]}</OptionText>
+          <Title order={2} style={{ margin: "auto" }}>
+            {countryOptions[ind]}
+          </Title>
         </Option>
       ))}
     </OptionsGuessBox>

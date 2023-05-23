@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { Dispatch, SetStateAction, useState } from "react";
-import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
 import { httpPost } from "../helpers/httpService";
@@ -175,6 +174,7 @@ export const ConfigureGame = (props: PropsType) => {
         <div style={{ marginBottom: "32px" }}>
           <TextInput
             label="Game Name"
+            placeholder="Game Name"
             value={lobbyName}
             onChange={handleLobbyNameInputChange}
             style={{ width: "100%" }}

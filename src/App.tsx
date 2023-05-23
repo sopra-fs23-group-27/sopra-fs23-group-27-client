@@ -9,7 +9,7 @@ import { GameLobby } from "./views/GameLobby";
 import { GameIdInput } from "./views/EnterGameId";
 import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
-import { ScoreBoard } from "./views/ScoreBoard";
+import { ScoreBoard } from "./components/ScoreBoard";
 import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { useEffect, useState } from "react";
 import { Lobby } from "./types/Lobby";
@@ -114,10 +114,7 @@ export const App = () => {
             path="/"
             element={
               <LoginGuard player={player}>
-                <HomePage
-                  player={player}
-                  setPlayer={setPlayer}            
-                />
+                <HomePage player={player} setPlayer={setPlayer} />
               </LoginGuard>
             }
             errorElement={<ErrorPage />}
@@ -229,10 +226,7 @@ export const App = () => {
             path="/dashboard"
             element={
               <PlayerGuard player={player}>
-                <UserDashboard
-                  player={player}
-                  setPlayer={setPlayer}
-                />
+                <UserDashboard player={player} setPlayer={setPlayer} />
               </PlayerGuard>
             }
             errorElement={<ErrorPage />}
@@ -271,10 +265,7 @@ export const App = () => {
             path="/saveStatsRegister"
             element={
               <FlagManiaGuard shouldPreventReload={true} player={player}>
-                <RegisterToSaveStats
-                  player={player}
-                  setPlayer={setPlayer}
-                />
+                <RegisterToSaveStats player={player} setPlayer={setPlayer} />
               </FlagManiaGuard>
             }
           />
@@ -292,15 +283,7 @@ export const App = () => {
             }
             errorElement={<ErrorPage />}
           />
-          <Route
-            path="/game/:lobbyId/scoreInfo"
-            element={
-              <FlagManiaGuard shouldPreventReload={true} player={player}>
-                <ScoreInfo />
-              </FlagManiaGuard>
-            }
-            errorElement={<ErrorPage />}
-          />
+
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Router>
