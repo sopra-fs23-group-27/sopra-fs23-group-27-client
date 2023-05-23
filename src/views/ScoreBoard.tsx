@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStompClient, useSubscription } from "react-stomp-hooks";
 import styled from "styled-components";
-import { LeaderBoard } from "./LeaderBoard";
+import { LeaderBoard } from "../components/LeaderBoard";
 import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { Player } from "../types/Player";
 import { IconInfoCircle } from "@tabler/icons-react";
-import { RainbowLoader } from "./RainbowLoader";
-import { ScoreInfo } from "../views/ScoreInfo";
+import { RainbowLoader } from "../components/RainbowLoader";
+import { ScoreInfo } from "../components/ScoreInfo";
 
 const ICON_SIZE = rem(60);
 
@@ -182,7 +182,7 @@ export const ScoreBoard = (props: PropsType) => {
             />
           </ThemeIcon>
           <LeaderBoardContainer>
-            <h1>Leaderboard of round {currentGameRound}</h1>
+            <h1>Leaderboard Round {currentGameRound}</h1>
             <LeaderBoard playerData={playerData} />
             {player?.isCreator && (
               <Button
