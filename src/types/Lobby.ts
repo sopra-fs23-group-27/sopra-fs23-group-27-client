@@ -1,3 +1,7 @@
+interface playerRoleMap {
+  [key: string]: string;
+}
+
 export type Lobby = {
   lobbyId: number;
   lobbyName: string;
@@ -10,5 +14,6 @@ export type Lobby = {
   isJoinable: boolean;
   currentGameId: number;
   privateLobbyKey: string;
+  playerRoleMap: playerRoleMap;
   mode: "BASIC" | "ADVANCED";
 };
