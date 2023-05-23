@@ -16,7 +16,6 @@ const Container = styled.div`
   align-items: center;
   padding: 50px;
   min-height: 100vh;
-  // background-color: #dba11c;
 `;
 const Application = styled.div`
   display: flex;
@@ -25,7 +24,6 @@ const Application = styled.div`
   width: 768px;
   font-size: 20px;
   border: 2px solid black;
-  //border: 2px solid rgb(216, 216, 216);
   border-radius: 10px;
   padding: 16px 32px;
   background-color: #f5f7f9;
@@ -76,10 +74,11 @@ interface PostBody {
 
 type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  setCurrentGameRound: Dispatch<SetStateAction<number>>;
 };
 
 export const ConfigureGame = (props: PropsType) => {
-  const { setLobby } = props;
+  const { setLobby, setCurrentGameRound } = props;
 
   const navigate = useNavigate();
 
@@ -100,9 +99,7 @@ export const ConfigureGame = (props: PropsType) => {
   const [isPublic, setIsPublic] = useState(true);
 
   // CONTINENTS
-  const defaultContinents = [
-    "World",
-  ];
+  const defaultContinents = ["World"];
   const [continent, setContinent] = useState(defaultContinents);
 
   const handleLobbyNameInputChange = (event: {
@@ -110,7 +107,6 @@ export const ConfigureGame = (props: PropsType) => {
   }) => {
     setLobbyName(event.currentTarget.value);
   };
-  
   const changeGameMode = (updatedGameModeIsBasic: boolean) => {
     if (updatedGameModeIsBasic === isBasic) {
       return;
@@ -123,12 +119,12 @@ export const ConfigureGame = (props: PropsType) => {
     }
     setIsBasic(updatedGameModeIsBasic);
   };
-  
+
   const createLobby = async () => {
     const mode = isBasic ? "basic" : "advanced";
 
-    console.log(continent)
-    
+    console.log(continent);
+
     const body: PostBody = {
       continent,
       isPublic,
@@ -143,7 +139,7 @@ export const ConfigureGame = (props: PropsType) => {
     } else {
       body.numOptions = numOptions;
     }
-    
+
     try {
       // get token of current player from session storage
       const headers = {
@@ -155,6 +151,7 @@ export const ConfigureGame = (props: PropsType) => {
       // Set the lobby state to the response data.
       const lobby = response.data as Lobby;
       setLobby(lobby);
+      setCurrentGameRound(0);
 
       // navigate to lobby
       navigate("/lobbies/" + lobby.lobbyId);

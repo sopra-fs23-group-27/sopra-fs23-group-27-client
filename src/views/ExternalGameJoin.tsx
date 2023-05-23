@@ -3,7 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { httpGet, httpPost, httpPut } from "../helpers/httpService";
 import { Player } from "../types/Player";
-import { Container, Button, Switch, TextInput, Title, Paper } from "@mantine/core";
+import {
+  Container,
+  Button,
+  Switch,
+  TextInput,
+  Title,
+  Paper,
+} from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Lobby } from "../types/Lobby";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
@@ -15,15 +22,6 @@ const Application = styled.div`
   justify-content: center;
   align-items: center;
   // background-color: #f5f7f9;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  justify-content: center;
-  align-items: center;
-  height: 40vh;
 `;
 
 const LoginButton = styled.button<props>`
@@ -54,7 +52,8 @@ type PropsType = {
 };
 
 export const ExternalGameJoin = (props: PropsType) => {
-  const { setLobby, player, setPlayer, setCurrentGameRound, setIsLoggedIn } = props;
+  const { setLobby, player, setPlayer, setCurrentGameRound, setIsLoggedIn } =
+    props;
   const [playerName, setPlayerName] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [nameInput, setNameInput] = useState("");
@@ -92,7 +91,8 @@ export const ExternalGameJoin = (props: PropsType) => {
         setLobby(lobby);
 
         // join game
-        joinGame(lobby.privateLobbyKey);
+        console.log("set lobby: ", lobby);
+        joinGame(response.data.privateLobbyKey);
       };
       playerJoin();
     }
@@ -151,8 +151,10 @@ export const ExternalGameJoin = (props: PropsType) => {
       // Set the lobby state variable using the data returned from the API
       const lobby = res.data as Lobby;
       setLobby(lobby);
+      console.log("set lobby: ", lobby);
 
       // join game
+
       joinGame(lobby.privateLobbyKey);
 
       // catch errors

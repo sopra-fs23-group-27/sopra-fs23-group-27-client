@@ -53,6 +53,7 @@ export const PublicGame = (props: PublicGameProps) => {
 
     // Set the lobby state to the lobby that was returned from the server
     const lobby = res.data as Lobby;
+    console.log("lobby from get request: ", res.data);
     setLobby(lobby);
 
     if (res.status === 200) {
@@ -60,9 +61,13 @@ export const PublicGame = (props: PublicGameProps) => {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
       const body = {};
-      const response = await httpPut("/lobbies/" + lobby.lobbyId + "/join", body, {
-        headers,
-      });
+      const response = await httpPut(
+        "/lobbies/" + lobby.lobbyId + "/join",
+        body,
+        {
+          headers,
+        }
+      );
       if (response.status === 204) {
         // Set the lobby state to the lobby that was returned from the server
         const lobby = response.data as Lobby;
@@ -144,10 +149,11 @@ export const ActiveGameOverview = (props: PropsType) => {
   };
 
   const joinGame = async (lobbyId: number) => {
-    const lobby = await httpGet("/lobbies/" + lobbyId, {});
+    const res = await httpGet("/lobbies/" + lobbyId, {});
+    const lobby = res.data as Lobby;
 
     console.log("lobby from join: ", lobby);
-    if (lobby.status === 200) {
+    if (res.status === 200) {
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
@@ -155,9 +161,9 @@ export const ActiveGameOverview = (props: PropsType) => {
       const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
         headers,
       });
+      console.log("response: ", response);
       if (response.status === 204) {
         setCurrentGameRound(0);
-        
         // Navigate to the lobby page
         navigate("/lobbies/" + lobbyId);
       } else {

@@ -4,7 +4,6 @@ import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 import { Player } from "../types/Player";
-
 import {
   TextInput,
   PasswordInput,
@@ -26,20 +25,20 @@ const Application = styled.div`
 `;
 
 type PropsType = {
+  player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 export const RegisterToSaveStats = (props: PropsType) => {
-  const { setPlayer, setIsLoggedIn } = props;
-  const guestName = sessionStorage.getItem("currentPlayer") || "";
-  const [nameInput, setNameInput] = useState(guestName);
+  const { player, setPlayer, setIsLoggedIn } = props;
+  const [nameInput, setNameInput] = useState(player?.playerName);
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
   const navigate = useNavigate();
 
   const handleNameInputChange = (event: {
-    currentTarget: { value: SetStateAction<string> };
+    currentTarget: { value: SetStateAction<string | undefined> };
   }) => {
     setNameInput(event.currentTarget.value);
   };
@@ -99,13 +98,6 @@ export const RegisterToSaveStats = (props: PropsType) => {
 
       // Store the ID of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayerId", res.data.id);
-
-      // Store the Name of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
-
-      // Store login status of the current user
-      sessionStorage.setItem("loggedIn", "true");
-
       // show notification that player has been registered
       notifications.show({
         title: "Success",

@@ -44,7 +44,7 @@ const Card = styled.div`
   text-align: center;
   width: 250px;
   height: 350px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   background-color: white;
   overflow: hidden;
 
@@ -169,6 +169,13 @@ export const GameEnd = (props: PropsType) => {
   playerData.sort((a, b) => b.playerScore - a.playerScore);
   console.log(playerData);
 
+  const adjustNameSize = (name: string) => {
+    if (name.length <= 10) {
+      return name;
+    }
+    const adjustedName = name.slice(0, 10) + "...";
+    return adjustedName;
+  };
   const isPlayerInTopThree = () => {
     if (
       currentPlayer?.playerName === playerData[0]?.playerName ||
@@ -210,17 +217,17 @@ export const GameEnd = (props: PropsType) => {
               <>
                 <Card>
                   <H2>2.</H2>
-                  <H1>{playerData[1]?.playerName}</H1>
+                  <H1>{adjustNameSize(playerData[1]?.playerName)}</H1>
                   <P>{playerData[1]?.playerScore} points</P>
                 </Card>
                 <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-2s">
                   <H2>1.</H2>
-                  <H1>{playerData[0]?.playerName}</H1>
+                  <H1>{adjustNameSize(playerData[0]?.playerName)}</H1>
                   <P>{playerData[0]?.playerScore} points</P>
                 </FirstRankCard>
                 <Card>
                   <H2>3.</H2>
-                  <H1>{playerData[2]?.playerName}</H1>
+                  <H1>{adjustNameSize(playerData[2]?.playerName)}</H1>
                   <P>{playerData[2]?.playerScore} points</P>
                 </Card>
               </>
@@ -228,13 +235,13 @@ export const GameEnd = (props: PropsType) => {
               <>
                 <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-2s">
                   <H2>1.</H2>
-                  <H1>{playerData[0]?.playerName}</H1>
+                  <H1>{adjustNameSize(playerData[0]?.playerName)}</H1>
                   <P>{playerData[0]?.playerScore} points</P>
                 </FirstRankCard>
 
                 <Card>
                   <H2>2.</H2>
-                  <H1>{playerData[1]?.playerName}</H1>
+                  <H1>{adjustNameSize(playerData[1]?.playerName)}</H1>
                   <P>{playerData[1]?.playerScore} points</P>
                 </Card>
               </>
