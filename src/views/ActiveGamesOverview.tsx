@@ -158,24 +158,36 @@ export const ActiveGameOverview = (props: PropsType) => {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
       const body = {};
-      const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
-        headers,
-      });
-      console.log("response: ", response);
-      if (response.status === 204) {
-        setCurrentGameRound(0);
-        // Navigate to the lobby page
-        navigate("/lobbies/" + lobbyId);
-      } else {
+      try {
+        const response = await httpPut("/lobbies/" + lobbyId + "/join", body, {
+          headers,
+        });
+        console.log("response: ", response);
+        if (response.status === 204) {
+          setCurrentGameRound(0);
+          // Navigate to the lobby page
+          navigate("/lobbies/" + lobbyId);
+        } else {
+          notifications.show({
+            title: "Error",
+            message: response.data.message,
+            color: "red",
+          });
+        }
+      } catch (e: any) {
+        console.error(e);
         notifications.show({
           title: "Error",
-          message: response.data.message,
+          message: e.response.data.message,
           color: "red",
         });
-        throw new Error("Error joining game");
-      }
+      }      
     } else {
-      throw new Error("Error joining game");
+      notifications.show({
+        title: "Error",
+        message: res.data.message,
+        color: "red",
+      });
     }
   };
 
