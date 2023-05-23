@@ -19,9 +19,9 @@ export const PlayerSettings = (props: PropsType) => {
   const userCardImageProps: UserCardImageProps = {
     name: player?.playerName ? player?.playerName : "",
     stats: [
-      { label: "Wins", value: "10" },
-      { label: "Losses", value: "10" },
-      { label: "Win Rate", value: "50%" },
+      // { label: "Wins", value: "10" },
+      // { label: "Losses", value: "10" },
+      // { label: "Win Rate", value: "50%" },
     ],
   };
 

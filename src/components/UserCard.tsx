@@ -1,15 +1,17 @@
 import {
   createStyles,
   Card,
-  Avatar,
+  Button,
   Text,
   Group,
   Button as MantineButton,
   rem,
+  Paper,
+  TextInput,
+  PasswordInput,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FloatingTextInput } from "../components/FloatingTextInput";
 import styled from "styled-components";
 import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
@@ -26,21 +28,6 @@ const Container = styled.div`
 type props = {
   isActive: boolean;
 };
-
-const Button = styled.button<props>`
-  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-  background-color: ${(props) =>
-    props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
-  color: ${(props) => (props.isActive ? "white" : "gray")};
-  border: none;
-  text-align: center;
-  padding: 16px 64px;
-  margin: 30px 0 50px;
-
-  &:hover {
-    background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
-  }
-`;
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -68,6 +55,24 @@ export function UserCardImage({ name, stats }: UserCardImageProps) {
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
   const navigate = useNavigate();
+
+  const handleNameInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setNameInput(event.currentTarget.value);
+  };
+
+  const handlePasswordInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setPasswordInput(event.currentTarget.value);
+  };
+
+  const handlePasswordRepetitionInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setPasswordRepetitionInput(event.currentTarget.value);
+  };
 
   function handleUpdateProfile() {
     if (showUpdateProfile) {
@@ -106,7 +111,7 @@ export function UserCardImage({ name, stats }: UserCardImageProps) {
         },
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
-      
+
       // store the new token in sessionStorage
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
 
@@ -146,7 +151,7 @@ export function UserCardImage({ name, stats }: UserCardImageProps) {
   return (
     <Card withBorder padding="xl" radius="md" className={classes.card}>
       <Text ta="center" fz="lg" fw={500} mt="sm">
-        {name}
+        User: {name}
       </Text>
       <Group mt="md" position="center" spacing={30}>
         {items}
@@ -159,37 +164,52 @@ export function UserCardImage({ name, stats }: UserCardImageProps) {
         style={{ display: "block", margin: "0 auto" }}
         color={theme.colorScheme === "dark" ? undefined : "dark"}
       >
-        Update Profile
+        Toggle modify settings
       </MantineButton>
       {showUpdateProfile ? (
         <div>
           <Container>
             <h1>Update User</h1>
-            <FloatingTextInput
-              label="Name"
-              value={nameInput}
-              onChange={setNameInput}
-            />
-            <p>
-              Minimum password length: <br />6 characters
-            </p>
-            <FloatingTextInput
-              label="Password"
-              value={passwordInput}
-              onChange={setPasswordInput}
-            />
-            <FloatingTextInput
-              label="repeat Password"
-              value={passwordRepetitionInput}
-              onChange={setPasswordRepetitionInput}
-            />
-            <Button
-              isActive={isFormFilledOut}
-              disabled={!isFormFilledOut}
-              onClick={updateUser}
-            >
-              Update User
-            </Button>
+            <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+              <TextInput
+                label="Username"
+                placeholder="Username"
+                value={nameInput}
+                onChange={handleNameInputChange}
+                size="xl"
+                required
+              />
+              <Text color="dimmed" size="md" align="center" mt={5}>
+                Minimum password length: 6 characters
+              </Text>
+              <PasswordInput
+                label="Password"
+                placeholder="Password"
+                value={passwordInput}
+                onChange={handlePasswordInputChange}
+                size="xl"
+                required
+                mt="md"
+              />
+              <PasswordInput
+                label="Password"
+                placeholder="repeat Password"
+                value={passwordRepetitionInput}
+                onChange={handlePasswordRepetitionInputChange}
+                size="xl"
+                required
+                mt="md"
+              />
+              <Group position="apart" mt="lg"></Group>
+              <Button
+                onClick={updateUser}
+                disabled={!isFormFilledOut}
+                fullWidth
+                size="xl"
+              >
+                Update profile
+              </Button>
+            </Paper>
           </Container>
         </div>
       ) : (

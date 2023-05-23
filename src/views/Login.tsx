@@ -26,11 +26,10 @@ const Application = styled.div`
 
 type PropsType = {
   setPlayer: React.Dispatch<React.SetStateAction<Player | undefined>>;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const Login = (props: PropsType) => {
-  const { setPlayer, setIsLoggedIn } = props;
+  const { setPlayer } = props;
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
@@ -84,8 +83,11 @@ export const Login = (props: PropsType) => {
         message: "Welcome back, " + res.data.playerName + "!",
         color: "green",
       });
+
+      // set the player state to the currently logged-in player
       setPlayer(res.data);
-      setIsLoggedIn(true);
+
+      // navigate to the home page
       navigate("/");
     } catch (err: any) {
       notifications.show({

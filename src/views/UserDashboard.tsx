@@ -58,12 +58,11 @@ const ButtonContainer = styled.div`
 type PropsType = {
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
 export const UserDashboard = (props: PropsType) => {
   const { classes } = useStyles();
-  const { setPlayer, player, setIsLoggedIn } = props;
+  const { setPlayer, player } = props;
   const [nRoundsPlayed, setNRoundsPlayed] = useState(0);
   const [
     overallTotalNumberOfCorrectGuesses,
@@ -263,9 +262,8 @@ export const UserDashboard = (props: PropsType) => {
         color: "green",
       });
 
-      // set player to undefined and isLoggedIn in to false
+      // set player to undefined
       setPlayer(undefined);
-      setIsLoggedIn(false);
 
       // reset the session storage
       sessionStorage.clear();

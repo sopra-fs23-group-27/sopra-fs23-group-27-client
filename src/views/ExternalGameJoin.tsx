@@ -48,11 +48,10 @@ type PropsType = {
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   setCurrentGameRound: Dispatch<SetStateAction<number>>;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
 export const ExternalGameJoin = (props: PropsType) => {
-  const { setLobby, player, setPlayer, setCurrentGameRound, setIsLoggedIn } =
+  const { setLobby, player, setPlayer, setCurrentGameRound } =
     props;
   const [playerName, setPlayerName] = useState("");
   const [showLogin, setShowLogin] = useState(false);
@@ -132,7 +131,6 @@ export const ExternalGameJoin = (props: PropsType) => {
       // Set the player state variable using the data returned from the API
       const player = response.data as Player;
       setPlayer(player);
-      setIsLoggedIn(false);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
@@ -185,9 +183,9 @@ export const ExternalGameJoin = (props: PropsType) => {
         },
         { headers: {} }
       );
-
+      
+      // Set the player state variable using the data returned from the API
       setPlayer(res.data);
-      setIsLoggedIn(true);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);
