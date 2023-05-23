@@ -190,6 +190,9 @@ export const App = () => {
                   currentGameRound={currentGameRound}
                   setCurrentGameRound={setCurrentGameRound}
                   player={player}
+                  setPlayer={setPlayer}
+                  lobby={lobby}
+                  setLobby={setLobby}
                   gameMode={lobby?.mode}
                   numRounds={lobby?.numRounds}
                 />
@@ -215,6 +218,9 @@ export const App = () => {
               <FlagManiaGuard shouldPreventReload={true} player={player}>
                 <ScoreBoard
                   player={player}
+                  setPlayer={setPlayer}
+                  lobby={lobby}
+                  setLobby={setLobby}
                   currentGameRound={currentGameRound}
                 />
               </FlagManiaGuard>

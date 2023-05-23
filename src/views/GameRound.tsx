@@ -9,6 +9,7 @@ import { GuessHistory } from "../components/GuessHistory";
 import { Player } from "../types/Player";
 import { TextInput, Button, Text, Title } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
+import { Lobby } from "../types/Lobby";
 
 const Application = styled.div`
   min-height: 100vh;
@@ -98,12 +99,23 @@ type PropsType = {
   currentGameRound: number;
   setCurrentGameRound: Dispatch<SetStateAction<number>>;
   player: Player | undefined;
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  lobby: Lobby | undefined;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
   gameMode: "BASIC" | "ADVANCED" | undefined;
   numRounds: number | undefined;
 };
 export const GameRound = (props: PropsType) => {
-  const { currentGameRound, setCurrentGameRound, player, gameMode, numRounds } =
-    props;
+  const {
+    currentGameRound,
+    setCurrentGameRound,
+    player,
+    setPlayer,
+    gameMode,
+    lobby,
+    setLobby,
+    numRounds,
+  } = props;
   const isBasic = gameMode === "BASIC";
 
   const { lobbyId } = useParams();
@@ -112,9 +124,6 @@ export const GameRound = (props: PropsType) => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [flagURL, setFlagURL] = useState("");
   const [correctCountry, setCorrectCountry] = useState("");
-
-  console.log("isBasic: ", isBasic);
-  console.log("correctCountry: ", correctCountry);
 
   // BASIC Mode
   const [guessOptions, setGuessOptions] = useState<string[]>([]);
@@ -164,9 +173,6 @@ export const GameRound = (props: PropsType) => {
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/round-end`,
     (message: any) => {
-      console.log(
-        `currentGameRound: ${currentGameRound}, numRounds: ${numRounds}`
-      );
       if (currentGameRound === numRounds) {
         navigate(`/game/${lobbyId}/gameEnd`);
       } else {
@@ -216,6 +222,74 @@ export const GameRound = (props: PropsType) => {
       const parsedMessage = JSON.parse(message.body);
       const choices = parsedMessage.choices;
       setGuessOptions(choices);
+    }
+  );
+
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/lobby-settings`,
+    (message: any) => {
+      setIsLoading(false);
+
+      const newLobby = JSON.parse(message.body) as Lobby;
+
+      // set the lobby to the new lobby settings
+      setLobby(newLobby);
+
+      // notify which player(s) did leave
+      const leftPlayerNames = lobby?.joinedPlayerNames.filter(
+        (playerName: string) => !newLobby.joinedPlayerNames.includes(playerName)
+      );
+      leftPlayerNames?.forEach((playerName: string) => {
+        if (playerName !== player?.playerName) {
+          notifications.show({
+            title: "Player left",
+            message: playerName,
+            color: "red",
+          });
+        }
+      });
+
+      // notify player if admin has changed
+      const oldAdmin = lobby?.joinedPlayerNames.filter((n) => {
+        return lobby?.playerRoleMap[n];
+      })[0];
+      if (oldAdmin) {
+        if (!newLobby?.playerRoleMap[oldAdmin]) {
+          const newAdmin = newLobby?.joinedPlayerNames.filter((n) => {
+            return newLobby?.playerRoleMap[n];
+          })[0];
+
+          // do not notify the player that is leaving
+          if (player) {
+            if (leftPlayerNames?.includes(player?.playerName)) {
+              return;
+            }
+          }
+
+          if (newAdmin === player?.playerName) {
+            notifications.show({
+              title: "Settings update",
+              message: "You are the new game admin",
+              color: "green",
+            });
+          } else {
+            notifications.show({
+              title: "Settings update",
+              message: `The new game admin is: ${newAdmin}`,
+              color: "green",
+            });
+          }
+        }
+      }
+
+      // update Player if its role has changed
+      if (player) {
+        if (newLobby.playerRoleMap[player.playerName]) {
+          const updatedPlayer = { ...player };
+          updatedPlayer.isCreator = true;
+          setPlayer(updatedPlayer);
+        }
+      }
     }
   );
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStompClient, useSubscription } from "react-stomp-hooks";
 import styled from "styled-components";
@@ -8,6 +8,8 @@ import { Player } from "../types/Player";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { ScoreInfo } from "../components/ScoreInfo";
+import { notifications } from "@mantine/notifications";
+import { Lobby } from "../types/Lobby";
 
 const ICON_SIZE = rem(60);
 
@@ -47,12 +49,16 @@ const LeaderBoardContainer = styled.div`
 
 type PropsType = {
   player: Player | undefined;
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  lobby: Lobby | undefined;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
   currentGameRound: number;
 };
 
 export const ScoreBoard = (props: PropsType) => {
+  const { player, setPlayer, lobby, setLobby, currentGameRound } = props;
+
   const { classes } = useStyles();
-  const { player, currentGameRound } = props;
   const { lobbyId } = useParams();
   const stompClient = useStompClient();
   const navigate = useNavigate();
@@ -72,8 +78,6 @@ export const ScoreBoard = (props: PropsType) => {
 
   // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
-
-  const playerName = player?.playerName;
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
@@ -103,6 +107,73 @@ export const ScoreBoard = (props: PropsType) => {
     `/user/queue/lobbies/${lobbyId}/round-start`,
     (message: any) => {
       navigate(`/game/${lobbyId}`);
+    }
+  );
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/lobby-settings`,
+    (message: any) => {
+      setIsLoading(false);
+
+      const newLobby = JSON.parse(message.body) as Lobby;
+
+      // set the lobby to the new lobby settings
+      setLobby(newLobby);
+
+      // notify which player(s) did leave
+      const leftPlayerNames = lobby?.joinedPlayerNames.filter(
+        (playerName: string) => !newLobby.joinedPlayerNames.includes(playerName)
+      );
+      leftPlayerNames?.forEach((playerName: string) => {
+        if (playerName !== player?.playerName) {
+          notifications.show({
+            title: "Player left",
+            message: playerName,
+            color: "red",
+          });
+        }
+      });
+
+      // notify player if admin has changed
+      const oldAdmin = lobby?.joinedPlayerNames.filter((n) => {
+        return lobby?.playerRoleMap[n];
+      })[0];
+      if (oldAdmin) {
+        if (!newLobby?.playerRoleMap[oldAdmin]) {
+          const newAdmin = newLobby?.joinedPlayerNames.filter((n) => {
+            return newLobby?.playerRoleMap[n];
+          })[0];
+
+          // do not notify the player that is leaving
+          if (player) {
+            if (leftPlayerNames?.includes(player?.playerName)) {
+              return;
+            }
+          }
+
+          if (newAdmin === player?.playerName) {
+            notifications.show({
+              title: "Settings update",
+              message: "You are the new game admin",
+              color: "green",
+            });
+          } else {
+            notifications.show({
+              title: "Settings update",
+              message: `The new game admin is: ${newAdmin}`,
+              color: "green",
+            });
+          }
+        }
+      }
+
+      // update Player if its role has changed
+      if (player) {
+        if (newLobby.playerRoleMap[player.playerName]) {
+          const updatedPlayer = { ...player };
+          updatedPlayer.isCreator = true;
+          setPlayer(updatedPlayer);
+        }
+      }
     }
   );
 
