@@ -53,7 +53,7 @@ const FlagManiaBackground = styled.img`
     transform: translateY(-150px);
   }
 
-  @media (orientation: portrait) and (max-width: 768px) {
+  @media (orientation: portrait) and (max-width: 1500px) {
     width: auto;
     height: 100%;
     left: 50%;
@@ -62,14 +62,12 @@ const FlagManiaBackground = styled.img`
 `;
 
 export const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [player, setPlayer] = useState<Player | undefined>();
   const [lobby, setLobby] = useState<Lobby | undefined>();
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
   console.log("lobby: ", lobby);
   // only playerId, flagmaniaToken is stored in sessionStorage
-  // tell backend to create a GET endpoint where we can get the player object with a given playerId
 
   useEffect(() => {
     getPlayer();
@@ -106,23 +104,19 @@ export const App = () => {
 
       <Router>
         <FlagmaniaLogo
-          isLoggedIn={isLoggedIn}
           player={player}
           lobby={lobby}
           setPlayer={setPlayer}
           setLobby={setLobby}
-          setIsLoggedIn={setIsLoggedIn}
         />
         <Routes>
           <Route
             path="/"
             element={
-              <LoginGuard isLoggedIn={isLoggedIn}>
+              <LoginGuard player={player}>
                 <HomePage
                   player={player}
-                  setPlayer={setPlayer}
-                  isLoggedIn={isLoggedIn}
-                  setIsLoggedIn={setIsLoggedIn}
+                  setPlayer={setPlayer}            
                 />
               </LoginGuard>
             }
@@ -154,8 +148,8 @@ export const App = () => {
           <Route
             path="/register"
             element={
-              <LoginGuard isLoggedIn={isLoggedIn}>
-                <Register setPlayer={setPlayer} setIsLoggedIn={setIsLoggedIn} />
+              <LoginGuard player={player}>
+                <Register setPlayer={setPlayer} />
               </LoginGuard>
             }
             errorElement={<ErrorPage />}
@@ -163,8 +157,8 @@ export const App = () => {
           <Route
             path="/login"
             element={
-              <LoginGuard isLoggedIn={isLoggedIn}>
-                <Login setPlayer={setPlayer} setIsLoggedIn={setIsLoggedIn} />
+              <LoginGuard player={player}>
+                <Login setPlayer={setPlayer} />
               </LoginGuard>
             }
             errorElement={<ErrorPage />}
@@ -214,7 +208,6 @@ export const App = () => {
                 player={player}
                 setPlayer={setPlayer}
                 setCurrentGameRound={setCurrentGameRound}
-                setIsLoggedIn={setIsLoggedIn}
               />
             }
             errorElement={<ErrorPage />}
@@ -235,11 +228,10 @@ export const App = () => {
           <Route
             path="/dashboard"
             element={
-              <PlayerGuard isLoggedIn={isLoggedIn}>
+              <PlayerGuard player={player}>
                 <UserDashboard
                   player={player}
                   setPlayer={setPlayer}
-                  setIsLoggedIn={setIsLoggedIn}
                 />
               </PlayerGuard>
             }
@@ -248,7 +240,7 @@ export const App = () => {
           <Route
             path="/playerSettings/:playerId"
             element={
-              <PlayerGuard isLoggedIn={isLoggedIn}>
+              <PlayerGuard player={player}>
                 <PlayerSettings player={player} setPlayer={setPlayer} />
               </PlayerGuard>
             }
@@ -282,7 +274,6 @@ export const App = () => {
                 <RegisterToSaveStats
                   player={player}
                   setPlayer={setPlayer}
-                  setIsLoggedIn={setIsLoggedIn}
                 />
               </FlagManiaGuard>
             }
@@ -295,7 +286,7 @@ export const App = () => {
           <Route
             path="/gameInfoDashboard"
             element={
-              <PlayerGuard isLoggedIn={isLoggedIn}>
+              <PlayerGuard player={player}>
                 <GameInfoDashboard />
               </PlayerGuard>
             }

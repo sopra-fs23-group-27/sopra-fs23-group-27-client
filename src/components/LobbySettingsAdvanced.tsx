@@ -71,7 +71,7 @@ export function LobbySettingsAdvanced(props: advancedProps) {
         {lobbyName}
       </Text>
       <Text c="dimmed" ta="center" fz="sm">
-        {continent} (Advanced Mode)
+        Advanced Mode
       </Text>
 
       <Group position="apart" mt="xs">

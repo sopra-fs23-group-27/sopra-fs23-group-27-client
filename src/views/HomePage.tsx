@@ -63,15 +63,13 @@ const ButtonContainer = styled.div`
 `;
 
 type PropsType = {
-  isLoggedIn: boolean;
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
 export const HomePage = (props: PropsType) => {
   const { classes } = useStyles();
-  const { isLoggedIn, player, setPlayer, setIsLoggedIn } = props;
+  const { player, setPlayer } = props;
 
   const [playerName, setPlayerName] = useInputState("");
   const navigate = useNavigate();
@@ -102,7 +100,6 @@ export const HomePage = (props: PropsType) => {
         // Set player to the response data
         const player = response.data as Player;
         setPlayer(player);
-        setIsLoggedIn(false);
         console.log("new guest player created: ", player);
 
         // Store the token into the session storage.
@@ -144,7 +141,7 @@ export const HomePage = (props: PropsType) => {
       <p>Learn about the flags of the world!</p>
 
       <UserContainer>
-        {isLoggedIn ? (
+        {player?.permanent ? (
           <>
             leaderBoard
             <Button size="xl" onClick={() => navigate("/profile")}>
@@ -169,7 +166,7 @@ export const HomePage = (props: PropsType) => {
         )}
       </UserContainer>
 
-      {!isLoggedIn && !sessionStorage.getItem("FlagManiaToken") ? (
+      {!player?.permanent && !sessionStorage.getItem("FlagManiaToken") ? (
         <GuestContainer>
           <P>or play as guest</P>
           <TextInput
