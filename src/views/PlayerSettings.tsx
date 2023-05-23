@@ -1,18 +1,15 @@
-import { Dispatch, SetStateAction } from "react";
 import { Player } from "../types/Player";
 import { UserCardImage } from "../components/UserCard";
 
 type PropsType = {
   player: Player | undefined;
-  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
 };
 
-export const PlayerSettings = () => {
+export const PlayerSettings = (props: PropsType) => {
+  const { player } = props;
 
-  // get player data from session storage
-  const playerId = sessionStorage.getItem("currentPlayerId");
-  const playerName = sessionStorage.getItem("currentPlayer");
-  const loggedIn = sessionStorage.getItem("loggedIn");
+  // get player name from player object
+  const playerName = player?.playerName;
 
   interface UserCardImageProps {
     name: string;

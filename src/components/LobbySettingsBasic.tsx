@@ -88,7 +88,7 @@ export function LobbySettingsBasic(props: basicProps) {
 
       <Group position="apart" mt="xs">
         <Text fz="sm" color="dimmed">
-          First hint after
+          Number of options
         </Text>
         <Text fz="sm" color="dimmed">
           {numberOfOptions}

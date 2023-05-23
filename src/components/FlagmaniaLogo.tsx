@@ -128,11 +128,11 @@ export const FlagmaniaLogo = (props: PropsType) => {
     if (isLoggedIn && lobby) {
       console.log("leave lobby");
       // prompt player if they really want to leave the lobby/game
-      handleLeaveLobby();
+      userConfirmationLobby();
     } else if (!isLoggedIn && player) {
       console.log("logout");
       // prompt player if they really want to leave the lobby/game
-      handleLogout();
+      userConfirmationLogout();
     } else {
       console.log("else");
       navigate("/");
