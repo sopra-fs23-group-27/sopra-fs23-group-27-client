@@ -10,11 +10,12 @@ import {
   TextInput,
   PasswordInput,
 } from "@mantine/core";
-import { SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
+import { Player } from "../types/Player";
 
 const Container = styled.div`
   display: flex;
@@ -43,11 +44,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface UserCardImageProps {
-  name: string;
-  stats: { label: string; value: string }[];
+  player: Player | undefined;
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
 }
 
-export function UserCardImage({ name, stats }: UserCardImageProps) {
+export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
   const { classes, theme } = useStyles();
   const [showUpdateProfile, setShowUpdateProfile] = useState(false);
   const [nameInput, setNameInput] = useState("");
@@ -117,9 +118,11 @@ export function UserCardImage({ name, stats }: UserCardImageProps) {
 
       // Store the new name (if applicable) of the currently logged-in user in sessionStorage
       if (nameInput) {
-        sessionStorage.setItem("currentPlayer", nameInput);
+        setPlayer(res.data);
       }
-      const currentName = sessionStorage.getItem("currentPlayer");
+      
+      // use the new name (if applicable) of the currently logged-in user
+      const currentName = nameInput ? nameInput : player?.playerName;
 
       // show notification that player has been registered
       notifications.show({
@@ -137,25 +140,11 @@ export function UserCardImage({ name, stats }: UserCardImageProps) {
     }
   };
 
-  const items = stats.map((stat) => (
-    <div key={stat.label}>
-      <Text ta="center" fz="lg" fw={500}>
-        {stat.value}
-      </Text>
-      <Text ta="center" fz="sm" c="dimmed">
-        {stat.label}
-      </Text>
-    </div>
-  ));
-
   return (
     <Card withBorder padding="xl" radius="md" className={classes.card}>
       <Text ta="center" fz="lg" fw={500} mt="sm">
-        User: {name}
+        User: {player?.playerName}
       </Text>
-      <Group mt="md" position="center" spacing={30}>
-        {items}
-      </Group>
       <MantineButton
         onClick={() => handleUpdateProfile()}
         radius="md"

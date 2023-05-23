@@ -47,7 +47,7 @@ export const FlagmaniaLogo = (props: PropsType) => {
   const userConfirmationLobby = async () => {
     modals.openConfirmModal({
       title: "Danger Zone",
-      children: "Are you sure you want to leave the lobby?",
+      children: "Are you sure you want to leave the game already?",
       labels: { confirm: "Confirm", cancel: "Cancel" },
       onConfirm: async () => {
         handleLeaveLobby();

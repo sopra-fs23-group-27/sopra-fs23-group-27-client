@@ -242,7 +242,7 @@ export const App = () => {
             path="/playerSettings/:playerId"
             element={
               <PlayerGuard player={player}>
-                <PlayerSettings player={player} />
+                <PlayerSettings player={player} setPlayer={setPlayer} />
               </PlayerGuard>
             }
             errorElement={<ErrorPage />}
