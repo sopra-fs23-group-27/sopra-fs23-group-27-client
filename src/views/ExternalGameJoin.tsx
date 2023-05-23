@@ -10,6 +10,7 @@ import {
   TextInput,
   Title,
   Paper,
+  PasswordInput,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Lobby } from "../types/Lobby";
@@ -259,24 +260,32 @@ export const ExternalGameJoin = (props: PropsType) => {
         </Switch>
         {showLogin ? (
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <TextInput
-              label="Name"
-              value={nameInput}
-              onChange={handleNameInputChange}
-            />
-            <TextInput
-              label="Password"
-              value={passwordInput}
-              onChange={handlePasswordInputChange}
-            />
-            <LoginButton
-              isActive={isFormFilledOut}
-              disabled={!isFormFilledOut}
-              onClick={loginUserJoin}
-            >
-              Login and Join
-            </LoginButton>
-          </Paper>
+          <TextInput
+            label="Username"
+            placeholder="Username"
+            value={nameInput}
+            onChange={handleNameInputChange}
+            size="xl"
+            required
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="Password"
+            value={passwordInput}
+            onChange={handlePasswordInputChange}
+            size="xl"
+            required
+            mt="md"
+          />
+          <Button
+            onClick={loginUserJoin}
+            disabled={!isFormFilledOut}
+            fullWidth
+            size="xl"
+          >
+            Sign in
+          </Button>
+        </Paper>
         ) : (
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
             <TextInput

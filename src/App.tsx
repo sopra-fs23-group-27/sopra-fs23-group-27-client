@@ -53,7 +53,7 @@ const FlagManiaBackground = styled.img`
     transform: translateY(-150px);
   }
 
-  @media (orientation: portrait) and (max-width: 768px) {
+  @media (orientation: portrait) and (max-width: 1500px) {
     width: auto;
     height: 100%;
     left: 50%;
@@ -68,7 +68,6 @@ export const App = () => {
 
   console.log("lobby: ", lobby);
   // only playerId, flagmaniaToken is stored in sessionStorage
-  // tell backend to create a GET endpoint where we can get the player object with a given playerId
 
   useEffect(() => {
     getPlayer();

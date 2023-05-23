@@ -142,15 +142,15 @@ export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
 
   return (
     <Card withBorder padding="xl" radius="md" className={classes.card}>
-      <Text ta="center" fz="lg" fw={500} mt="sm">
+      <h1 style={{ textAlign: "center" }}>
         User: {player?.playerName}
-      </Text>
+      </h1>
       <MantineButton
         onClick={() => handleUpdateProfile()}
         radius="md"
         mt="xl"
-        size="md"
-        style={{ display: "block", margin: "0 auto" }}
+        size="xl"
+        style={{ display: "block", margin: "0 auto", marginTop: "20px" }}
         color={theme.colorScheme === "dark" ? undefined : "dark"}
       >
         Toggle modify settings
