@@ -143,19 +143,24 @@ export const ScoreBoard = (props: PropsType) => {
             return newLobby?.playerRoleMap[n];
           })[0];
 
+          // do not notify the player that is leaving
+          if (player) {
+            if (leftPlayerNames?.includes(player?.playerName)) {
+              return;
+            }
+          }
+
           if (newAdmin === player?.playerName) {
             notifications.show({
               title: "Settings update",
               message: "You are the new game admin",
               color: "green",
-              autoClose: 10000,
             });
           } else {
             notifications.show({
               title: "Settings update",
               message: `The new game admin is: ${newAdmin}`,
               color: "green",
-              autoClose: 10000,
             });
           }
         }
