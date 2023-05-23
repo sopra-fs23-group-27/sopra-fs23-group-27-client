@@ -6,6 +6,7 @@ import {
   Group,
   rem,
 } from "@mantine/core";
+import { Dispatch, SetStateAction } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -71,7 +72,10 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const ScoreInfo = () => {
+type PropsType = {
+  setShowScoreInfo: Dispatch<SetStateAction<boolean>>;
+};
+export const ScoreInfo = ({ setShowScoreInfo }: PropsType) => {
   const { classes } = useStyles();
   const navigate = useNavigate();
   const { lobbyId } = useParams();
@@ -150,7 +154,7 @@ export const ScoreInfo = () => {
             className={classes.control}
             variant="gradient"
             gradient={{ from: "blue", to: "cyan" }}
-            onClick={() => navigate("/game/" + lobbyId + "/leaderBoard")}
+            onClick={() => setShowScoreInfo(false)}
           >
             Back to Game
           </Button>

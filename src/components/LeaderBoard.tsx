@@ -72,7 +72,7 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
             <th>Player</th>
             <th>Total Score</th>
             <th>Correct Guesses</th>
-            <th>Time Until Correct Guess</th>
+            <th>Time Until Guess</th>
             <th>Answer Distribution (Correct/Wrong)</th>
             <th>Bonus</th>
           </tr>

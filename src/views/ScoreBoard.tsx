@@ -7,6 +7,7 @@ import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { Player } from "../types/Player";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { RainbowLoader } from "../components/RainbowLoader";
+import { ScoreInfo } from "../components/ScoreInfo";
 
 const ICON_SIZE = rem(60);
 
@@ -57,6 +58,7 @@ export const ScoreBoard = (props: PropsType) => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [showScoreInfo, setShowScoreInfo] = useState(false);
   const [playerNames, setPlayerNames] = useState<string[]>([]);
   const [playerScores, setPlayerScores] = useState<number[]>([]);
   const [correctGuesses, setCorrectGuesses] = useState<number[]>([]);
@@ -163,6 +165,8 @@ export const ScoreBoard = (props: PropsType) => {
     <>
       {isLoading ? (
         <RainbowLoader />
+      ) : showScoreInfo ? (
+        <ScoreInfo setShowScoreInfo={setShowScoreInfo} />
       ) : (
         <Application>
           <ThemeIcon
@@ -173,12 +177,12 @@ export const ScoreBoard = (props: PropsType) => {
             <IconInfoCircle
               size="2rem"
               stroke={1.5}
-              onClick={() => navigate("/game/" + lobbyId + "/scoreInfo")}
+              onClick={() => setShowScoreInfo(true)}
               style={{ cursor: "pointer" }}
             />
           </ThemeIcon>
           <LeaderBoardContainer>
-            <h1>Leaderboard of round {currentGameRound}</h1>
+            <h1>Leaderboard Round {currentGameRound}</h1>
             <LeaderBoard playerData={playerData} />
             {player?.isCreator && (
               <Button
