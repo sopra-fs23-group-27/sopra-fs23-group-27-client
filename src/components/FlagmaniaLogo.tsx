@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import FlagLogo from "../icons/DALL-E_FlagMania_Logo.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { httpPost, httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";

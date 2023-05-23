@@ -48,6 +48,12 @@ export const Login = (props: PropsType) => {
   };
 
   useEffect(() => {
+    if (sessionStorage.getItem("FlagManiaToken")) {
+      navigate("/dashboard");
+    }
+  }, []);
+
+  useEffect(() => {
     const formCheck = () => {
       if (!nameInput) {
         return false;

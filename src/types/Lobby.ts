@@ -1,6 +1,7 @@
 export type Lobby = {
   lobbyId: number;
   lobbyName: string;
+  continent: string[];
   isPublic: boolean;
   numRounds: number;
   numSeconds: number;
