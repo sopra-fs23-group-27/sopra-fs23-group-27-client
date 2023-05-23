@@ -2,7 +2,6 @@ import {
   createStyles,
   Table,
   Progress,
-  Anchor,
   Text,
   Group,
   ScrollArea,
@@ -25,6 +24,7 @@ interface PlayerData {
   correctGuesses: number;
   timeUntilCorrectGuess: number;
   wrongGuesses: number;
+  totalCorrectGuessesInARow: number;
 }
 
 interface LeaderBoardProps {
@@ -65,15 +65,16 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
 
   return (
     <ScrollArea>
-      <Table>
+      <Table fontSize="lg" horizontalSpacing="lg">
         <thead>
           <tr>
             <th>Rank</th>
             <th>Player</th>
-            <th>Score</th>
+            <th>Total Score</th>
             <th>Correct Guesses</th>
             <th>Time Until Correct Guess</th>
             <th>Answer Distribution (Correct/Wrong)</th>
+            <th>Bonus</th>
           </tr>
         </thead>
         <tbody>
@@ -118,6 +119,10 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
                       },
                     ]}
                   />
+                </td>
+                <td>
+                  {row.totalCorrectGuessesInARow >= 2 &&
+                    `🔥 ${row.totalCorrectGuessesInARow} 🔥`}
                 </td>
               </tr>
             );

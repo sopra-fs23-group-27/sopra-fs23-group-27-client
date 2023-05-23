@@ -1,12 +1,27 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Dispatch, SetStateAction } from "react";
-import { handleError, httpPost } from "../helpers/httpService";
-import Player from "../models/Player";
+import { httpPost } from "../helpers/httpService";
+import { Player } from "../types/Player";
 import { notifications } from "@mantine/notifications";
-import { Button, TextInput } from "@mantine/core";
+import { Button, TextInput, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
-import Logo from "../icons/DALL-E_FlagMania_Logo.png";
+import { IconInfoCircle } from "@tabler/icons-react";
+
+const ICON_SIZE = rem(60);
+
+const useStyles = createStyles((theme) => ({
+  icon: {
+    position: "absolute",
+    top: `calc(5% - ${ICON_SIZE} / 2)`,
+    left: `calc(95% - ${ICON_SIZE} / 2)`,
+  },
+
+  title: {
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+    lineHeight: 1,
+  },
+}));
 
 const Application = styled.div`
   display: flex;
@@ -16,15 +31,17 @@ const Application = styled.div`
   height: 100vh;
   font-size: 38px;
   color: black;
+  // color: white;
   text-align: center;
-  background-color: #f5f7f9;
+  //background-color: #f5f7f9;
+  //background-color: #dba11c;
 `;
 const H1 = styled.h1`
   margin: 0;
   margin-bottom: 32px;
 `;
 const P = styled.p`
-  font-size: 18px;
+  font-size: 24px;
   margin: 0;
 `;
 const UserContainer = styled.div`
@@ -45,25 +62,16 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
 `;
 
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  padding: 10px;
-  justify-content: space-between;
-`;
-
 type PropsType = {
   isLoggedIn: boolean;
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
 export const HomePage = (props: PropsType) => {
-  const { isLoggedIn, player, setPlayer } = props;
+  const { classes } = useStyles();
+  const { isLoggedIn, player, setPlayer, setIsLoggedIn } = props;
 
   const [playerName, setPlayerName] = useInputState("");
   const navigate = useNavigate();
@@ -84,15 +92,18 @@ export const HomePage = (props: PropsType) => {
           { headers: {} }
         );
 
-        console.log(response.data);
+        response.data.permanent = false;
 
         if (link === "/configureGame") {
           response.data.isCreator = true;
         }
+        console.log("new guest player created: ", response.data);
 
-        // Create a new Player instance from the JSON data in the response
-        const player = new Player(response.data);
+        // Set player to the response data
+        const player = response.data as Player;
         setPlayer(player);
+        setIsLoggedIn(false);
+        console.log("new guest player created: ", player);
 
         // Store the token into the session storage.
         sessionStorage.setItem(
@@ -102,12 +113,6 @@ export const HomePage = (props: PropsType) => {
 
         // Store the ID of the currently logged-in user in sessionStorage
         sessionStorage.setItem("currentPlayerId", player.id.toString());
-
-        // Store the Name of the currently logged-in user in sessionStorage
-        sessionStorage.setItem("currentPlayer", player.playerName);
-
-        // Store login status of the current user
-        sessionStorage.setItem("loggedIn", "false");
       }
 
       // navigate to respective view
@@ -127,17 +132,26 @@ export const HomePage = (props: PropsType) => {
 
   return (
     <Application>
+      <ThemeIcon className={classes.icon} size={ICON_SIZE} radius={ICON_SIZE}>
+        <IconInfoCircle
+          size="2rem"
+          stroke={1.5}
+          onClick={() => navigate("/gameInfo")}
+          style={{ cursor: "pointer" }}
+        />
+      </ThemeIcon>
       <H1>FlagMania</H1>
       <p>Learn about the flags of the world!</p>
 
       <UserContainer>
         {isLoggedIn ? (
           <>
-            <Button size="lg" onClick={() => navigate("/profile")}>
+            leaderBoard
+            <Button size="xl" onClick={() => navigate("/profile")}>
               Show Your Profile
             </Button>
             <Button
-              size="lg"
+              size="xl"
               onClick={() => alert("logout not implemented yet")}
             >
               Logout
@@ -145,10 +159,10 @@ export const HomePage = (props: PropsType) => {
           </>
         ) : (
           <>
-            <Button size="lg" onClick={() => navigate("/login")}>
+            <Button size="xl" onClick={() => navigate("/login")}>
               Login
             </Button>
-            <Button size="lg" onClick={() => navigate("/register")}>
+            <Button size="xl" onClick={() => navigate("/register")}>
               Register
             </Button>
           </>
@@ -159,32 +173,36 @@ export const HomePage = (props: PropsType) => {
         <GuestContainer>
           <P>or play as guest</P>
           <TextInput
+            size="lg"
             label="Username"
-            placeholder="guest"
+            placeholder="Guest"
             value={playerName}
             onChange={setPlayerName}
           />{" "}
         </GuestContainer>
       ) : (
         <GuestContainer>
-          <P>User: {sessionStorage.getItem("currentPlayer")}</P>
+          <P>User: {player?.playerName}</P>
         </GuestContainer>
       )}
       <GuestContainer>
         <ButtonContainer>
           <Button
+            size="lg"
             disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
             onClick={() => handleGuestJoin("/publicGames")}
           >
             Join Public Game
           </Button>
           <Button
+            size="lg"
             disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
             onClick={() => handleGuestJoin("/enterGameId")}
           >
             Join Private Game
           </Button>
           <Button
+            size="lg"
             disabled={!playerName && !sessionStorage.getItem("FlagManiaToken")}
             onClick={() => handleGuestJoin("/configureGame")}
           >

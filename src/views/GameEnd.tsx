@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
-import { useStompClient, useSubscription } from "react-stomp-hooks";
+import { useSubscription } from "react-stomp-hooks";
 import { useState } from "react";
 
 import { Button } from "@mantine/core";
-import Player from "../models/Player";
+import { Player } from "../types/Player";
 import { RainbowLoader } from "../components/RainbowLoader";
+import { Table } from "@mantine/core";
+import "animate.css";
 
 const Application = styled.div`
   display: flex;
@@ -15,27 +17,36 @@ const Application = styled.div`
   align-items: center;
 
   width: 80vw;
-  height: 90vh;
+  min-height: 100vh;
   margin: auto;
 `;
 
 const Container = styled.div`
-  width: 60%;
   display: flex;
+  gap: 88px;
 `;
-const UpperRankContainer = styled(Container)`
-  justify-content: center;
-`;
-const LowerRankContainer = styled(Container)`
+
+const RankContainer = styled(Container)`
   justify-content: space-between;
+  margin-top: 150px;
+  margin-bottom: 20px;
 `;
 
 const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  align-items: center;
   border: 0.0625rem solid #dee2e6;
   border-radius: 0.5rem;
   padding: 16px 28px;
   text-align: center;
-  width: 190px;
+  width: 250px;
+  height: 350px;
+  font-size: 1.2rem;
+  background-color: white;
+  overflow: hidden;
 
   box-shadow: blue 0px 0px 0px 2px inset, rgb(255, 255, 255) 10px -10px 0px -3px,
     rgb(31, 193, 27) 10px -10px, rgb(255, 255, 255) 20px -20px 0px -3px,
@@ -43,19 +54,29 @@ const Card = styled.div`
     rgb(255, 156, 85) 30px -30px, rgb(255, 255, 255) 40px -40px 0px -3px,
     rgb(255, 85, 85) 40px -40px;
 `;
+const H1 = styled.h1`
+  margin: 0;
+  padding: 0;
+`;
+const H2 = styled.h2`
+  margin: 0;
+  padding: 0;
+`;
+const P = styled.p`
+  margin: 0;
+  padding: 0;
+`;
 const FirstRankCard = styled(Card)`
   position: relative;
-  top: 200px;
+  bottom: 80px;
 `;
-const InvisibleCard = styled(Card)`
-  color: rgba(0, 0, 0, 0);
-  background: rgba(0, 0, 0, 0);
-  border: none;
-  box-shadow: none;
+const CurrentPlayerRow = styled.tr`
+  border: 2px solid black;
 `;
 const ButtonContainer = styled(Container)`
   justify-content: center;
   gap: 32px;
+  margin-bottom: 100px;
 `;
 
 interface PlayerData {
@@ -89,12 +110,13 @@ export const GameEnd = (props: PropsType) => {
     []
   );
   const [wrongGuesses, setWrongGuesses] = useState<number[]>([]);
-
-  const stompClient = useStompClient();
+  const [playAgainTimer, setPlayAgainTimer] = useState<number>(10);
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/score-board`,
     (message: any) => {
+      console.log("scoreboard: ", JSON.parse(message.body));
+
       const playerNames = JSON.parse(message.body).playerNames as string[];
       const totalGameScores = JSON.parse(message.body)
         .totalGameScores as number[];
@@ -104,17 +126,22 @@ export const GameEnd = (props: PropsType) => {
         .totalTimeUntilCorrectGuess as number[];
       const totalWrongGuesses = JSON.parse(message.body)
         .totalWrongGuesses as number[];
-      console.log("Message from server: ", playerNames);
-      console.log("Message from server: ", totalGameScores);
-      console.log("Message from server: ", totalCorrectGuesses);
-      console.log("Message from server: ", totalTimeUntilCorrectGuess);
-      console.log("Message from server: ", totalWrongGuesses);
       setPlayerNames(playerNames);
       setPlayerScores(totalGameScores);
       setCorrectGuesses(totalCorrectGuesses);
       setTimeUntilCorrectGuess(totalTimeUntilCorrectGuess);
       setWrongGuesses(totalWrongGuesses);
       setIsLoading(false);
+    }
+  );
+
+  useSubscription(
+    `/user/queue/lobbies/${lobbyId}/timer-play-again`,
+    (message: any) => {
+      const parsedMessage = JSON.parse(message.body);
+      const { time } = parsedMessage;
+      console.log(time);
+      setPlayAgainTimer(time);
     }
   );
 
@@ -140,7 +167,15 @@ export const GameEnd = (props: PropsType) => {
     });
   });
   playerData.sort((a, b) => b.playerScore - a.playerScore);
+  console.log(playerData);
 
+  const adjustNameSize = (name: string) => {
+    if (name.length <= 10) {
+      return name;
+    }
+    const adjustedName = name.slice(0, 10) + "...";
+    return adjustedName;
+  };
   const isPlayerInTopThree = () => {
     if (
       currentPlayer?.playerName === playerData[0]?.playerName ||
@@ -177,48 +212,96 @@ export const GameEnd = (props: PropsType) => {
         <RainbowLoader />
       ) : (
         <Application>
-          <UpperRankContainer>
-            <FirstRankCard>
-              <h2>1.</h2>
-              <h1>{playerData[0]?.playerName}</h1>
-              <p>{playerData[0]?.playerScore} points</p>
-            </FirstRankCard>
-          </UpperRankContainer>
-          <LowerRankContainer>
-            <Card>
-              <h2>2.</h2>
-              <h1>{playerData[1]?.playerName}</h1>
-              <p>{playerData[1]?.playerScore} points</p>
-            </Card>
-
-            {playerData[2]?.playerName ? (
-              <Card>
-                <h2>3.</h2>
-                <h1>{playerData[2]?.playerName}</h1>
-                <p>{playerData[2]?.playerScore} points</p>
-              </Card>
+          <RankContainer>
+            {playerData.length > 2 ? (
+              <>
+                <Card>
+                  <H2>2.</H2>
+                  <H1>{adjustNameSize(playerData[1]?.playerName)}</H1>
+                  <P>{playerData[1]?.playerScore} points</P>
+                </Card>
+                <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-2s">
+                  <H2>1.</H2>
+                  <H1>{adjustNameSize(playerData[0]?.playerName)}</H1>
+                  <P>{playerData[0]?.playerScore} points</P>
+                </FirstRankCard>
+                <Card>
+                  <H2>3.</H2>
+                  <H1>{adjustNameSize(playerData[2]?.playerName)}</H1>
+                  <P>{playerData[2]?.playerScore} points</P>
+                </Card>
+              </>
             ) : (
-              <InvisibleCard />
-            )}
-          </LowerRankContainer>
+              <>
+                <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-2s">
+                  <H2>1.</H2>
+                  <H1>{adjustNameSize(playerData[0]?.playerName)}</H1>
+                  <P>{playerData[0]?.playerScore} points</P>
+                </FirstRankCard>
 
-          {!isPlayerInTopThree() && (
-            <Container>
-              Your Rank: {getCurrentPlayerRank()}, with{" "}
-              {getCurrentPlayerScore()} points
-            </Container>
+                <Card>
+                  <H2>2.</H2>
+                  <H1>{adjustNameSize(playerData[1]?.playerName)}</H1>
+                  <P>{playerData[1]?.playerScore} points</P>
+                </Card>
+              </>
+            )}
+          </RankContainer>
+
+          {playerData.length > 3 && (
+            <Table
+              fontSize="xl"
+              horizontalSpacing="lg"
+              withColumnBorders
+              style={{ borderRadius: "0.5rem" }}
+            >
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Player</th>
+                  <th>Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                {playerData.slice(2).map((p, ind) => {
+                  if (p.playerName === currentPlayer?.playerName) {
+                    return (
+                      <CurrentPlayerRow>
+                        <td>{ind + 3 + 1} Your rank!!!</td>
+                        <td>{p.playerName}</td>
+                        <td>{p.playerScore}</td>
+                      </CurrentPlayerRow>
+                    );
+                  }
+                  return (
+                    <tr>
+                      <td>{ind + 3 + 1}</td>
+                      <td>{p.playerName}</td>
+                      <td>{p.playerScore}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
           )}
 
           <ButtonContainer>
-            <Button disabled={false} onClick={() => navigate("/playAgain")}>
-              Play again
-            </Button>
             <Button
-              disabled={true}
-              onClick={() => navigate("/register-save-stats")}
+              size="xl"
+              disabled={playAgainTimer === 0}
+              onClick={() => navigate("/playAgain")}
             >
-              Register to save your stats
+              Play again {playAgainTimer}
             </Button>
+            <Button size="xl" onClick={() => navigate("/")}>
+              Home
+            </Button>
+
+            {!currentPlayer?.permanent && (
+              <Button size="xl" onClick={() => navigate("/saveStatsRegister")}>
+                Register to save your stats
+              </Button>
+            )}
           </ButtonContainer>
         </Application>
       )}

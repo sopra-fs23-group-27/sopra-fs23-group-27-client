@@ -1,5 +1,4 @@
 import { Button } from "@mantine/core";
-import { Dispatch, SetStateAction } from "react";
 
 type PropsType = {
   aSelected: boolean;
@@ -13,6 +12,7 @@ export const BiSelect = (props: PropsType) => {
   return (
     <div>
       <Button
+        size="xl"
         color={aSelected ? "blue" : "gray"}
         style={{ borderTopRightRadius: "0", borderBottomRightRadius: "0" }}
         onClick={() => setASelected(true)}
@@ -20,6 +20,7 @@ export const BiSelect = (props: PropsType) => {
         {labelA}
       </Button>
       <Button
+        size="xl"
         color={aSelected ? "gray" : "blue"}
         style={{ borderTopLeftRadius: "0", borderBottomLeftRadius: "0" }}
         onClick={() => setASelected(false)}

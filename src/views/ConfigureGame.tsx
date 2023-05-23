@@ -3,27 +3,30 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
-import { handleError, httpPost } from "../helpers/httpService";
-import Lobby from "../models/Lobby";
+import { httpPost } from "../helpers/httpService";
+import { Lobby } from "../types/Lobby";
 import { notifications } from "@mantine/notifications";
-import { Button as MantineButton } from "@mantine/core";
+import { Button as MantineButton, TextInput, Title } from "@mantine/core";
 import { BiSelect } from "../components/BiSelect";
+import { ImageCheckboxes } from "../components/Checkboxes";
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 100px;
+  padding: 50px;
+  min-height: 100vh;
 `;
 const Application = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 464px;
+  width: 768px;
   font-size: 20px;
-  border: 2px solid rgb(216, 216, 216);
+  border: 2px solid black;
   border-radius: 10px;
   padding: 16px 32px;
+  background-color: #f5f7f9;
 `;
 
 const RangeOptions = styled.div`
@@ -32,18 +35,6 @@ const RangeOptions = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-type props = {
-  isActive: boolean;
-};
-const Button = styled.button<props>`
-  cursor: pointer;
-  background-color: ${(props) => (props.isActive ? "lightgray" : "white")};
-  text-align: center;
-  border: 3px solid lightgray;
-  padding: 8px 16px;
-`;
-
 type StartButtonProps = {
   isActive: boolean;
 };
@@ -56,6 +47,7 @@ const StartButton = styled.button<StartButtonProps>`
   font-size: 32px;
   padding: 16px 32px;
   margin: 64px 0;
+  z-index: 1;
   color: ${(props) => (props.isActive ? "white" : "gray")};
 
   &:hover {
@@ -65,6 +57,7 @@ const StartButton = styled.button<StartButtonProps>`
 
 interface PostBody {
   //commmon fields
+  continent: string[];
   isPublic: boolean;
   numRounds: number;
   numSeconds: number;
@@ -81,10 +74,11 @@ interface PostBody {
 
 type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  setCurrentGameRound: Dispatch<SetStateAction<number>>;
 };
 
 export const ConfigureGame = (props: PropsType) => {
-  const { setLobby } = props;
+  const { setLobby, setCurrentGameRound } = props;
 
   const navigate = useNavigate();
 
@@ -104,6 +98,15 @@ export const ConfigureGame = (props: PropsType) => {
   const [numOptions, setNumOptions] = useState(4);
   const [isPublic, setIsPublic] = useState(true);
 
+  // CONTINENTS
+  const defaultContinents = ["World"];
+  const [continent, setContinent] = useState(defaultContinents);
+
+  const handleLobbyNameInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setLobbyName(event.currentTarget.value);
+  };
   const changeGameMode = (updatedGameModeIsBasic: boolean) => {
     if (updatedGameModeIsBasic === isBasic) {
       return;
@@ -116,10 +119,14 @@ export const ConfigureGame = (props: PropsType) => {
     }
     setIsBasic(updatedGameModeIsBasic);
   };
+
   const createLobby = async () => {
     const mode = isBasic ? "basic" : "advanced";
 
+    console.log(continent);
+
     const body: PostBody = {
+      continent,
       isPublic,
       numRounds,
       numSeconds,
@@ -134,22 +141,17 @@ export const ConfigureGame = (props: PropsType) => {
     }
 
     try {
-      // get token of current player from local storage
+      // get token of current player from session storage
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
 
       const response = await httpPost("/lobbies/" + mode, body, { headers });
 
-      // Create a new Lobby instance from the JSON data in the response
-      const lobby = new Lobby(response.data);
+      // Set the lobby state to the response data.
+      const lobby = response.data as Lobby;
       setLobby(lobby);
-
-      // Store the name of the lobby into the local storage.
-      sessionStorage.setItem("lobbyName", lobby.lobbyName);
-
-      // Store the ID of the current game in sessionStorage
-      sessionStorage.setItem("lobbyId", lobby.lobbyId.toString());
+      setCurrentGameRound(0);
 
       // navigate to lobby
       navigate("/lobbies/" + lobby.lobbyId);
@@ -169,12 +171,16 @@ export const ConfigureGame = (props: PropsType) => {
   return (
     <Container>
       <Application>
-        <h1>Configure your Game</h1>
-        <FloatingTextInput
-          label="Name"
-          value={lobbyName}
-          onChange={(newVal: string) => setLobbyName(newVal)}
-        />
+        <Title>Configure Game</Title>
+        <div style={{ marginBottom: "32px" }}>
+          <TextInput
+            label="Game Name"
+            value={lobbyName}
+            onChange={handleLobbyNameInputChange}
+            style={{ width: "100%" }}
+          />
+        </div>
+
         <BiSelect
           labelA={"BASIC"}
           labelB={"ADVANCED"}
@@ -183,7 +189,10 @@ export const ConfigureGame = (props: PropsType) => {
         />
 
         <div style={{ marginTop: "32px" }}>
-          <MantineButton onClick={() => setShowSettings(!showSettings)}>
+          <MantineButton
+            size="xl"
+            onClick={() => setShowSettings(!showSettings)}
+          >
             {showSettings ? "Hide " : "Show "} Settings{"  "}
             {showSettings ? "▲" : "▼"}
           </MantineButton>
@@ -262,6 +271,10 @@ export const ConfigureGame = (props: PropsType) => {
           </RangeOptions>
         )}
 
+        <h2>Select Regions</h2>
+
+        <ImageCheckboxes setContinent={setContinent} />
+
         <div style={{ marginTop: "36px" }}>
           <BiSelect
             labelA="Public"
@@ -273,7 +286,7 @@ export const ConfigureGame = (props: PropsType) => {
 
         <StartButton
           isActive={!!lobbyName}
-          disabled={!lobbyName}
+          disabled={!lobbyName || continent.length === 0}
           onClick={() => createLobby()}
         >
           OPEN

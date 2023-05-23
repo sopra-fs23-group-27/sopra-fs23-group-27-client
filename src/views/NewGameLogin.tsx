@@ -57,7 +57,6 @@ export const NewGameLogin = () => {
   let navigate = useNavigate();
 
   const handleCreateGame = () => {
-    console.log("create game");
     return navigate("/configureGame");
   };
 

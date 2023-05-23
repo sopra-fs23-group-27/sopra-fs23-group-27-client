@@ -3,7 +3,7 @@ import { useStompClient } from "react-stomp-hooks";
 import { useNavigate } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
-import Lobby from "../models/Lobby";
+import { Lobby } from "../types/Lobby";
 import { SetStateAction, Dispatch } from "react";
 
 type PropsType = {
@@ -23,7 +23,7 @@ export const PlayAgain = (props: PropsType) => {
         destination: `/app/games/${lobby?.lobbyId}/play-again`,
         body: JSON.stringify({ playerName }),
       });
-      setCurrentGameRound(1);
+      setCurrentGameRound(0);
       navigate("/lobbies/" + lobby?.lobbyId);
     } else {
       console.error("Error: could not send message");

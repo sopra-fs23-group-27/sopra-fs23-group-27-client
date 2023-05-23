@@ -9,23 +9,53 @@ import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Button, CloseButton } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import Player from "../models/Player";
-import Lobby from "../models/Lobby";
+import { Player } from "../types/Player";
 import { ButtonCopy } from "../components/ClipboardButton";
 import { LobbySettingsAdvanced } from "../components/LobbySettingsAdvanced";
 import { LobbySettingsBasic } from "../components/LobbySettingsBasic";
+import { Lobby } from "../types/Lobby";
 
-const QrBox = styled.div`
+const Container = styled.div`
+  min-height: 100vh;
   width: 100vw;
-  height: 100vh;
+  // background-color: #dba11c;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  flex-direction: row;
+  height: 40vh;
+  justify-content: space-between;
+`;
+
+const Application = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 80vh;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const QrContainer = styled.div`
+  width: 100vw;
+  min-height: 100vh;
   position: absolute;
+  top: 0;
+  z-index: 1;
+  background-color: white;
+`;
+const QrBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  background-color: white;
-  z-index: 1;
+  height: 80vh;
+  background-color: transparent;
 `;
 
 const UserContainer = styled.div`
@@ -33,35 +63,9 @@ const UserContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 20px;
   height: 80vh;
   font-size: 38px;
-`;
-
-const GreenButton = styled.button`
-  width: 200px;
-  height: 50px;
-  background-color: #90ee90;
-  border: 1px solid #000;
-  border-radius: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
-const P = styled.p`
-  padding: 0;
-  margin: 0;
-`;
-
-const AdditionalBoxes = styled.div`
-  padding: 8px 16px;
-  border: 2px solid rgb(216, 216, 216);
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 50px;
 `;
 
 type PropsType = {
@@ -69,9 +73,10 @@ type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   lobby: Lobby | undefined;
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+  setCurrentGameRound: Dispatch<SetStateAction<number>>;
 };
 export const GameLobby = (props: PropsType) => {
-  const { player, setPlayer, lobby, setLobby } = props;
+  const { player, setPlayer, lobby, setLobby, setCurrentGameRound } = props;
 
   const [currentAdmin, setCurrentAdmin] = useState("");
 
@@ -81,17 +86,15 @@ export const GameLobby = (props: PropsType) => {
   const { lobbyId } = useParams();
   const navigate = useNavigate();
 
-  // get the player token from local storage
+  // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
 
   const stompClient = useStompClient();
-  // log the connection status
-  console.log(stompClient ? "Connected" : "Not Connected");
 
   // get the player and lobby information from session storage
   const [lobbyName, setLobbyname] = useState("");
   const [joinedPlayerNames, setJoinedPlayerNames] = useState<string[]>([]);
-  const [numberOfRounds, setNumberOfRounds] = useState(0);
+  const [continent, setContinent] = useState("");
   const [firstHintAfter, setFirstHintAfter] = useState(0);
   const [hintsInterval, setHintsInterval] = useState(0);
   const [timeLimitPerRound, setTimeLimitPerRound] = useState(0);
@@ -116,21 +119,23 @@ export const GameLobby = (props: PropsType) => {
   // get the current lobby URL
   const lobbyURL = window.location.href;
 
-  console.log("player token: ", playerToken);
-
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
       setIsLoading(false);
+      console.log("Lobby settings: ", JSON.parse(message.body));
+      // set the lobby to the new lobby settings
+      setLobby(JSON.parse(message.body));
       // get the lobby name and joined player names from the message
       const newLobbyName = JSON.parse(message.body).lobbyName as string;
       const newJoinedPlayerNames = JSON.parse(message.body)
         .joinedPlayerNames as string[];
-      const newNumberOfRounds = JSON.parse(message.body).numRounds as number;
-      //TODO: num rounds not working
-      const newFirstHintAfter = JSON.parse(message.body).numSecondsUntilHint as number;
+      const continent = JSON.parse(message.body).continent as string;
+      const newFirstHintAfter = JSON.parse(message.body)
+        .numSecondsUntilHint as number;
       const newHintsInterval = JSON.parse(message.body).hintInterval as number;
-      const newTimeLimitPerRound = JSON.parse(message.body).numSeconds as number;
+      const newTimeLimitPerRound = JSON.parse(message.body)
+        .numSeconds as number;
       const numberOfOptions = JSON.parse(message.body).numOptions as number;
       const gameMode = JSON.parse(message.body).mode as string;
 
@@ -138,10 +143,7 @@ export const GameLobby = (props: PropsType) => {
       const newPlayerRoles = JSON.parse(message.body).playerRoleMap as {
         [key: string]: boolean;
       };
-      console.log(message.body);
-      console.log("Message from server: ", lobbyName);
-      console.log("Message from server: ", joinedPlayerNames);
-      console.log("Message from server: ", playerRoles);
+
       // find players that joined the lobby recently
       const newPlayerNames = newJoinedPlayerNames.filter(
         (playerName: string) => !joinedPlayerNames.includes(playerName)
@@ -155,7 +157,7 @@ export const GameLobby = (props: PropsType) => {
       if (newPlayerNames.length > 0) {
         // show notification for each player that joined
         newPlayerNames.forEach((playerName: string) => {
-          if (playerName !== sessionStorage.getItem("currentPlayer")) {
+          if (playerName !== player?.playerName) {
             notifications.show({
               title: "Player joined",
               message: playerName,
@@ -169,7 +171,7 @@ export const GameLobby = (props: PropsType) => {
       if (leftPlayerNames.length > 0) {
         // show notification for each player that joined
         leftPlayerNames.forEach((playerName: string) => {
-          if (playerName !== sessionStorage.getItem("currentPlayer")) {
+          if (playerName !== player?.playerName) {
             notifications.show({
               title: "Player left",
               message: playerName,
@@ -198,33 +200,19 @@ export const GameLobby = (props: PropsType) => {
             color: "blue",
           });
         }
-      }
 
-      // get player data from session storage
-      const playerId = sessionStorage.getItem("currentPlayerId");
-      const playerName = sessionStorage.getItem("currentPlayer");
-      const loggedIn = sessionStorage.getItem("loggedIn");
-
-      // get the player role
-      if (playerName && newPlayerRoles) {
-        const isCreator = newPlayerRoles[playerName];
-
-        // create player object
-        const playerInfo = {
-          playerNId: playerId,
-          playerName: playerName,
-          loggedIn: loggedIn,
-          isCreator: isCreator,
-        };
-
-        const player = new Player(playerInfo);
-        setPlayer(player);
+        const updatedPlayer = player ? { ...player } : undefined;
+        const thisPlayerIsCreator = updatedPlayer?.playerName === newAdmin;
+        if (updatedPlayer) {
+          updatedPlayer.isCreator = thisPlayerIsCreator;
+          setPlayer(updatedPlayer);
+        }
       }
 
       // update the lobby name and joined player names
       setLobbyname(newLobbyName);
       setJoinedPlayerNames(newJoinedPlayerNames);
-      setNumberOfRounds(newNumberOfRounds);
+      setContinent(continent);
       setFirstHintAfter(newFirstHintAfter);
       setHintsInterval(newHintsInterval);
       setTimeLimitPerRound(newTimeLimitPerRound);
@@ -237,6 +225,7 @@ export const GameLobby = (props: PropsType) => {
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/game-start`,
     (message: any) => {
+      setCurrentGameRound(0);
       navigate("/game/" + lobbyId);
     }
   );
@@ -248,25 +237,17 @@ export const GameLobby = (props: PropsType) => {
       message: "You were removed from the lobby",
       color: "red",
     });
-    // delete lobby from session storage
-    sessionStorage.removeItem("lobbyId");
-    sessionStorage.removeItem("lobbyName");
-    // for non-permanent users, flush session storage
-    if (!sessionStorage.getItem("loggedIn") === true) {
-      sessionStorage.clear();
-    }
-    navigate("/");
+    // set lobby to undefined
+    setLobby(undefined);
+    // navigate to the public games page
+    navigate("/publicGames");
   });
 
-  console.log("player token: ", playerToken);
-
   useEffectOnce(() => {
-    console.log("lobbyId: ", lobbyId);
     httpGet("/lobbies/" + lobbyId, { headers })
       .then((response) => {
         const privateLobbyKey = response.data.privateLobbyKey;
         if (privateLobbyKey === null) {
-          console.log("Public lobby");
           setGameUrl(lobbyURL + "/join");
         } else {
           setGameUrl(lobbyURL + "/join/?key=" + privateLobbyKey);
@@ -275,7 +256,6 @@ export const GameLobby = (props: PropsType) => {
       .catch((error) => {
         console.error(error);
       });
-    console.log("StompClient Status: ", stompClient);
     if (stompClient) {
       stompClient.publish({
         destination: "/app/authentication",
@@ -283,19 +263,16 @@ export const GameLobby = (props: PropsType) => {
       });
     } else {
       console.error("Error: Could not send message");
-      // reconnect the websocket
-      // stompClient.reconnect_delay = 5000;
     }
   });
 
   const startGame = async () => {
-    console.log("PlayerToken: ", playerToken);
     try {
       const headers = {
         Authorization: sessionStorage.getItem("FlagManiaToken"),
       };
       const body = {};
-      const response = await httpPut("/lobbies/" + lobbyId + "/start", body, {
+      await httpPut("/lobbies/" + lobbyId + "/start", body, {
         headers,
       });
       navigate("/game/" + lobbyId);
@@ -310,86 +287,126 @@ export const GameLobby = (props: PropsType) => {
     }
   };
 
-  interface advancedProps {
-    lobbyId: string | undefined;
-    lobbyName: string | undefined;
-    numberOfPlayers: number;
-    numberOfRounds: number;
-    showFirstHintAfter: number;
-    hintsInterval: number;
-    timeLimitPerRound: number;
-  }
+  const handleLeaveLobby = async () => {
+    try {
+      await httpPut(
+        "/lobbies/" + lobbyId + "/leave",
+        {},
+        { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
+      );
+      // set lobby to undefined
+      setLobby(undefined);
 
-  interface basicProps {
-    lobbyId: string | undefined;
-    lobbyName: string | undefined;
-    numberOfPlayers: number;
-    numberOfRounds: number;
-    numberOfOptions: number;
-    timeLimitPerRound: number;
-  }
+      // navigate to public games
+      navigate("/publicGames");
+    } catch (error: any) {
+      notifications.show({
+        title: "Error",
+        message: error.response.data.message,
+        color: "red",
+      });
+      console.error(error);
+    }
+  };
 
   // number of players
   const numberOfPlayers = joinedPlayerNames.length;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        height: "80vh",
-        position: "relative",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      {showQrCodeBig && (
-        <QrBox>
-          <CloseButton
-            aria-label="Close Button"
-            size="xl"
-            iconSize={40}
-            color="red"
-            style={{ position: "relative", left: "18%" }}
-            onClick={() => setShowQrCodeBig(false)}
-          />
-          <h1>Scan to join the game</h1>
-          <QRCode value={gameUrl} style={{ width: "100%" }} />
-          <ButtonCopy url={gameUrl} />
-        </QrBox>
-      )}
-      {isLoading ? (
-        <RainbowLoader />
-      ) : (
-        <>
-          <QRCode
-            value={gameUrl}
-            onClick={() => setShowQrCodeBig(true)}
-            style={{
-              cursor: "pointer",
-              right: "50px",
-              position: "absolute",
-              top: "0",
-              width: "100px",
-            }}
-          />
+    <Container>
+      <Application>
+        {showQrCodeBig && (
+          <QrContainer>
+            <QrBox>
+              <CloseButton
+                aria-label="Close Button"
+                size="xl"
+                iconSize={40}
+                color="red"
+                style={{ position: "relative", left: "18%" }}
+                onClick={() => setShowQrCodeBig(false)}
+              />
+              <h1>Scan to join the game</h1>
+              <QRCode value={gameUrl} style={{ width: "100%" }} />
+              <ButtonCopy url={gameUrl} />
+            </QrBox>
+          </QrContainer>
+        )}
+        {isLoading ? (
+          <RainbowLoader />
+        ) : (
+          <>
+            <QRCode
+              value={gameUrl}
+              onClick={() => setShowQrCodeBig(true)}
+              style={{
+                cursor: "pointer",
+                right: "40px",
+                position: "absolute",
+                top: "40px",
+                width: "180px",
+                height: "auto",
+                padding: "12px",
+                backgroundColor: "white",
+              }}
+            />
 
-          {gameMode === "ADVANCED" ? (
-            <LobbySettingsAdvanced lobbyId={lobbyId} lobbyName={lobbyName} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} showFirstHintAfter={firstHintAfter} hintsInterval={hintsInterval} timeLimitPerRound={timeLimitPerRound} /> ) :
-            ( <LobbySettingsBasic lobbyId={lobbyId} lobbyName={lobbyName} numberOfPlayers={numberOfPlayers} numberOfRounds={numberOfRounds} numberOfOptions={numberOfOptions} timeLimitPerRound={timeLimitPerRound} /> )
-          }
+            <UserContainer style={{ marginTop: "25px" }}>
+              {gameMode === "ADVANCED" ? (
+                <LobbySettingsAdvanced
+                  lobbyId={lobbyId}
+                  lobbyName={lobbyName}
+                  continent={continent}
+                  numberOfPlayers={numberOfPlayers}
+                  numberOfRounds={lobby?.numRounds}
+                  showFirstHintAfter={firstHintAfter}
+                  hintsInterval={hintsInterval}
+                  timeLimitPerRound={timeLimitPerRound}
+                />
+              ) : (
+                <LobbySettingsBasic
+                  lobbyId={lobbyId}
+                  lobbyName={lobbyName}
+                  continent={continent}
+                  numberOfPlayers={numberOfPlayers}
+                  numberOfRounds={lobby?.numRounds}
+                  numberOfOptions={numberOfOptions}
+                  timeLimitPerRound={timeLimitPerRound}
+                />
+              )}
+            </UserContainer>
+            <h3>Players in lobby:</h3>
 
-          <h3>Players in lobby:</h3>
+            <UserContainer>
+              <UsersRolesTable
+                data={playerNamesAndRoles}
+                player={player}
+                lobby={lobby}
+              />
+            </UserContainer>
 
-          <UserContainer>
-            <UsersRolesTable data={playerNamesAndRoles} player={player} />
-          </UserContainer>
-
-          {player?.isCreator && (
-            <Button onClick={() => startGame()}>Start Game</Button>
-          )}
-        </>
-      )}
-    </div>
+            <ButtonContainer>
+              {player?.isCreator && (
+                <Button
+                  size="xl"
+                  style={{ padding: "12px 36px" }}
+                  onClick={() => startGame()}
+                >
+                  Start Game
+                </Button>
+              )}
+              <Button
+                size="xl"
+                color="red"
+                style={{ padding: "12px 36px" }}
+                onClick={() => handleLeaveLobby()}
+              >
+                Leave Lobby
+              </Button>
+            </ButtonContainer>
+          </>
+        )}
+      </Application>
+    </Container>
   );
 };

@@ -1,53 +1,52 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import styled from "styled-components";
-import { FloatingTextInput } from "../components/FloatingTextInput";
 import { httpPost } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import { Button as MantineButton } from "@mantine/core";
+import { Player } from "../types/Player";
+import {
+  TextInput,
+  PasswordInput,
+  Anchor,
+  Paper,
+  Title,
+  Text,
+  Container,
+  Button,
+} from "@mantine/core";
 
 const Application = styled.div`
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f7f9;
+  // background-color: #f5f7f9;
 `;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  border: 2px solid rgb(216, 216, 216);
-  border-radius: 10px;
-  padding: 16px 32px;
-`;
-
-type props = {
-  isActive: boolean;
+type PropsType = {
+  setPlayer: React.Dispatch<React.SetStateAction<Player | undefined>>;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const Button = styled.button<props>`
-  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-  text-align: center;
-  border: none;
-  padding: 16px 64px;
-  margin: 32px 0;
-  color: ${(props) => (props.isActive ? "white" : "gray")};
 
-  background-color: ${(props) =>
-    props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
-  &:hover {
-    background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
-  }
-`;
-
-export const Login = () => {
+export const Login = (props: PropsType) => {
+  const { setPlayer, setIsLoggedIn } = props;
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
   const navigate = useNavigate();
+
+  const handleNameInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setNameInput(event.currentTarget.value);
+  };
+
+  const handlePasswordInputChange = (event: {
+    currentTarget: { value: SetStateAction<string> };
+  }) => {
+    setPasswordInput(event.currentTarget.value);
+  };
 
   useEffect(() => {
     const formCheck = () => {
@@ -79,23 +78,19 @@ export const Login = () => {
       // Store the ID of the currently logged-in user in sessionStorage
       sessionStorage.setItem("currentPlayerId", res.data.id);
 
-      // Store the Name of the currently logged-in user in sessionStorage
-      sessionStorage.setItem("currentPlayer", res.data.playerName);
-
-      // Store login status of the current user
-      sessionStorage.setItem("loggedIn", "true");
-
       // show notification that player has successfully logged in
       notifications.show({
         title: "Success",
         message: "Welcome back, " + res.data.playerName + "!",
         color: "green",
       });
+      setPlayer(res.data);
+      setIsLoggedIn(true);
       navigate("/");
     } catch (err: any) {
       notifications.show({
         title: "Error",
-        message: err.message,
+        message: err.response.data.message,
         color: "red",
       });
     }
@@ -103,29 +98,54 @@ export const Login = () => {
 
   return (
     <Application>
-      <Container>
-        <h1>Login</h1>
-        <FloatingTextInput
-          label="Name"
-          value={nameInput}
-          onChange={setNameInput}
-        />
-        <FloatingTextInput
-          label="Password"
-          value={passwordInput}
-          onChange={setPasswordInput}
-        />
-        <Button
-          isActive={isFormFilledOut}
-          onClick={loginUser}
-          disabled={!isFormFilledOut}
+      <Container size="xl" my={40}>
+        <Title
+          align="center"
+          sx={(theme) => ({
+            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            fontWeight: 900,
+          })}
         >
-          Login
-        </Button>
-        <p>Not an account yet?</p>
-        <MantineButton onClick={() => navigate("/register")}>
-          Register
-        </MantineButton>
+          Welcome back!
+        </Title>
+        <Text color="dimmed" size="xl" align="center" mt={5}>
+          Do not have an account yet?{" "}
+          <Anchor
+            size="xl"
+            component="button"
+            onClick={() => navigate("/register")}
+          >
+            Create account
+          </Anchor>
+        </Text>
+
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <TextInput
+            label="Username"
+            placeholder="Username"
+            value={nameInput}
+            onChange={handleNameInputChange}
+            size="xl"
+            required
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="Password"
+            value={passwordInput}
+            onChange={handlePasswordInputChange}
+            size="xl"
+            required
+            mt="md"
+          />
+          <Button
+            onClick={loginUser}
+            disabled={!isFormFilledOut}
+            fullWidth
+            size="xl"
+          >
+            Sign in
+          </Button>
+        </Paper>
       </Container>
     </Application>
   );
