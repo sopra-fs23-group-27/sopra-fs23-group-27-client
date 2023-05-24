@@ -25,6 +25,7 @@ interface PlayerData {
   timeUntilCorrectGuess: number;
   wrongGuesses: number;
   totalCorrectGuessesInARow: number;
+  playerHasGuessed: number;
 }
 
 interface LeaderBoardProps {
@@ -85,7 +86,7 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
                 <td>{row.playerName}</td>
                 <td>{row.playerScore}</td>
                 <td>{row.correctGuesses}</td>
-                {timePerAnswer[index] ? (
+                {row.playerHasGuessed && timePerAnswer[index] ? (
                   <td>{timePerAnswer[index]} seconds</td>
                 ) : (
                   <td></td>
