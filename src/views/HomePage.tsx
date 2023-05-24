@@ -91,7 +91,7 @@ export const HomePage = (props: PropsType) => {
       );
       notifications.show({
         title: "Success",
-        message: "You have successfully logged out",
+        message: "You can now choose a new username.",
         color: "green",
       });
 
@@ -169,13 +169,13 @@ export const HomePage = (props: PropsType) => {
       {player ? (
         <TopRightContainer>
           <Button size="md" color="red" onClick={() => handleLogout()}>
-            Logout
+            Change username
           </Button>
           <ThemeIcon size={ICON_SIZE} radius={ICON_SIZE}>
             <IconInfoCircle
               size="2rem"
               stroke={1.5}
-              onClick={() => navigate("/gameInfoDashboard")}
+              onClick={() => navigate("/gameInfo")}
               style={{ cursor: "pointer" }}
             />
           </ThemeIcon>
