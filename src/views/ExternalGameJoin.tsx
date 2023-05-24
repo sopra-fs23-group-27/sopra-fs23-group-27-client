@@ -15,6 +15,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { Lobby } from "../types/Lobby";
 import { useEffectOnce } from "../customHooks/useEffectOnce";
+import { join } from "path";
 
 const Application = styled.div`
   width: 100%;
@@ -61,6 +62,12 @@ export const ExternalGameJoin = (props: PropsType) => {
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
   const navigate = useNavigate();
   const lobbyId = window.location.pathname.split("/")[2];
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [color, setColor] = useState("");
+
+  // privateLobbyKey, string after question mark in url, otherwise empty string
+  const privateLobbyKey = window.location.search.split("?key=")[1] || "";
 
   useEffect(() => {
     const formCheck = () => {
@@ -92,7 +99,7 @@ export const ExternalGameJoin = (props: PropsType) => {
 
         // join game
         console.log("set lobby: ", lobby);
-        joinGame(response.data.privateLobbyKey);
+        joinGame(response.data.privateLobbyKey, player.playerName);
       };
       playerJoin();
     }
@@ -132,6 +139,7 @@ export const ExternalGameJoin = (props: PropsType) => {
       // Set the player state variable using the data returned from the API
       const player = response.data as Player;
       setPlayer(player);
+      console.log("set player: ", player);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
@@ -152,9 +160,11 @@ export const ExternalGameJoin = (props: PropsType) => {
       setLobby(lobby);
       console.log("set lobby: ", lobby);
 
-      // join game
+      // // join game
+      // joinGame(lobby.privateLobbyKey);
 
-      joinGame(lobby.privateLobbyKey);
+      // join game
+      joinGame(privateLobbyKey, player.playerName);
 
       // catch errors
     } catch (error: any) {
@@ -173,6 +183,38 @@ export const ExternalGameJoin = (props: PropsType) => {
       setShowLogin(true);
     }
   }
+
+  const handleLogout = async () => {
+    // get player id from session storage
+    const playerId = sessionStorage.getItem("currentPlayerId");
+    try {
+      await httpPost(
+        "/players/" + playerId + "/logout" + "?playerId=" + playerId,
+        {},
+        { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
+      );
+      notifications.show({
+        title: "You got banned!",
+        message: "You just got yourself banned for maliciously trying to join a private lobby without the key. Better luck next time!",
+        color: "red",
+      });
+
+      // set player to undefined
+      setPlayer(undefined);
+
+      // reset the session storage
+      sessionStorage.clear();
+      navigate("/");
+    } catch (error: any) {
+      notifications.show({
+        title: "Error",
+        message: error.response.data.message,
+        color: "red",
+      });
+      console.error(error);
+    }
+  };
+
 
   const loginUserJoin = async () => {
     try {
@@ -202,19 +244,15 @@ export const ExternalGameJoin = (props: PropsType) => {
       // get lobby
       const response = await httpGet("/lobbies/" + lobbyId, { headers });
 
-      // show notification that player has successfully logged in
-      notifications.show({
-        title: "Success",
-        message: "Welcome back, " + res.data.playerName + "!",
-        color: "green",
-      });
-
       // Set the lobby state variable using the data returned from the API
       const lobby = response.data as Lobby;
       setLobby(lobby);
 
+      // // join game
+      // joinGame(lobby.privateLobbyKey);
+      
       // join game
-      joinGame(lobby.privateLobbyKey);
+      joinGame(privateLobbyKey, res.data.playerName);
     } catch (err: any) {
       notifications.show({
         title: "Error",
@@ -224,25 +262,45 @@ export const ExternalGameJoin = (props: PropsType) => {
     }
   };
 
-  async function joinGame(privateLobbyKey: string) {
+  async function joinGame(privateLobbyKey: string, playerName: string) {
     const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
     const body = {};
-    const response = await httpPut(
-      "/lobbies/" + lobbyId + "/join?privateLobbyKey=" + privateLobbyKey,
-      body,
-      { headers }
-    );
-    console.log("put response: ", response);
-    if (response.status === 204) {
+    try {
+      const response = await httpPut(
+        "/lobbies/" + lobbyId + "/join?privateLobbyKey=" + privateLobbyKey,
+        body,
+        { headers }
+      );
+      console.log("put response: ", response);
+
+      console.log("player: ", player);
+
+      // show notification that player has successfully logged in and joined the game
+      notifications.show({
+        title: "Success",
+        message: "Great to see you " + playerName + "! You have successfully joined the game.",
+        color: "green",
+      });
+      
+      // navigate to game
       setCurrentGameRound(0);
       navigate("/lobbies/" + lobbyId);
-    } else {
-      notifications.show({
-        title: "Error",
-        message: response.status,
-        color: "red",
-      });
-      console.error("Error joining game: ", response);
+    } catch (error: any) {
+      if (error.response.status === 403) {
+        notifications.show({
+          title: "Something went wrong",
+          message: error.response.data.message,
+          color: "red",
+        });
+        handleLogout();
+      } else {
+        notifications.show({
+          title: "Something went wrong",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error("Error joining game: ", error);
+      }
     }
   }
 

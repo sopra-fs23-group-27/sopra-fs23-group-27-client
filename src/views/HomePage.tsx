@@ -175,7 +175,7 @@ export const HomePage = (props: PropsType) => {
             <IconInfoCircle
               size="2rem"
               stroke={1.5}
-              onClick={() => navigate("/gameInfoDashboard")}
+              onClick={() => navigate("/gameInfo")}
               style={{ cursor: "pointer" }}
             />
           </ThemeIcon>
