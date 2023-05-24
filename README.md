@@ -7,7 +7,6 @@
 # FlagMania Client Application - SoPra FS23 - Group 27
 
 ## Introduction and Motivation
-Introduction:
 Welcome to FlagMania, the ultimate game that will put your knowledge of flags to the test! Are you ready to embark on an exciting journey around the world and showcase your flag recognition skills? Get ready to dive into two thrilling modes: Basic Game and Public Game.
 
 In the Basic Game mode, we've carefully curated a series of challenging flag-based questions for you. Guess the flags of different countries based on our preselected options and see how many correct answers you can rack up! This mode is perfect for sharpening your flag identification abilities, learning about various countries, and competing against your friends to achieve the highest score.
@@ -22,7 +21,7 @@ So, what are you waiting for? Unleash your inner adventurer and test your flag k
 
 1. **Stable Internet Connection**: FlagMania is an online game, players will need a stable internet connection to play. We recommend a minimum internet speed of 5 Mbps for a smooth and seamless gameplay experience.
 2. **Web Browser**: FlagMania is a web-based game, so players will need a web browser to play. We recommend using the latest version of Google Chrome or Mozilla Firefox for the best experience.
-3. **Devices**: FlagMania is a web-based game, so players will need a device to play. We recommend using a laptop or desktop computer for the best experience. Smartphone and tablet devices may lead to a suboptimal experience.
+3. **Devices**: FlagMania is a web-based game, so players will need a device to play. We recommend using a laptop or desktop computer for the best experience. The use of smartphone and tablet devices is discouraged and may lead to a suboptimal experience.  If a user still chooses to play on a smartphone, playing in side view is recommended!
 
 ## Technologies
 To establish a seamless connection between the frontend and backend, we have employed REST and Stomp-Websockets protocols. REST (Representational State Transfer) enables smooth communication and data transfer, allowing the frontend to interact with the backend effortlessly. Stomp-Websockets, a subprotocol of WebSocket, adds a layer of real-time communication, ensuring instant updates and an immersive gameplay experience.
@@ -73,28 +72,28 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Illustrations
 In the following, you see the main landing page and entry point for a player to FlagMania. You can choose to login or register a user if you want to have your scores tracked. Alternatively, you can also play as a guest without registering.
-![image](.//img/Main_Page.png)
+![image](.//img/EntryPage.png)
 
 If you click "Create New Game" you will be directed to the game creation page. Here you can choose a name for your lobby and select the game mode you want to play. You can either play the Basic Game, where you will be presented with a set of preselected flags and options to choose from, or the Public Game, where you can submit your own guesses for a set of flags. Once you have created your lobby, you will be redirected to the lobby page.
-![image](.//img/Main_Page.png)
+![image](.//img/LobbyCreation.png)
 
 On the lobby page, you can see the lobby name, the game mode, and the players that have joined the lobby. You can also copy the lobby code and send it to your friends to invite them to join your lobby. Once you are ready to start the game, you can click "Start Game" and you will be redirected to the game page:
-![image](.//img/Main_Page.png)
+![image](.//img/Lobby.png)
 
-Now you are in the game! You can below see the layout of the basic mode. In the basic mode you can select your guess by clicking on it. After all players have submitted their guess, the correct guess will light in green.
-![image](.//img/Main_Page.png)
+Now you are in the game! You can below see the layout of the basic mode. In basic mode you can select your guess by clicking on it. After all players have submitted their guess, the correct guess will light in green.
+![image](.//img/BasicMode.png)
 
 You can below see the layout of the advanced mode. In the advanced mode you can submit your guess by typing it into the submission field. On the right, you can see the wrong guesses other players have submitted:
-![image](.//img/Main_Page.png)
+![image](.//img/AdvancedMode.png)
 
-Once you finished the round you get redirected to the scoreboard. It is displayed below. You can see each players current ranking with individual statistics for each player. Don't know what these statistics mean? Click the "Explain Stats" button and get your answers:
-![image](.//img/Main_Page.png)
+Once you finished the round you get redirected to the scoreboard. It is displayed below. You can see each players current ranking with individual statistics for each player. Don't know what these statistics mean? Click the blue information icon and get your answers:
+![image](.//img/Leaderboard.png)
 
 Congrats, you made it through the whole game! You are now displayed the final leaderboard below. Want to play another game? Then click "Play Again". Are you currently not logged in but still want to save your stats? Click "Register to Save Stats". Want to play a new game with a different lobby? Click "Go to Home":
-![image](.//img/Main_Page.png)
+![image](.//img/FinalLeaderboard.png)
 
 If you navigate to your login screen, you see your overall statistics of all the games you have played:
-![image](.//img/Main_Page.png)
+![image](.//img/Dashboard.png)
 
 
 ## Roadmap
@@ -118,7 +117,7 @@ Further, we extend our appreciation to the providers of the FLAGCDN API (https:/
 ## License
 This project is licensed under the MIT License.
 
-Copyright (c) 2023 Dominic Tobler
+Copyright (c) 2023
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
