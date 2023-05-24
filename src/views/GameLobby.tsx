@@ -43,9 +43,8 @@ const Application = styled.div`
 
 const QrContainer = styled.div`
   width: 100vw;
-  height: calc(100% + 250px);
-  margin-top: -80px;
-  position: absolute;
+  height: 100vh;
+  position: fixed;
   top: 0;
   z-index: 1;
   background-color: white;
