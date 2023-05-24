@@ -56,7 +56,6 @@ type PropsType = {
 };
 
 export const UserDashboard = (props: PropsType) => {
-  const { classes } = useStyles();
   const { setPlayer, player } = props;
   const [nRoundsPlayed, setNRoundsPlayed] = useState(0);
   const [
