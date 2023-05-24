@@ -75,6 +75,7 @@ export const ScoreBoard = (props: PropsType) => {
   const [totalCorrectGuessesInARow, setTotalCorrectGuessesInARow] = useState<
     number[]
   >([]);
+  const [playerHasGuessed, setPlayerHasGuessed] = useState<number[]>([]);
 
   // get the player token from session storage
   const playerToken = sessionStorage.getItem("FlagManiaToken");
@@ -91,7 +92,9 @@ export const ScoreBoard = (props: PropsType) => {
       const totalWrongGuesses = body.totalWrongGuesses as number[];
       const totalCorrectGuessesInARow =
         body.totalCorrectGuessesInARow as number[];
-      console.log(totalCorrectGuessesInARow);
+      const playerHasGuessed = body.playerHasGuessed as number[];
+      console.log("full body: ", body);
+      console.log("playerHasGuessed: ", playerHasGuessed);
 
       setIsLoading(false);
       setPlayerNames(playerNames);
@@ -100,6 +103,7 @@ export const ScoreBoard = (props: PropsType) => {
       setTimeUntilCorrectGuess(totalTimeUntilCorrectGuess);
       setWrongGuesses(totalWrongGuesses);
       setTotalCorrectGuessesInARow(totalCorrectGuessesInARow);
+      setPlayerHasGuessed(playerHasGuessed);
     }
   );
 
@@ -196,6 +200,7 @@ export const ScoreBoard = (props: PropsType) => {
     timeUntilCorrectGuess: number;
     wrongGuesses: number;
     totalCorrectGuessesInARow: number;
+    playerHasGuessed: number;
   }
 
   interface GameData {
@@ -205,6 +210,7 @@ export const ScoreBoard = (props: PropsType) => {
     timeUntilCorrectGuess: number[];
     wrongGuesses: number[];
     totalCorrectGuessesInARow: number[];
+    playerHasGuessed: number[];
   }
 
   // define data for leaderboard
@@ -216,6 +222,7 @@ export const ScoreBoard = (props: PropsType) => {
       timeUntilCorrectGuess: timeUntilCorrectGuess,
       wrongGuesses: wrongGuesses,
       totalCorrectGuessesInARow: totalCorrectGuessesInARow,
+      playerHasGuessed: playerHasGuessed,
     },
   ];
 
@@ -228,6 +235,7 @@ export const ScoreBoard = (props: PropsType) => {
         timeUntilCorrectGuess: game.timeUntilCorrectGuess[index],
         wrongGuesses: game.wrongGuesses[index],
         totalCorrectGuessesInARow: game.totalCorrectGuessesInARow[index],
+        playerHasGuessed: game.playerHasGuessed[index],
       };
     });
   });
