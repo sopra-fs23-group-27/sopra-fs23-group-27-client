@@ -247,7 +247,7 @@ export const App = () => {
             path="/game/:lobbyId/gameEnd"
             element={
               <FlagManiaGuard shouldPreventReload={true} player={player}>
-                <GameEnd player={player} />
+                <GameEnd player={player} setLobby={setLobby} />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}

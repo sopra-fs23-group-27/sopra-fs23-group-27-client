@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSubscription } from "react-stomp-hooks";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { Button } from "@mantine/core";
 import { Player } from "../types/Player";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Table, Title, Text } from "@mantine/core";
 import "animate.css";
+import { Lobby } from "../types/Lobby";
 
 const Application = styled.div`
   display: flex;
@@ -85,9 +86,10 @@ interface GameData {
 
 type PropsType = {
   player: Player | undefined;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
 };
 export const GameEnd = (props: PropsType) => {
-  const { player: currentPlayer } = props;
+  const { player: currentPlayer, setLobby } = props;
   const { lobbyId } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -282,12 +284,24 @@ export const GameEnd = (props: PropsType) => {
             >
               Play again {playAgainTimer}
             </Button>
-            <Button size="xl" onClick={() => navigate("/")}>
+            <Button
+              size="xl"
+              onClick={() => {
+                setLobby(undefined);
+                navigate("/");
+              }}
+            >
               Home
             </Button>
 
             {!currentPlayer?.permanent && (
-              <Button size="xl" onClick={() => navigate("/saveStatsRegister")}>
+              <Button
+                size="xl"
+                onClick={() => {
+                  setLobby(undefined);
+                  navigate("/saveStatsRegister");
+                }}
+              >
                 Register to save your stats
               </Button>
             )}
