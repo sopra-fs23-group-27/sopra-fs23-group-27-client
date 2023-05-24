@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Table,
-  Group,
-  Text,
-  ActionIcon,
-  ScrollArea,
-} from "@mantine/core";
+import { Badge, Table, Group, Text, ActionIcon } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons-react";
 import { useStompClient } from "react-stomp-hooks";
@@ -96,18 +89,16 @@ export function UsersRolesTable(props: PropsType) {
   ));
 
   return (
-    <ScrollArea>
-      <Table miw={800} verticalSpacing="sm">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </Table>
-    </ScrollArea>
+    <Table miw={800} verticalSpacing="sm">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </Table>
   );
 }
