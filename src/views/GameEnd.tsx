@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button } from "@mantine/core";
 import { Player } from "../types/Player";
 import { RainbowLoader } from "../components/RainbowLoader";
-import { Table } from "@mantine/core";
+import { Table, Title, Text } from "@mantine/core";
 import "animate.css";
 
 const Application = styled.div`
@@ -187,35 +187,65 @@ export const GameEnd = (props: PropsType) => {
             {playerData.length > 2 ? (
               <>
                 <Card>
-                  <H2>2.</H2>
-                  <H1>{adjustNameSize(playerData[1]?.playerName)}</H1>
-                  <P>{playerData[1]?.playerScore} points</P>
+                  <Title order={1} style={{ fontSize: "6rem" }}>
+                    🥈
+                  </Title>
+                  <Title order={1}>
+                    {adjustNameSize(playerData[1]?.playerName)}
+                  </Title>
+                  <Text>{playerData[1]?.playerScore} points</Text>
                 </Card>
                 <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-1s">
-                  <H2>1.</H2>
-                  <H1>{adjustNameSize(playerData[0]?.playerName)}</H1>
-                  <P>{playerData[0]?.playerScore} points</P>
+                  <Title order={1} style={{ fontSize: "6rem" }}>
+                    🏆
+                  </Title>
+                  <Title order={1}>
+                    {adjustNameSize(playerData[0]?.playerName)}
+                  </Title>
+                  <Text>{playerData[0]?.playerScore} points</Text>
                 </FirstRankCard>
                 <Card>
-                  <H2>3.</H2>
-                  <H1>{adjustNameSize(playerData[2]?.playerName)}</H1>
-                  <P>{playerData[2]?.playerScore} points</P>
+                  <Title order={1} style={{ fontSize: "6rem" }}>
+                    🥉
+                  </Title>
+                  <Title order={1}>
+                    {adjustNameSize(playerData[2]?.playerName)}
+                  </Title>
+                  <Text>{playerData[2]?.playerScore} points</Text>
                 </Card>
               </>
-            ) : (
+            ) : playerData.length === 2 ? (
               <>
                 <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-1s">
-                  <H2>1.</H2>
-                  <H1>{adjustNameSize(playerData[0]?.playerName)}</H1>
-                  <P>{playerData[0]?.playerScore} points</P>
+                  <Title order={1} style={{ fontSize: "6rem" }}>
+                    🏆
+                  </Title>
+                  <Title order={1}>
+                    {adjustNameSize(playerData[0]?.playerName)}
+                  </Title>
+                  <Text>{playerData[0]?.playerScore} points</Text>
                 </FirstRankCard>
 
                 <Card>
-                  <H2>2.</H2>
-                  <H1>{adjustNameSize(playerData[1]?.playerName)}</H1>
-                  <P>{playerData[1]?.playerScore} points</P>
+                  <Title order={1} style={{ fontSize: "6rem" }}>
+                    🥈
+                  </Title>
+                  <Title order={1}>
+                    {adjustNameSize(playerData[1]?.playerName)}
+                  </Title>
+                  <Text>{playerData[1]?.playerScore} points</Text>
                 </Card>
               </>
+            ) : (
+              <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-1s">
+                <Title order={1} style={{ fontSize: "6rem" }}>
+                  🏆
+                </Title>
+                <Title order={1}>
+                  {adjustNameSize(playerData[0]?.playerName)}
+                </Title>
+                <Text>{playerData[0]?.playerScore} points</Text>
+              </FirstRankCard>
             )}
           </RankContainer>
 
