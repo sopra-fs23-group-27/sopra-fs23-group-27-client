@@ -6,6 +6,7 @@ import { mainURL } from "./helpers/httpService";
 
 import { App } from "./App";
 import { Notifications } from "@mantine/notifications";
+import { ModalsProvider } from "@mantine/modals";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,7 +20,9 @@ root.render(
     >
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <Notifications />
-        <App />
+        <ModalsProvider>
+          <App />
+        </ModalsProvider>
       </MantineProvider>
     </StompSessionProvider>
   </React.StrictMode>

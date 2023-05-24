@@ -92,6 +92,7 @@ export const ScoreBoardTest = () => {
     timeUntilCorrectGuess: number;
     wrongGuesses: number;
     totalCorrectGuessesInARow: number;
+    playerHasGuessed: number;
   }
 
   interface GameData {
@@ -101,6 +102,7 @@ export const ScoreBoardTest = () => {
     timeUntilCorrectGuess: number[];
     wrongGuesses: number[];
     totalCorrectGuessesInARow: number[];
+    playerHasGuessed: number[];
   }
 
   // define mock data for leaderboard
@@ -112,6 +114,7 @@ export const ScoreBoardTest = () => {
       timeUntilCorrectGuess: [10, 20, 30],
       wrongGuesses: [1, 2, 3],
       totalCorrectGuessesInARow: [1, 2, 3],
+      playerHasGuessed: [1, 1, 0],
     },
     {
       playerNames: ["Player 23", "Player 2", "Player 3"],
@@ -120,6 +123,7 @@ export const ScoreBoardTest = () => {
       timeUntilCorrectGuess: [10, 20, 30],
       wrongGuesses: [1, 2, 3],
       totalCorrectGuessesInARow: [1, 2, 3],
+      playerHasGuessed: [1, 1, 0],
     },
   ];
 
@@ -132,6 +136,7 @@ export const ScoreBoardTest = () => {
         timeUntilCorrectGuess: game.timeUntilCorrectGuess[index],
         wrongGuesses: game.wrongGuesses[index],
         totalCorrectGuessesInARow: game.totalCorrectGuessesInARow[index],
+        playerHasGuessed: game.playerHasGuessed[index],
       };
     });
   });
