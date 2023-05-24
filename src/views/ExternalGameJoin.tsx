@@ -242,7 +242,7 @@ export const ExternalGameJoin = (props: PropsType) => {
         message: response.status,
         color: "red",
       });
-      throw new Error("Error joining game");
+      console.error("Error joining game: ", response);
     }
   }
 
