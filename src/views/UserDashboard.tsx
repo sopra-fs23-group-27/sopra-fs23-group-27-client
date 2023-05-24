@@ -140,7 +140,7 @@ export const UserDashboard = (props: PropsType) => {
       stats: number | string;
       progress: number;
       color: string;
-      icon: "up" | "down";
+      icon: "up" | "down" | "360" | "clock";
     }[];
   }
 
@@ -150,7 +150,7 @@ export const UserDashboard = (props: PropsType) => {
       stats: nRoundsPlayed,
       progress: 100,
       color: "blue",
-      icon: "up",
+      icon: "360",
     },
     {
       label: "Correct Guesses",
@@ -171,7 +171,7 @@ export const UserDashboard = (props: PropsType) => {
       stats: guessingSpeed + "s",
       progress: 100,
       color: "blue",
-      icon: "up",
+      icon: "clock",
     },
   ];
 

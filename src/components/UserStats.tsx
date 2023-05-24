@@ -1,5 +1,5 @@
 import { RingProgress, Text, SimpleGrid, Paper, Center, Group } from '@mantine/core';
-import { IconArrowUpRight, IconArrowDownRight } from '@tabler/icons-react';
+import { IconArrowUpRight, IconArrowDownRight, Icon360, IconClock } from '@tabler/icons-react';
 
 interface UserStatsProps {
   userData: {
@@ -7,13 +7,15 @@ interface UserStatsProps {
     stats: number | string;
     progress: number;
     color: string;
-    icon: 'up' | 'down';
+    icon: 'up' | 'down' | '360' | 'clock';
   }[];
 }
 
 const icons = {
   up: IconArrowUpRight,
   down: IconArrowDownRight,
+  '360': Icon360,
+  clock: IconClock,
 };
 
 export function UserStats({ userData }: UserStatsProps) {
