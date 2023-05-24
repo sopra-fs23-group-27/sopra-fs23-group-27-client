@@ -135,7 +135,7 @@ export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
     } catch (err: any) {
       notifications.show({
         title: "Error",
-        message: err.message,
+        message: err.response.data.message,
         color: "red",
       });
     }
