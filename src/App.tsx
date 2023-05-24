@@ -155,7 +155,7 @@ export const App = () => {
             path="/login"
             element={
               <LoginGuard player={player}>
-                <Login setPlayer={setPlayer} />
+                <Login player={player} setPlayer={setPlayer} />
               </LoginGuard>
             }
             errorElement={<ErrorPage />}

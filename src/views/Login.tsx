@@ -25,11 +25,12 @@ const Application = styled.div`
 `;
 
 type PropsType = {
+  player: Player | undefined;
   setPlayer: React.Dispatch<React.SetStateAction<Player | undefined>>;
 };
 
 export const Login = (props: PropsType) => {
-  const { setPlayer } = props;
+  const { player, setPlayer } = props;
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
@@ -48,7 +49,7 @@ export const Login = (props: PropsType) => {
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem("FlagManiaToken")) {
+    if (sessionStorage.getItem("FlagManiaToken") && player?.permanent !== false) {
       navigate("/dashboard");
     }
   }, []);

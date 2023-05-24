@@ -48,7 +48,7 @@ export function UserStats({ userData }: UserStatsProps) {
   });
 
   return (
-    <SimpleGrid cols={5} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
+    <SimpleGrid cols={4} breakpoints={[{ maxWidth: 'md', cols: 1 }]}>
       {stats}
     </SimpleGrid>
   );

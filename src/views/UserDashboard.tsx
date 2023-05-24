@@ -67,8 +67,6 @@ export const UserDashboard = (props: PropsType) => {
     overallTotalNumberOfWrongGuesses,
     setOverallTotalNumberOfWrongGuesses,
   ] = useState(0);
-  const [unansweredFlags, setUnansweredFlags] = useState(0);
-  const [ratioOfUnansweredFlags, setRatioOfUnansweredFlags] = useState(0);
   const [ratioOfCorrectGuesses, setRatioOfCorrectGuesses] = useState(0);
   const [ratioOfWrongGuesses, setRatioOfWrongGuesses] = useState(0);
   const [guessingSpeed, setGuessingSpeed] = useState(0);
@@ -91,24 +89,6 @@ export const UserDashboard = (props: PropsType) => {
       setOverallTotalNumberOfCorrectGuesses(response.data.totalCorrectGuesses);
       setOverallTotalNumberOfWrongGuesses(response.data.numWrongGuesses);
 
-      // calculate number of unanswered flags
-      setUnansweredFlags(
-        response.data.nRoundsPlayed -
-          response.data.totalCorrectGuesses -
-          response.data.numWrongGuesses
-      );
-
-      // calculate ratio of unanswered flags
-      setRatioOfUnansweredFlags(
-        Math.round(
-          ((response.data.nRoundsPlayed -
-            response.data.totalCorrectGuesses -
-            response.data.numWrongGuesses) /
-            response.data.nRoundsPlayed) *
-            100
-        )
-      );
-
       // calculate ration of correct guesses
       setRatioOfCorrectGuesses(
         Math.round(
@@ -121,7 +101,8 @@ export const UserDashboard = (props: PropsType) => {
             100
         )
       );
-
+      
+      // calculate ration of wrong guesses
       setRatioOfWrongGuesses(
         Math.round(
           (response.data.numWrongGuesses /
@@ -184,13 +165,6 @@ export const UserDashboard = (props: PropsType) => {
       stats: overallTotalNumberOfWrongGuesses,
       progress: ratioOfWrongGuesses,
       color: "red",
-      icon: "down",
-    },
-    {
-      label: "Unanswered Flags",
-      stats: unansweredFlags,
-      progress: ratioOfUnansweredFlags,
-      color: "orange",
       icon: "down",
     },
     {
