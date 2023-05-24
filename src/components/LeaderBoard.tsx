@@ -7,6 +7,8 @@ import {
   ScrollArea,
   rem,
 } from "@mantine/core";
+import { Player } from "../types/Player";
+import styled from "styled-components";
 
 const useStyles = createStyles((theme) => ({
   progressBar: {
@@ -17,6 +19,10 @@ const useStyles = createStyles((theme) => ({
     },
   },
 }));
+
+const CurrentPlayerRow = styled.tr`
+  border: 2px solid black;
+`;
 
 interface PlayerData {
   playerName: string;
@@ -30,9 +36,10 @@ interface PlayerData {
 
 interface LeaderBoardProps {
   playerData: PlayerData[];
+  currentPlayer: Player | undefined;
 }
 
-export function LeaderBoard({ playerData }: LeaderBoardProps) {
+export function LeaderBoard({ playerData, currentPlayer }: LeaderBoardProps) {
   const { classes, theme } = useStyles();
 
   // calculate rank by score and sort players by rank
@@ -80,6 +87,55 @@ export function LeaderBoard({ playerData }: LeaderBoardProps) {
         </thead>
         <tbody>
           {playerData.map((row, index) => {
+            if (row.playerName === currentPlayer?.playerName) {
+              return (
+                <CurrentPlayerRow key={index}>
+                  <td>{rank[index]}</td>
+                  <td>{row.playerName}</td>
+                  <td>{row.playerScore}</td>
+                  <td>{row.correctGuesses}</td>
+                  {row.playerHasGuessed && timePerAnswer[index] ? (
+                    <td>{timePerAnswer[index]} seconds</td>
+                  ) : (
+                    <td></td>
+                  )}
+
+                  <td>
+                    <Group position="apart">
+                      <Text fz="xs" c="teal" weight={700}>
+                        {answerDistribution[index][0].toFixed(0)}%
+                      </Text>
+                      <Text fz="xs" c="red" weight={700}>
+                        {answerDistribution[index][1].toFixed(0)}%
+                      </Text>
+                    </Group>
+                    <Progress
+                      classNames={{ bar: classes.progressBar }}
+                      sections={[
+                        {
+                          value: answerDistribution[index][0],
+                          color:
+                            theme.colorScheme === "dark"
+                              ? theme.colors.teal[9]
+                              : theme.colors.teal[6],
+                        },
+                        {
+                          value: answerDistribution[index][1],
+                          color:
+                            theme.colorScheme === "dark"
+                              ? theme.colors.red[9]
+                              : theme.colors.red[6],
+                        },
+                      ]}
+                    />
+                  </td>
+                  <td>
+                    {row.totalCorrectGuessesInARow >= 2 &&
+                      `🔥 ${row.totalCorrectGuessesInARow} 🔥`}
+                  </td>
+                </CurrentPlayerRow>
+              );
+            }
             return (
               <tr key={index}>
                 <td>{rank[index]}</td>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import FlagLogo from "../icons/DALL-E_FlagMania_Logo.png";
 import { useNavigate } from "react-router-dom";
-import { httpPost, httpPut } from "../helpers/httpService";
+import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
 import { Player } from "../types/Player";
@@ -14,7 +14,7 @@ const FlagManiaLogo = styled.img`
   padding: 10px;
   width: 180px;
   height: auto;
-  position: absolute;
+  position: fixed;
   z-index: 1;
   cursor: pointer;
   transition: transform 200ms ease-in-out;
@@ -41,8 +41,7 @@ type PropsType = {
 
 export const FlagmaniaLogo = (props: PropsType) => {
   const navigate = useNavigate();
-  const { player, lobby, setPlayer, setLobby } =
-    props;
+  const { player, lobby, setLobby } = props;
 
   const userConfirmationLobby = async () => {
     modals.openConfirmModal({
@@ -88,7 +87,6 @@ export const FlagmaniaLogo = (props: PropsType) => {
       }
     }
   };
-
 
   const handleClickedLogo = () => {
     if (player && lobby) {

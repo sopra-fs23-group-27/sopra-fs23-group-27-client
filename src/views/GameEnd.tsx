@@ -54,18 +54,6 @@ const Card = styled.div`
     rgb(255, 156, 85) 30px -30px, rgb(255, 255, 255) 40px -40px 0px -3px,
     rgb(255, 85, 85) 40px -40px;
 `;
-const H1 = styled.h1`
-  margin: 0;
-  padding: 0;
-`;
-const H2 = styled.h2`
-  margin: 0;
-  padding: 0;
-`;
-const P = styled.p`
-  margin: 0;
-  padding: 0;
-`;
 const FirstRankCard = styled(Card)`
   position: relative;
   bottom: 80px;

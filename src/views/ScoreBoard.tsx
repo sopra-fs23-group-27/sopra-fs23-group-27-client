@@ -262,7 +262,7 @@ export const ScoreBoard = (props: PropsType) => {
           </ThemeIcon>
           <LeaderBoardContainer>
             <h1>Leaderboard Round {currentGameRound}</h1>
-            <LeaderBoard playerData={playerData} />
+            <LeaderBoard playerData={playerData} currentPlayer={player} />
             {player?.isCreator && (
               <Button
                 size="xl"
@@ -272,8 +272,6 @@ export const ScoreBoard = (props: PropsType) => {
                 Start Next Round
               </Button>
             )}
-
-            {/* <Button onClick={anotherGame}>Another Game</Button> */}
           </LeaderBoardContainer>
         </Application>
       )}

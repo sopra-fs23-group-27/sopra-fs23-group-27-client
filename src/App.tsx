@@ -10,7 +10,6 @@ import { GameIdInput } from "./views/EnterGameId";
 import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoard } from "./views/ScoreBoard";
-import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { useEffect, useState } from "react";
 import { Lobby } from "./types/Lobby";
 import { Player } from "./types/Player";
@@ -29,7 +28,6 @@ import { RegisterToSaveStats } from "./views/RegisterToSaveStats";
 import { FlagmaniaLogo } from "./components/FlagmaniaLogo";
 import styled from "styled-components";
 import { GameInfo } from "./views/GameInfo";
-import { ScoreInfo } from "./components/ScoreInfo";
 import { httpGet } from "./helpers/httpService";
 import { GameInfoDashboard } from "./views/GameInfoDashboard";
 
@@ -227,7 +225,6 @@ export const App = () => {
             }
             errorElement={<ErrorPage />}
           />
-          <Route path="/leaderBoard" element={<ScoreBoardTest />} />
           <Route
             path="/dashboard"
             element={
