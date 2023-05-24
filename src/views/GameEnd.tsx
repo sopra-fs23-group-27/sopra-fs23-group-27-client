@@ -176,35 +176,6 @@ export const GameEnd = (props: PropsType) => {
     const adjustedName = name.slice(0, 10) + "...";
     return adjustedName;
   };
-  const isPlayerInTopThree = () => {
-    if (
-      currentPlayer?.playerName === playerData[0]?.playerName ||
-      currentPlayer?.playerName === playerData[1]?.playerName ||
-      currentPlayer?.playerName === playerData[2]?.playerName
-    ) {
-      return true;
-    }
-    return false;
-  };
-  const getCurrentPlayerRank = () => {
-    if (playerData[0]) {
-      for (let i: number = 0; i < playerData.length; i++) {
-        if (playerData[i].playerName === currentPlayer?.playerName) {
-          return i + 1;
-        }
-      }
-    }
-    return 0;
-  };
-  const getCurrentPlayerScore = () => {
-    if (playerData[0]) {
-      const player: any = playerData.find(
-        (p) => p.playerName === currentPlayer?.playerName
-      );
-      return player.playerScore;
-    }
-    return 0;
-  };
 
   return (
     <>
@@ -220,7 +191,7 @@ export const GameEnd = (props: PropsType) => {
                   <H1>{adjustNameSize(playerData[1]?.playerName)}</H1>
                   <P>{playerData[1]?.playerScore} points</P>
                 </Card>
-                <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-2s">
+                <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-1s">
                   <H2>1.</H2>
                   <H1>{adjustNameSize(playerData[0]?.playerName)}</H1>
                   <P>{playerData[0]?.playerScore} points</P>
@@ -233,7 +204,7 @@ export const GameEnd = (props: PropsType) => {
               </>
             ) : (
               <>
-                <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-2s">
+                <FirstRankCard className="animate__animated animate__fadeInUp animate__delay-1s">
                   <H2>1.</H2>
                   <H1>{adjustNameSize(playerData[0]?.playerName)}</H1>
                   <P>{playerData[0]?.playerScore} points</P>
@@ -267,7 +238,7 @@ export const GameEnd = (props: PropsType) => {
                   if (p.playerName === currentPlayer?.playerName) {
                     return (
                       <CurrentPlayerRow>
-                        <td>{ind + 3 + 1} Your rank!!!</td>
+                        <td>{ind + 3 + 1}</td>
                         <td>{p.playerName}</td>
                         <td>{p.playerScore}</td>
                       </CurrentPlayerRow>

@@ -34,6 +34,10 @@ export const GuessHistory = ({ guesses, playerNames }: PropsType) => {
   }
   return (
     <>
+      <Title order={5} style={{ textAlign: "center" }}>
+        Recent guesses
+      </Title>
+      <Divider />
       {parsedGuesses.map((g, ind) => (
         <>
           <Guess>
