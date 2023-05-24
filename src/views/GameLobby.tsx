@@ -119,6 +119,8 @@ export const GameLobby = (props: PropsType) => {
   // get the current lobby URL
   const lobbyURL = window.location.href;
 
+  // useEffect to catch 404 errors
+
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
     (message: any) => {
@@ -277,13 +279,23 @@ export const GameLobby = (props: PropsType) => {
       });
       navigate("/game/" + lobbyId);
     } catch (e: any) {
-      notifications.show({
-        title: "Error",
-        message: e.response
-          ? e.response.data.message
-          : "Server could not be reached",
-        color: "red",
-      });
+      if (e.response.status === 404) {
+        notifications.show({
+          title: "Error",
+          message: e.response.data.message,
+          color: "red",
+        });
+        console.error(e);
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        notifications.show({
+          title: "Error",
+          message: e.response.data.message,
+          color: "red",
+        });
+        console.error(e);
+      }
     }
   };
 
@@ -300,12 +312,23 @@ export const GameLobby = (props: PropsType) => {
       // navigate to public games
       navigate("/publicGames");
     } catch (error: any) {
-      notifications.show({
-        title: "Error",
-        message: error.response.data.message,
-        color: "red",
-      });
-      console.error(error);
+      if (error.response.status === 404) {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
+      }
     }
   };
 
