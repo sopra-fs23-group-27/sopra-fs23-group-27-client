@@ -62,9 +62,6 @@ export const ExternalGameJoin = (props: PropsType) => {
   const [isFormFilledOut, setIsFormFilledOut] = useState(false);
   const navigate = useNavigate();
   const lobbyId = window.location.pathname.split("/")[2];
-  const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
-  const [color, setColor] = useState("");
 
   // privateLobbyKey, string after question mark in url, otherwise empty string
   const privateLobbyKey = window.location.search.split("?key=")[1] || "";
@@ -82,28 +79,45 @@ export const ExternalGameJoin = (props: PropsType) => {
     setIsFormFilledOut(formCheck());
   }, [nameInput, passwordInput]);
 
-  useEffectOnce(() => {
-    // check if user is logged in
-    if (player) {
-      const playerJoin = async () => {
-        // define header and body
-        const headers = {
-          Authorization: sessionStorage.getItem("FlagManiaToken"),
+  useEffect(() => {
+    const delay = 20; // 20 milliseconds
+
+    const timer = setTimeout(() => {
+      // check if user is logged in
+      if (player) {
+        const playerJoin = async () => {
+          // define header and body
+          const headers = {
+            Authorization: sessionStorage.getItem("FlagManiaToken"),
+          };
+          try {
+            // get lobby
+            const response = await httpGet("/lobbies/" + lobbyId, { headers });
+
+            // Set the lobby state variable using the data returned from the API
+            const lobby = response.data as Lobby;
+            setLobby(lobby);
+
+            // join game
+            console.log("set lobby: ", lobby);
+            console.log(window.location);
+            console.log(privateLobbyKey);
+            joinGame(privateLobbyKey, player.playerName);
+          } catch (error: any) {
+            notifications.show({
+              title: "Something went wrong",
+              message: error.response.data.message,
+              color: "red",
+            });
+            console.error(error);
+          }
         };
-        // get lobby
-        const response = await httpGet("/lobbies/" + lobbyId, { headers });
+        playerJoin();
+      }
+    }, delay);
 
-        // Set the lobby state variable using the data returned from the API
-        const lobby = response.data as Lobby;
-        setLobby(lobby);
-
-        // join game
-        console.log("set lobby: ", lobby);
-        joinGame(response.data.privateLobbyKey, player.playerName);
-      };
-      playerJoin();
-    }
-  });
+    return () => clearTimeout(timer);
+  }, [player, lobbyId, privateLobbyKey]);
 
   const handleSetPlayerName = (event: {
     currentTarget: { value: SetStateAction<string> };
@@ -160,9 +174,6 @@ export const ExternalGameJoin = (props: PropsType) => {
       setLobby(lobby);
       console.log("set lobby: ", lobby);
 
-      // // join game
-      // joinGame(lobby.privateLobbyKey);
-
       // join game
       joinGame(privateLobbyKey, player.playerName);
 
@@ -194,8 +205,8 @@ export const ExternalGameJoin = (props: PropsType) => {
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
       notifications.show({
-        title: "You got banned!",
-        message: "You just got yourself banned for maliciously trying to join a private lobby without the key. Better luck next time!",
+        title: "Malicious behavior detected!",
+        message: "You just got kicked from the game for maliciously trying to join a private lobby without the key!",
         color: "red",
       });
 
@@ -247,9 +258,6 @@ export const ExternalGameJoin = (props: PropsType) => {
       // Set the lobby state variable using the data returned from the API
       const lobby = response.data as Lobby;
       setLobby(lobby);
-
-      // // join game
-      // joinGame(lobby.privateLobbyKey);
       
       // join game
       joinGame(privateLobbyKey, res.data.playerName);
