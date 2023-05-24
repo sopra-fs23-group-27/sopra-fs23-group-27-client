@@ -69,12 +69,23 @@ export const FlagmaniaLogo = (props: PropsType) => {
       // navigate to dashboard
       navigate("/");
     } catch (error: any) {
-      notifications.show({
-        title: "Error",
-        message: error.response.data.message,
-        color: "red",
-      });
-      console.error(error);
+      if (error.response.status === 404) {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
+      }
     }
   };
 

@@ -216,7 +216,7 @@ export const HomePage = (props: PropsType) => {
         ) : (
           <>
             <Button size="xl" onClick={() => navigate("/login")}>
-              Login
+              Sign in
             </Button>
             <Button size="xl" onClick={() => navigate("/register")}>
               Register

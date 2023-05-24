@@ -233,6 +233,13 @@ export const ActiveGameOverview = (props: PropsType) => {
                 ))}
               </thead>
             </Table>
+            <Button
+              size="lg"
+              onClick={() => navigate("/configureGame")}
+              style={{ marginTop: "54px" }}
+            >
+              Create new game
+            </Button>
           </>
         )}
       </Application>
