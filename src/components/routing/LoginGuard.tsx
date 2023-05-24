@@ -1,24 +1,25 @@
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Player } from "../../types/Player";
 
 type PropsType = {
-  isLoggedIn: boolean;
+  player: Player | undefined;
   children: any;
 };
 
 export const LoginGuard = (props: PropsType) => {
   const navigate = useNavigate();
-  const { isLoggedIn } = props;
+  const { player } = props;
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (player?.permanent) {
       navigate("/dashboard");
     }
   }, [navigate]);
   
   if (
-    !isLoggedIn
+    !player?.permanent
   ) {
     return props.children;
   } 

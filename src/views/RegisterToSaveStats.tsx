@@ -27,10 +27,9 @@ const Application = styled.div`
 type PropsType = {
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 export const RegisterToSaveStats = (props: PropsType) => {
-  const { player, setPlayer, setIsLoggedIn } = props;
+  const { player, setPlayer } = props;
   const [nameInput, setNameInput] = useState(player?.playerName);
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
@@ -90,8 +89,9 @@ export const RegisterToSaveStats = (props: PropsType) => {
         },
         { headers }
       );
+
+      // Update the player state with the newly registered player.
       setPlayer(res.data);
-      setIsLoggedIn(true);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", res.headers.authorization);

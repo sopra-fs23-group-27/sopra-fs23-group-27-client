@@ -1,12 +1,16 @@
 import styled from "styled-components";
 import { Dispatch, SetStateAction, useState } from "react";
-import { FloatingTextInput } from "../components/FloatingTextInput";
 import { RangeInput } from "../components/RangeInput";
 import { useNavigate } from "react-router-dom";
 import { httpPost } from "../helpers/httpService";
 import { Lobby } from "../types/Lobby";
 import { notifications } from "@mantine/notifications";
-import { Button as MantineButton, TextInput, Title } from "@mantine/core";
+import {
+  Button,
+  Button as MantineButton,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { BiSelect } from "../components/BiSelect";
 import { ImageCheckboxes } from "../components/Checkboxes";
 
@@ -171,10 +175,12 @@ export const ConfigureGame = (props: PropsType) => {
   return (
     <Container>
       <Application>
-        <Title>Configure Game</Title>
+        <Title style={{ margin: "32px 0" }}>Configure Game</Title>
         <div style={{ marginBottom: "32px" }}>
           <TextInput
+            size="xl"
             label="Game Name"
+            placeholder="Game Name"
             value={lobbyName}
             onChange={handleLobbyNameInputChange}
             style={{ width: "100%" }}
@@ -284,13 +290,14 @@ export const ConfigureGame = (props: PropsType) => {
           />
         </div>
 
-        <StartButton
-          isActive={!!lobbyName}
+        <Button
+          size="xl"
           disabled={!lobbyName || continent.length === 0}
           onClick={() => createLobby()}
+          style={{ margin: "48px 0" }}
         >
           OPEN
-        </StartButton>
+        </Button>
       </Application>
     </Container>
   );

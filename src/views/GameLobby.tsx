@@ -18,7 +18,6 @@ import { Lobby } from "../types/Lobby";
 const Container = styled.div`
   min-height: 100vh;
   width: 100vw;
-  // background-color: #dba11c;
 `;
 
 const ButtonContainer = styled.div`
@@ -27,14 +26,16 @@ const ButtonContainer = styled.div`
   align-items: center;
   gap: 32px;
   flex-direction: row;
-  height: 40vh;
+  margin-bottom: 64px;
   justify-content: space-between;
 `;
 
 const Application = styled.div`
   display: flex;
   justify-content: center;
-  height: 80vh;
+  align-items: center;
+  margin-top: 80px;
+  gap: 64px;
   position: relative;
   flex-direction: column;
   align-items: center;
@@ -42,8 +43,8 @@ const Application = styled.div`
 
 const QrContainer = styled.div`
   width: 100vw;
-  min-height: 100vh;
-  position: absolute;
+  height: 100vh;
+  position: fixed;
   top: 0;
   z-index: 1;
   background-color: white;
@@ -63,8 +64,7 @@ const UserContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  height: 80vh;
+  gap: 30px;
   font-size: 38px;
 `;
 
@@ -118,6 +118,8 @@ export const GameLobby = (props: PropsType) => {
   const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
   // get the current lobby URL
   const lobbyURL = window.location.href;
+
+  // useEffect to catch 404 errors
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/lobby-settings`,
@@ -277,13 +279,23 @@ export const GameLobby = (props: PropsType) => {
       });
       navigate("/game/" + lobbyId);
     } catch (e: any) {
-      notifications.show({
-        title: "Error",
-        message: e.response
-          ? e.response.data.message
-          : "Server could not be reached",
-        color: "red",
-      });
+      if (e.response.status === 404) {
+        notifications.show({
+          title: "Error",
+          message: e.response.data.message,
+          color: "red",
+        });
+        console.error(e);
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        notifications.show({
+          title: "Error",
+          message: e.response.data.message,
+          color: "red",
+        });
+        console.error(e);
+      }
     }
   };
 
@@ -300,12 +312,23 @@ export const GameLobby = (props: PropsType) => {
       // navigate to public games
       navigate("/publicGames");
     } catch (error: any) {
-      notifications.show({
-        title: "Error",
-        message: error.response.data.message,
-        color: "red",
-      });
-      console.error(error);
+      if (error.response.status === 404) {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
+      }
     }
   };
 
@@ -313,29 +336,29 @@ export const GameLobby = (props: PropsType) => {
   const numberOfPlayers = joinedPlayerNames.length;
 
   return (
-    <Container>
-      <Application>
-        {showQrCodeBig && (
-          <QrContainer>
-            <QrBox>
-              <CloseButton
-                aria-label="Close Button"
-                size="xl"
-                iconSize={40}
-                color="red"
-                style={{ position: "relative", left: "18%" }}
-                onClick={() => setShowQrCodeBig(false)}
-              />
-              <h1>Scan to join the game</h1>
-              <QRCode value={gameUrl} style={{ width: "100%" }} />
-              <ButtonCopy url={gameUrl} />
-            </QrBox>
-          </QrContainer>
-        )}
-        {isLoading ? (
-          <RainbowLoader />
-        ) : (
-          <>
+    <>
+      {isLoading ? (
+        <RainbowLoader />
+      ) : (
+        <Container>
+          <Application>
+            {showQrCodeBig && (
+              <QrContainer>
+                <QrBox>
+                  <CloseButton
+                    aria-label="Close Button"
+                    size="xl"
+                    iconSize={40}
+                    color="red"
+                    style={{ position: "relative", left: "18%" }}
+                    onClick={() => setShowQrCodeBig(false)}
+                  />
+                  <h1>Scan to join the game</h1>
+                  <QRCode value={gameUrl} style={{ width: "100%" }} />
+                  <ButtonCopy url={gameUrl} />
+                </QrBox>
+              </QrContainer>
+            )}
             <QRCode
               value={gameUrl}
               onClick={() => setShowQrCodeBig(true)}
@@ -375,7 +398,6 @@ export const GameLobby = (props: PropsType) => {
                 />
               )}
             </UserContainer>
-            <h3>Players in lobby:</h3>
 
             <UserContainer>
               <UsersRolesTable
@@ -404,9 +426,9 @@ export const GameLobby = (props: PropsType) => {
                 Leave Lobby
               </Button>
             </ButtonContainer>
-          </>
-        )}
-      </Application>
-    </Container>
+          </Application>
+        </Container>
+      )}
+    </>
   );
 };

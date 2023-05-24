@@ -1,25 +1,23 @@
-import { Dispatch, SetStateAction } from "react";
 import { Player } from "../types/Player";
 import { UserCardImage } from "../components/UserCard";
+import { Dispatch, SetStateAction } from "react";
 
 type PropsType = {
   player: Player | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
 };
 
-export const PlayerSettings = ({ player, setPlayer }: PropsType) => {
+export const PlayerSettings = (props: PropsType) => {
+  const { player, setPlayer } = props;
+
   interface UserCardImageProps {
-    name: string;
-    stats: { label: string; value: string }[];
+    player: Player | undefined;
+    setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   }
 
   const userCardImageProps: UserCardImageProps = {
-    name: player?.playerName ? player?.playerName : "",
-    stats: [
-      { label: "Wins", value: "10" },
-      { label: "Losses", value: "10" },
-      { label: "Win Rate", value: "50%" },
-    ],
+    player: player,
+    setPlayer: setPlayer,
   };
 
   return <UserCardImage {...userCardImageProps} />;

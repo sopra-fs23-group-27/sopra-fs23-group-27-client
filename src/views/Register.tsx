@@ -29,10 +29,9 @@ const Application = styled.div`
 
 type PropsType = {
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 export const Register = (props: PropsType) => {
-  const { setPlayer, setIsLoggedIn } = props;
+  const { setPlayer } = props;
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
@@ -88,7 +87,6 @@ export const Register = (props: PropsType) => {
         { headers: {} }
       );
       setPlayer(res.data);
-      setIsLoggedIn(true);
       console.log("new permanent player created: ", res.data);
 
       // Store the token into the session storage.

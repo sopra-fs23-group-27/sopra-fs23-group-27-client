@@ -174,7 +174,7 @@ export const GameInfo = () => {
             gradient={{ from: "blue", to: "cyan" }}
             onClick={() => navigate("/login")}
           >
-            Login
+            Sign in
           </Button>
           <Button
             size="xl"

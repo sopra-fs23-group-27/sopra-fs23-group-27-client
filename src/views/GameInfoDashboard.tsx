@@ -150,9 +150,8 @@ export const GameInfoDashboard = () => {
               the correct country.
             </li>
           </ul>
-          Can you hold your own against the other players? Do you already have a
-          user login? If no, then register as soon as possible! There are great
-          advantages waiting for you. Specifically, the permanent metrics
+          Can you hold your own against the other players? It's great to see that you already created an account, there are great
+          advantages waiting for you! Specifically, the permanent metrics
           collectively provide insights into a user's overall performance,
           engagement, accuracy, learning progress, and speed while playing
           FlagMania. Analyzing these metrics can help users track their flag

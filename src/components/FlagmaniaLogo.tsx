@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import FlagLogo from "../icons/DALL-E_FlagMania_Logo.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { httpPost, httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
@@ -33,38 +33,24 @@ const FlagManiaLogo = styled.img`
 `;
 
 type PropsType = {
-  isLoggedIn: boolean;
   player: Player | undefined;
   lobby: Lobby | undefined;
   setPlayer: Dispatch<SetStateAction<Player | undefined>>;
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 };
 
 export const FlagmaniaLogo = (props: PropsType) => {
   const navigate = useNavigate();
-  const { isLoggedIn, player, lobby, setPlayer, setLobby, setIsLoggedIn } =
+  const { player, lobby, setPlayer, setLobby } =
     props;
 
   const userConfirmationLobby = async () => {
     modals.openConfirmModal({
-      title: "Danger Zone",
-      children: "Are you sure you want to leave the lobby?",
+      title: "Leave game",
+      children: "Are you sure you want to leave the game already?",
       labels: { confirm: "Confirm", cancel: "Cancel" },
       onConfirm: async () => {
         handleLeaveLobby();
-      },
-    });
-  };
-
-  const userConfirmationLogout = async () => {
-    modals.openConfirmModal({
-      title: "Danger Zone",
-      children:
-        "This action will log you out and delete your player account. Are you sure you want to continue?",
-      labels: { confirm: "Confirm", cancel: "Cancel" },
-      onConfirm: async () => {
-        handleLogout();
       },
     });
   };
@@ -83,56 +69,32 @@ export const FlagmaniaLogo = (props: PropsType) => {
       // navigate to dashboard
       navigate("/");
     } catch (error: any) {
-      notifications.show({
-        title: "Error",
-        message: error.response.data.message,
-        color: "red",
-      });
-      console.error(error);
-    }
-  };
-
-  const handleLogout = async () => {
-    // get player id from session storage
-    const playerId = sessionStorage.getItem("currentPlayerId");
-    try {
-      await httpPost(
-        "/players/" + playerId + "/logout" + "?playerId=" + playerId,
-        {},
-        { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
-      );
-
-      // set player to undefined and isLoggedIn in to false
-      setPlayer(undefined);
-      setIsLoggedIn(false);
-
-      // if lobby is defined, set lobby to undefined
-      if (lobby) {
-        setLobby(undefined);
+      if (error.response.status === 404) {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
       }
-
-      // reset the session storage
-      sessionStorage.clear();
-      navigate("/");
-    } catch (error: any) {
-      notifications.show({
-        title: "Error",
-        message: error.response.data.message,
-        color: "red",
-      });
-      console.error(error);
     }
   };
+
 
   const handleClickedLogo = () => {
-    if (isLoggedIn && lobby) {
+    if (player && lobby) {
       console.log("leave lobby");
       // prompt player if they really want to leave the lobby/game
-      handleLeaveLobby();
-    } else if (!isLoggedIn && player) {
-      console.log("logout");
-      // prompt player if they really want to leave the lobby/game
-      handleLogout();
+      userConfirmationLobby();
     } else {
       console.log("else");
       navigate("/");
