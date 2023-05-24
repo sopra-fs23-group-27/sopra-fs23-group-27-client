@@ -46,23 +46,11 @@ export const FlagmaniaLogo = (props: PropsType) => {
 
   const userConfirmationLobby = async () => {
     modals.openConfirmModal({
-      title: "Danger Zone",
+      title: "Leave game",
       children: "Are you sure you want to leave the game already?",
       labels: { confirm: "Confirm", cancel: "Cancel" },
       onConfirm: async () => {
         handleLeaveLobby();
-      },
-    });
-  };
-
-  const userConfirmationLogout = async () => {
-    modals.openConfirmModal({
-      title: "Danger Zone",
-      children:
-        "This action will log you out and delete your player account. Are you sure you want to continue?",
-      labels: { confirm: "Confirm", cancel: "Cancel" },
-      onConfirm: async () => {
-        handleLogout();
       },
     });
   };
@@ -81,55 +69,32 @@ export const FlagmaniaLogo = (props: PropsType) => {
       // navigate to dashboard
       navigate("/");
     } catch (error: any) {
-      notifications.show({
-        title: "Error",
-        message: error.response.data.message,
-        color: "red",
-      });
-      console.error(error);
-    }
-  };
-
-  const handleLogout = async () => {
-    // get player id from session storage
-    const playerId = sessionStorage.getItem("currentPlayerId");
-    try {
-      await httpPost(
-        "/players/" + playerId + "/logout" + "?playerId=" + playerId,
-        {},
-        { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
-      );
-
-      // set player to undefined
-      setPlayer(undefined);
-
-      // if lobby is defined, set lobby to undefined
-      if (lobby) {
-        setLobby(undefined);
+      if (error.response.status === 404) {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        notifications.show({
+          title: "Error",
+          message: error.response.data.message,
+          color: "red",
+        });
+        console.error(error);
       }
-
-      // reset the session storage
-      sessionStorage.clear();
-      navigate("/");
-    } catch (error: any) {
-      notifications.show({
-        title: "Error",
-        message: error.response.data.message,
-        color: "red",
-      });
-      console.error(error);
     }
   };
+
 
   const handleClickedLogo = () => {
-    if (player?.permanent && lobby) {
+    if (player && lobby) {
       console.log("leave lobby");
       // prompt player if they really want to leave the lobby/game
       userConfirmationLobby();
-    } else if (!player?.permanent && player) {
-      console.log("logout");
-      // prompt player if they really want to leave the lobby/game
-      userConfirmationLogout();
     } else {
       console.log("else");
       navigate("/");

@@ -81,10 +81,10 @@ export const PublicGame = (props: PublicGameProps) => {
           message: response.data.message,
           color: "red",
         });
-        throw new Error("Error joining game");
+        console.error(response.data.message);
       }
     } else {
-      throw new Error("Error joining game");
+      console.error(res.data.message);
     }
   };
 
@@ -233,6 +233,13 @@ export const ActiveGameOverview = (props: PropsType) => {
                 ))}
               </thead>
             </Table>
+            <Button
+              size="lg"
+              onClick={() => navigate("/configureGame")}
+              style={{ marginTop: "54px" }}
+            >
+              Create new game
+            </Button>
           </>
         )}
       </Application>

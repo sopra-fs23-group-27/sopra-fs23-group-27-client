@@ -17,13 +17,24 @@ import { httpPut } from "../helpers/httpService";
 import { notifications } from "@mantine/notifications";
 import { Player } from "../types/Player";
 
+const Application = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 38px;
+  color: black;
+  text-align: center;
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  border: 2px solid rgb(216, 216, 216);
-  border-radius: 10px;
   padding: 32px 64px;
   align-items: center;
+  background-color: transparent;
 `;
 
 type props = {
@@ -49,8 +60,6 @@ interface UserCardImageProps {
 }
 
 export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
-  const { classes, theme } = useStyles();
-  const [showUpdateProfile, setShowUpdateProfile] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordRepetitionInput, setPasswordRepetitionInput] = useState("");
@@ -74,14 +83,6 @@ export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
   }) => {
     setPasswordRepetitionInput(event.currentTarget.value);
   };
-
-  function handleUpdateProfile() {
-    if (showUpdateProfile) {
-      setShowUpdateProfile(false);
-    } else {
-      setShowUpdateProfile(true);
-    }
-  }
 
   useEffect(() => {
     const formCheck = () => {
@@ -120,7 +121,7 @@ export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
       if (nameInput) {
         setPlayer(res.data);
       }
-      
+
       // use the new name (if applicable) of the currently logged-in user
       const currentName = nameInput ? nameInput : player?.playerName;
 
@@ -141,69 +142,50 @@ export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
   };
 
   return (
-    <Card withBorder padding="xl" radius="md" className={classes.card}>
-      <h1 style={{ textAlign: "center" }}>
-        User: {player?.playerName}
-      </h1>
-      <MantineButton
-        onClick={() => handleUpdateProfile()}
-        radius="md"
-        mt="xl"
-        size="xl"
-        style={{ display: "block", margin: "0 auto", marginTop: "20px" }}
-        color={theme.colorScheme === "dark" ? undefined : "dark"}
-      >
-        Toggle modify settings
-      </MantineButton>
-      {showUpdateProfile ? (
-        <div>
-          <Container>
-            <h1>Update User</h1>
-            <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-              <TextInput
-                label="Username"
-                placeholder="Username"
-                value={nameInput}
-                onChange={handleNameInputChange}
-                size="xl"
-                required
-              />
-              <Text color="dimmed" size="md" align="center" mt={5}>
-                Minimum password length: 6 characters
-              </Text>
-              <PasswordInput
-                label="Password"
-                placeholder="Password"
-                value={passwordInput}
-                onChange={handlePasswordInputChange}
-                size="xl"
-                required
-                mt="md"
-              />
-              <PasswordInput
-                label="Password"
-                placeholder="repeat Password"
-                value={passwordRepetitionInput}
-                onChange={handlePasswordRepetitionInputChange}
-                size="xl"
-                required
-                mt="md"
-              />
-              <Group position="apart" mt="lg"></Group>
-              <Button
-                onClick={updateUser}
-                disabled={!isFormFilledOut}
-                fullWidth
-                size="xl"
-              >
-                Update profile
-              </Button>
-            </Paper>
-          </Container>
-        </div>
-      ) : (
-        <div></div>
-      )}
-    </Card>
+    <Application>
+      <Container>
+        <h1>Update current user: {player?.playerName}</h1>
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <TextInput
+            label="Username"
+            placeholder="Username"
+            value={nameInput}
+            onChange={handleNameInputChange}
+            size="xl"
+          />
+          <Text color="dimmed" size="md" align="center" mt={5}>
+            Minimum password length: 6 characters
+          </Text>
+          <PasswordInput
+            label="Password"
+            placeholder="Password"
+            value={passwordInput}
+            onChange={handlePasswordInputChange}
+            size="xl"
+            mt="md"
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="repeat Password"
+            value={passwordRepetitionInput}
+            onChange={handlePasswordRepetitionInputChange}
+            size="xl"
+            mt="md"
+          />
+          <Group position="apart" mt="lg"></Group>
+          <Text color="dimmed" size="md" align="center" mt={5}>
+            Update at least one field to update your profile
+          </Text>
+          <Button
+            onClick={updateUser}
+            disabled={!isFormFilledOut}
+            fullWidth
+            size="xl"
+          >
+            Update profile
+          </Button>
+        </Paper>
+      </Container>
+    </Application>
   );
 }
