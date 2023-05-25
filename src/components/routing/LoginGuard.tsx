@@ -18,10 +18,6 @@ export const LoginGuard = (props: PropsType) => {
     }
   }, [navigate]);
 
-  if (!player?.permanent) {
-    return props.children;
-  }
-
   return props.children;
 };
 
