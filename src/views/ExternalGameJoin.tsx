@@ -184,9 +184,9 @@ export const ExternalGameJoin = (props: PropsType) => {
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
       notifications.show({
-        title: "Malicious behavior detected!",
+        title: "Invalid key!",
         message:
-          "You just got kicked from the game for maliciously trying to join a private lobby without the key!",
+          "You just got kicked from the game for trying to join a private lobby without the correct key!",
         color: "red",
       });
 
