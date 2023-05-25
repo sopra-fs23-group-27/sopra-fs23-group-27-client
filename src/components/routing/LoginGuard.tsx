@@ -17,12 +17,10 @@ export const LoginGuard = (props: PropsType) => {
       navigate("/dashboard");
     }
   }, [navigate]);
-  
-  if (
-    !player?.permanent
-  ) {
+
+  if (!player?.permanent) {
     return props.children;
-  } 
+  }
 
   return null;
 };

@@ -65,6 +65,7 @@ export const App = () => {
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
   console.log("lobby: ", lobby);
+  console.log("player: ", player);
   // only playerId, flagmaniaToken is stored in sessionStorage
 
   useEffect(() => {
@@ -72,6 +73,9 @@ export const App = () => {
   }, []);
 
   const getPlayer = async () => {
+    console.log("execute getPlayer");
+    const playerId = sessionStorage.getItem("currentPlayerId");
+    console.log(playerId);
     if (sessionStorage.getItem("currentPlayerId") && !player) {
       // get player object from backend
       try {

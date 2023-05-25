@@ -277,13 +277,12 @@ export const GameEnd = (props: PropsType) => {
           )}
 
           <ButtonContainer>
-            <Button
-              size="xl"
-              disabled={playAgainTimer === 0}
-              onClick={() => navigate("/playAgain")}
-            >
-              Play again {playAgainTimer}
-            </Button>
+            {playAgainTimer > 0 && (
+              <Button size="xl" onClick={() => navigate("/playAgain")}>
+                Play again, closes after {playAgainTimer}
+              </Button>
+            )}
+
             <Button
               size="xl"
               onClick={() => {
