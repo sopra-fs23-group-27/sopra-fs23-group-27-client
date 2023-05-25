@@ -1,5 +1,13 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Button, Group, Input, Title, createStyles, rem } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Input,
+  Title,
+  createStyles,
+  rem,
+  Text,
+} from "@mantine/core";
 import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
@@ -124,9 +132,12 @@ export const GameIdInput = ({ setPlayer, setLobby }: PropsType) => {
         alignItems: "center",
       }}
     >
-      <Title size={36} order={1} style={{ margin: "24px" }}>
-        Enter the game URL or scan a QR code to join private games
+      <Title size={36} order={1} style={{ margin: "130px 0 24px 0" }}>
+        Enter the game URL
       </Title>
+      <Text size="lg" style={{ marginBottom: "48px" }}>
+        or ask the game creator for the QR code to join the private game
+      </Text>
       <Input
         size="xl"
         type="text"

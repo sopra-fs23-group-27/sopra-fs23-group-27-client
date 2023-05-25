@@ -105,25 +105,6 @@ const RangeOptions = styled.div`
   justify-content: center;
   align-items: center;
 `;
-type StartButtonProps = {
-  isActive: boolean;
-};
-const StartButton = styled.button<StartButtonProps>`
-  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-  background-color: ${(props) =>
-    props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
-  text-align: center;
-  border: none;
-  font-size: 32px;
-  padding: 16px 32px;
-  margin: 64px 0;
-  z-index: 1;
-  color: ${(props) => (props.isActive ? "white" : "gray")};
-
-  &:hover {
-    background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
-  }
-`;
 
 interface PostBody {
   //commmon fields

@@ -15,7 +15,6 @@ import {
   Button,
   rem,
   createStyles,
-  Table,
   Group,
 } from "@mantine/core";
 

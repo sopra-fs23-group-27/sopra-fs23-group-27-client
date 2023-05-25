@@ -175,9 +175,6 @@ const Application = styled.div`
   margin-top: 150px;
   width: 1200px;
 `;
-const H1 = styled.h1`
-  font-size: 40px;
-`;
 const ButtonTh = styled.th`
   width: 100px;
 `;

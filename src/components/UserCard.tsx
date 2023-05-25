@@ -36,10 +36,6 @@ const Container = styled.div`
   background-color: transparent;
 `;
 
-type props = {
-  isActive: boolean;
-};
-
 const useStyles = createStyles((theme) => ({
   card: {
     backgroundColor:
