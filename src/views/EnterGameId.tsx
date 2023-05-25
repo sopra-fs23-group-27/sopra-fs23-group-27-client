@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Group, Input, Title, createStyles, rem } from "@mantine/core";
 import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
+import { Player } from "../types/Player";
+import { Lobby } from "../types/Lobby";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -76,20 +78,37 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
 `;
 
-export const GameIdInput = () => {
+type PropsType = {
+  setPlayer: Dispatch<SetStateAction<Player | undefined>>;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
+};
+
+export const GameIdInput = ({ setPlayer, setLobby }: PropsType) => {
   const [gameURL, setGameURL] = useState("");
   const { classes } = useStyles();
   const navigate = useNavigate();
 
   const handleNavigateURL = () => {
     try {
+      if (!gameURL.includes("lobbies/" || !gameURL.includes("/join/?key="))) {
+        setLobby(undefined);
+        notifications.show({
+          title: "Invalid Game URL",
+          message: "The game URL you entered is invalid. Please try again.",
+          color: "red",
+        });
+        return;
+      }
       window.location.href = gameURL;
     } catch (error: any) {
+      setPlayer(undefined);
+      setLobby(undefined);
       notifications.show({
         title: "Invalid Game URL",
         message: "The game URL you entered is invalid. Please try again.",
         color: "red",
       });
+      navigate("/");
       console.log(error);
     }
   };

@@ -165,7 +165,7 @@ export const App = () => {
 
           <Route
             path="/enterGameId"
-            element={<GameIdInput />}
+            element={<GameIdInput setPlayer={setPlayer} setLobby={setLobby} />}
             errorElement={<ErrorPage />}
           />
 
