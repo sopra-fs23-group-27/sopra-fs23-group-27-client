@@ -4,26 +4,11 @@ import { Dispatch, SetStateAction } from "react";
 import { httpPost } from "../helpers/httpService";
 import { Player } from "../types/Player";
 import { notifications } from "@mantine/notifications";
-import {
-  Button,
-  TextInput,
-  ThemeIcon,
-  Title,
-  Text,
-  createStyles,
-  rem,
-} from "@mantine/core";
+import { Button, TextInput, ThemeIcon, Title, Text, rem } from "@mantine/core";
 import { useInputState } from "@mantine/hooks";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 const ICON_SIZE = rem(60);
-
-const useStyles = createStyles((theme) => ({
-  title: {
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    lineHeight: 1,
-  },
-}));
 
 const Application = styled.div`
   display: flex;
@@ -85,7 +70,7 @@ export const HomePage = (props: PropsType) => {
     const playerId = sessionStorage.getItem("currentPlayerId");
     try {
       await httpPost(
-        "/players/" + playerId + "/logout" + "?playerId=" + playerId,
+        `/players/${playerId}/logout?playerId=${playerId}`,
         {},
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
@@ -192,10 +177,15 @@ export const HomePage = (props: PropsType) => {
           </ThemeIcon>
         </TopRightContainer>
       )}
-      <Title size={56} order={1} style={{ margin: "0" }}>
+      <Title size={56} order={1} style={{ margin: "24px" }}>
         FlagMania
       </Title>
-      <Text size="md" sx={{ lineHeight: 1 }} mb={5} style={{ margin: "25" }}>
+      <Text
+        size="lg"
+        sx={{ lineHeight: 1 }}
+        mb={5}
+        style={{ marginBottom: "48px" }}
+      >
         Learn about the flags of the world!
       </Text>
 
@@ -227,7 +217,7 @@ export const HomePage = (props: PropsType) => {
 
       {!player?.permanent && !sessionStorage.getItem("FlagManiaToken") ? (
         <GuestContainer>
-          <Text size="xl" sx={{ lineHeight: 1 }} mb={5}>
+          <Text size="xl" sx={{ lineHeight: 1, marginBottom: "12px" }} mb={5}>
             or play as Guest
           </Text>
           <TextInput

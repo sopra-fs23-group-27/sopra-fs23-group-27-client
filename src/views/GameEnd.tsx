@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSubscription } from "react-stomp-hooks";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { Button } from "@mantine/core";
 import { Player } from "../types/Player";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { Table, Title, Text } from "@mantine/core";
 import "animate.css";
+import { Lobby } from "../types/Lobby";
 
 const Application = styled.div`
   display: flex;
@@ -54,18 +55,6 @@ const Card = styled.div`
     rgb(255, 156, 85) 30px -30px, rgb(255, 255, 255) 40px -40px 0px -3px,
     rgb(255, 85, 85) 40px -40px;
 `;
-const H1 = styled.h1`
-  margin: 0;
-  padding: 0;
-`;
-const H2 = styled.h2`
-  margin: 0;
-  padding: 0;
-`;
-const P = styled.p`
-  margin: 0;
-  padding: 0;
-`;
 const FirstRankCard = styled(Card)`
   position: relative;
   bottom: 80px;
@@ -97,9 +86,10 @@ interface GameData {
 
 type PropsType = {
   player: Player | undefined;
+  setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
 };
 export const GameEnd = (props: PropsType) => {
-  const { player: currentPlayer } = props;
+  const { player: currentPlayer, setLobby } = props;
   const { lobbyId } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -287,19 +277,30 @@ export const GameEnd = (props: PropsType) => {
           )}
 
           <ButtonContainer>
+            {playAgainTimer > 0 && (
+              <Button size="xl" onClick={() => navigate("/playAgain")}>
+                Play again, closes after {playAgainTimer}
+              </Button>
+            )}
+
             <Button
               size="xl"
-              disabled={playAgainTimer === 0}
-              onClick={() => navigate("/playAgain")}
+              onClick={() => {
+                setLobby(undefined);
+                navigate("/");
+              }}
             >
-              Play again {playAgainTimer}
-            </Button>
-            <Button size="xl" onClick={() => navigate("/")}>
               Home
             </Button>
 
             {!currentPlayer?.permanent && (
-              <Button size="xl" onClick={() => navigate("/saveStatsRegister")}>
+              <Button
+                size="xl"
+                onClick={() => {
+                  setLobby(undefined);
+                  navigate("/saveStatsRegister");
+                }}
+              >
                 Register to save your stats
               </Button>
             )}
