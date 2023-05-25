@@ -7,11 +7,11 @@
 # FlagMania Client Application - SoPra FS23 - Group 27
 
 ## Introduction and Motivation
-Welcome to FlagMania, the ultimate game that will put your knowledge of flags to the test! Are you ready to embark on an exciting journey around the world and showcase your flag recognition skills? Get ready to dive into two thrilling modes: Basic Game and Public Game.
+Welcome to FlagMania, the ultimate game that will put your knowledge of flags to the test! Are you ready to embark on an exciting journey around the world and showcase your flag recognition skills? Get ready to dive into two thrilling modes: Basic Game and Advanced Game.
 
 In the Basic Game mode, we've carefully curated a series of challenging flag-based questions for you. Guess the flags of different countries based on our preselected options and see how many correct answers you can rack up! This mode is perfect for sharpening your flag identification abilities, learning about various countries, and competing against your friends to achieve the highest score.
 
-But wait, if you're feeling extra adventurous and want to take your flag-guessing skills to the next level, then the Public Game mode is your ultimate destination! This mode provides you with a free submission form, where you can submit your guesses, allowing you to put your knowledge to the ultimate test. No limitations, no restrictions! Simply submit your best guess for each flag and let your intuition and expertise guide you to victory. Challenge yourself to recognize flags from every corner of the globe and prove that you are a true flag connoisseur.
+But wait, if you're feeling extra adventurous and want to take your flag-guessing skills to the next level, then the Advanced Game mode is your ultimate destination! This mode provides you with a free submission form, where you can submit your guesses, allowing you to put your knowledge to the ultimate test. No limitations, no restrictions! Simply submit your best guess for each flag and let your intuition and expertise guide you to victory. Challenge yourself to recognize flags from every corner of the globe and prove that you are a true flag connoisseur.
 
 Whether you're a beginner or a dedicated flag enthusiast, FlagMania offers an immersive and entertaining experience that will keep you engaged for hours. With its user-friendly interface and diverse range of flags from all over the world, this game is the perfect choice to expand your cultural knowledge and become a master at identifying flags.
 
@@ -71,7 +71,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 In the following, you see the main landing page and entry point for a player to FlagMania. You can choose to login or register a user if you want to have your scores tracked. Alternatively, you can also play as a guest without registering.
 ![image](.//img/EntryPage.png)
 
-If you click "Create New Game" you will be directed to the game creation page. Here you can choose a name for your lobby and select the game mode you want to play. You can either play the Basic Game, where you will be presented with a set of preselected flags and options to choose from, or the Public Game, where you can submit your own guesses for a set of flags. Once you have created your lobby, you will be redirected to the lobby page.
+If you click "Create New Game" you will be directed to the game creation page. Here you can choose a name for your lobby and select the game mode you want to play. You can either play the Basic Game, where you will be presented with a set of preselected flags and options to choose from, or the Advanced Game, where you can submit your own guesses for a set of flags. Once you have created your lobby, you will be redirected to the lobby page.
 ![image](.//img/LobbyCreation.png)
 
 On the lobby page, you can see the lobby name, the game mode, and the players that have joined the lobby. You can also copy the lobby code and send it to your friends to invite them to join your lobby. Once you are ready to start the game, you can click "Start Game" and you will be redirected to the game page:
