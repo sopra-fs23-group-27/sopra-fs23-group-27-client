@@ -60,6 +60,8 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 12px;
   background-color: #f5f7f9;
 `;
 const FlagContainer = styled.div`
@@ -76,7 +78,6 @@ const FlagCover = styled.div`
   width: 600px;
   height: 400px;
 `;
-const Hint = styled.p``;
 const TextGuessBox = styled.div`
   display: flex;
   flex-direction: column;
