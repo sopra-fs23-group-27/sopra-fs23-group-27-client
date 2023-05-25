@@ -382,24 +382,24 @@ export const ConfigureGame = (props: PropsType) => {
           OPEN
         </Button>
         <Group className={classes.controls}>
-              <Button
-                size="xl"
-                className={classes.control}
-                color="gray"
-                onClick={() => navigate("/")}
-              >
-                Back to home
-              </Button>
-              <Button
-                size="xl"
-                className={classes.control}
-                variant="gradient"
-                gradient={{ from: "blue", to: "cyan" }}
-                onClick={() => navigate("/publicGames")}
-              >
-                Join public game
-              </Button>
-            </Group>
+          <Button
+            size="md"
+            className={classes.control}
+            color="gray"
+            onClick={() => navigate("/")}
+          >
+            Back to home
+          </Button>
+          <Button
+            size="md"
+            className={classes.control}
+            variant="gradient"
+            gradient={{ from: "blue", to: "cyan" }}
+            onClick={() => navigate("/publicGames")}
+          >
+            Join public game
+          </Button>
+        </Group>
       </Application>
     </Container>
   );

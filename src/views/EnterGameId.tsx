@@ -127,7 +127,7 @@ export const GameIdInput = () => {
       </ButtonContainer>
       <Group className={classes.controls}>
         <Button
-          size="xl"
+          size="md"
           className={classes.control}
           color="gray"
           onClick={() => navigate("/")}
@@ -135,7 +135,7 @@ export const GameIdInput = () => {
           Back to home
         </Button>
         <Button
-          size="xl"
+          size="md"
           className={classes.control}
           variant="gradient"
           gradient={{ from: "blue", to: "cyan" }}

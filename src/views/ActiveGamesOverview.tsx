@@ -301,7 +301,7 @@ export const ActiveGameOverview = (props: PropsType) => {
             </Table>
             <Group className={classes.controls}>
               <Button
-                size="xl"
+                size="md"
                 className={classes.control}
                 color="gray"
                 onClick={() => navigate("/")}
@@ -309,7 +309,7 @@ export const ActiveGameOverview = (props: PropsType) => {
                 Back to home
               </Button>
               <Button
-                size="xl"
+                size="md"
                 className={classes.control}
                 variant="gradient"
                 gradient={{ from: "blue", to: "cyan" }}
