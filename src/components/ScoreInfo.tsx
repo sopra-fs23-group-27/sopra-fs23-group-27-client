@@ -77,8 +77,6 @@ type PropsType = {
 };
 export const ScoreInfo = ({ setShowScoreInfo }: PropsType) => {
   const { classes } = useStyles();
-  const navigate = useNavigate();
-  const { lobbyId } = useParams();
 
   return (
     <div className={classes.wrapper}>

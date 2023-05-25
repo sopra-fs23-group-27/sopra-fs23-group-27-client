@@ -204,18 +204,6 @@ export const GameInfoDashboard = () => {
                 gradient={{ from: "blue", to: "cyan" }}
                 inherit
               >
-                UNANSWERED FLAGS:{" "}
-              </Text>
-              This metric deducts the number of unanswered flags by a permanent
-              user while playing FlagMania.
-            </li>
-            <li>
-              <Text
-                component="span"
-                variant="gradient"
-                gradient={{ from: "blue", to: "cyan" }}
-                inherit
-              >
                 GUESSING SPEED:{" "}
               </Text>
               Guessing speed represents the average time taken to make a guess
