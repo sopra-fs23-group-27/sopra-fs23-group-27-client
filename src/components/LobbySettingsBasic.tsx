@@ -45,9 +45,7 @@ interface basicProps {
 export function LobbySettingsBasic(props: basicProps) {
   const { classes } = useStyles();
   const {
-    lobbyId,
     lobbyName,
-    continent,
     numberOfPlayers,
     numberOfRounds,
     numberOfOptions,

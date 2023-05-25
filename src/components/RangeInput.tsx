@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Slider } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
+import { Text } from "@mantine/core";
 
 const Container = styled.div`
   display: flex;
@@ -50,7 +51,7 @@ export const RangeInput = (props: PropsType) => {
       />
 
       <Value>
-        <p>{value}</p>
+        <Text size="xl">{value}</Text>
       </Value>
     </Container>
   );

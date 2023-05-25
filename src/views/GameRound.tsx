@@ -4,7 +4,7 @@ import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
-import { BasicRoundOptions } from "../components/BasicGame/BasicRoundOptions";
+import { BasicRoundOptions } from "../components/BasicRoundOptions";
 import { GuessHistory } from "../components/GuessHistory";
 import { Player } from "../types/Player";
 import { TextInput, Button, Text, Title } from "@mantine/core";
