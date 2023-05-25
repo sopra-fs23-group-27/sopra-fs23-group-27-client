@@ -118,6 +118,7 @@ export const ExternalGameJoin = (props: PropsType) => {
 
   const handleUserJoin = async (link: string) => {
     const password = "";
+
     try {
       const response = await httpPost(
         "/players",
@@ -132,7 +133,6 @@ export const ExternalGameJoin = (props: PropsType) => {
       // Set the player state variable using the data returned from the API
       const player = response.data as Player;
       setPlayer(player);
-      console.log("set player: ", player);
 
       // Store the token into the session storage.
       sessionStorage.setItem("FlagManiaToken", response.headers.authorization);
@@ -146,15 +146,37 @@ export const ExternalGameJoin = (props: PropsType) => {
       };
 
       // get lobby
-      const res = await httpGet("/lobbies/" + lobbyId, { headers });
+      try {
+        const res = await httpGet("/lobbies/" + lobbyId, { headers });
+        const lobby = res.data as Lobby;
+        if (lobby.privateLobbyKey !== privateLobbyKey) {
+          setPlayer(undefined);
+          setLobby(undefined);
+          sessionStorage.clear();
+          navigate("/");
+
+          notifications.show({
+            title: "Invalid URL!",
+            message: "Please use the correct link to join a game",
+            color: "red",
+          });
+
+          return;
+        }
+        setLobby(lobby);
+        console.log("set lobby: ", lobby);
+
+        // join game
+        joinGame(privateLobbyKey, player.playerName);
+      } catch (error: any) {
+        notifications.show({
+          title: "Something went wrong",
+          message: error.response.data.message,
+          color: "red",
+        });
+      }
 
       // Set the lobby state variable using the data returned from the API
-      const lobby = res.data as Lobby;
-      setLobby(lobby);
-      console.log("set lobby: ", lobby);
-
-      // join game
-      joinGame(privateLobbyKey, player.playerName);
 
       // catch errors
     } catch (error: any) {
@@ -177,11 +199,16 @@ export const ExternalGameJoin = (props: PropsType) => {
   const handleLogout = async () => {
     // get player id from session storage
     const playerId = sessionStorage.getItem("currentPlayerId");
+    console.log("playerId when logging out: ", playerId);
     try {
       await httpPost(
         `/players/${playerId}/logout?playerId=${playerId}`,
         {},
-        { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
+        {
+          headers: {
+            Authorization: sessionStorage.getItem("FlagManiaToken"),
+          },
+        }
       );
       notifications.show({
         title: "Invalid key!",
@@ -199,10 +226,10 @@ export const ExternalGameJoin = (props: PropsType) => {
     } catch (error: any) {
       notifications.show({
         title: "Error",
-        message: error.response.data.message,
+        message: error.errorresponse.data.message,
         color: "red",
       });
-      console.error(error);
+      console.error();
     }
   };
 
@@ -253,6 +280,8 @@ export const ExternalGameJoin = (props: PropsType) => {
     const headers = { Authorization: sessionStorage.getItem("FlagManiaToken") };
     const body = {};
     try {
+      console.log("lobbyId: ", lobbyId);
+      console.log("");
       const response = await httpPut(
         "/lobbies/" + lobbyId + "/join?privateLobbyKey=" + privateLobbyKey,
         body,
