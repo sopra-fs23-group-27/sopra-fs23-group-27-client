@@ -226,7 +226,7 @@ export const ExternalGameJoin = (props: PropsType) => {
     } catch (error: any) {
       notifications.show({
         title: "Error",
-        message: error.errorresponse.data.message,
+        message: error.response.data.message,
         color: "red",
       });
       console.error();

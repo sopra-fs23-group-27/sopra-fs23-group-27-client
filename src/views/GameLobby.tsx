@@ -19,7 +19,16 @@ const Container = styled.div`
   min-height: 100vh;
   width: 100vw;
 `;
-
+const SmallQrBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  right: 40px;
+  position: absolute;
+  top: 40px;
+  width: 200px;
+  height: auto;
+  gap: 8px;
+`;
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -375,24 +384,27 @@ export const GameLobby = (props: PropsType) => {
                     Scan to join the game
                   </Title>
                   <QRCode value={gameUrl} style={{ width: "100%" }} />
-                  <ButtonCopy url={gameUrl} />
+                  <ButtonCopy
+                    url={gameUrl}
+                    buttonText="Copy Link to clipboard"
+                  />
                 </QrBox>
               </QrContainer>
             )}
-            <QRCode
-              value={gameUrl}
-              onClick={() => setShowQrCodeBig(true)}
-              style={{
-                cursor: "pointer",
-                right: "40px",
-                position: "absolute",
-                top: "40px",
-                width: "180px",
-                height: "auto",
-                padding: "12px",
-                backgroundColor: "white",
-              }}
-            />
+            <SmallQrBox>
+              <QRCode
+                value={gameUrl}
+                onClick={() => setShowQrCodeBig(true)}
+                style={{
+                  cursor: "pointer",
+                  padding: "12px",
+                  backgroundColor: "white",
+                  width: "200px",
+                  height: "auto",
+                }}
+              />
+              <ButtonCopy url={gameUrl} buttonText="Copy Link" />
+            </SmallQrBox>
 
             <UserContainer style={{ marginTop: "25px" }}>
               {gameMode === "ADVANCED" ? (
