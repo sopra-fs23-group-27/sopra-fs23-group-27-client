@@ -10,7 +10,6 @@ import { GameIdInput } from "./views/EnterGameId";
 import { GameRound } from "./views/GameRound";
 import { ExternalGameJoin } from "./views/ExternalGameJoin";
 import { ScoreBoard } from "./views/ScoreBoard";
-import { ScoreBoardTest } from "./views/ScoreBoardTest";
 import { useEffect, useState } from "react";
 import { Lobby } from "./types/Lobby";
 import { Player } from "./types/Player";
@@ -29,7 +28,6 @@ import { RegisterToSaveStats } from "./views/RegisterToSaveStats";
 import { FlagmaniaLogo } from "./components/FlagmaniaLogo";
 import styled from "styled-components";
 import { GameInfo } from "./views/GameInfo";
-import { ScoreInfo } from "./components/ScoreInfo";
 import { httpGet } from "./helpers/httpService";
 import { GameInfoDashboard } from "./views/GameInfoDashboard";
 
@@ -67,6 +65,7 @@ export const App = () => {
   const [currentGameRound, setCurrentGameRound] = useState(0);
 
   console.log("lobby: ", lobby);
+  console.log("player: ", player);
   // only playerId, flagmaniaToken is stored in sessionStorage
 
   useEffect(() => {
@@ -74,6 +73,9 @@ export const App = () => {
   }, []);
 
   const getPlayer = async () => {
+    console.log("execute getPlayer");
+    const playerId = sessionStorage.getItem("currentPlayerId");
+    console.log(playerId);
     if (sessionStorage.getItem("currentPlayerId") && !player) {
       // get player object from backend
       try {
@@ -227,7 +229,6 @@ export const App = () => {
             }
             errorElement={<ErrorPage />}
           />
-          <Route path="/leaderBoard" element={<ScoreBoardTest />} />
           <Route
             path="/dashboard"
             element={
@@ -250,7 +251,7 @@ export const App = () => {
             path="/game/:lobbyId/gameEnd"
             element={
               <FlagManiaGuard shouldPreventReload={true} player={player}>
-                <GameEnd player={player} />
+                <GameEnd player={player} setLobby={setLobby} />
               </FlagManiaGuard>
             }
             errorElement={<ErrorPage />}
