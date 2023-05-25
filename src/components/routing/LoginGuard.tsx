@@ -22,7 +22,7 @@ export const LoginGuard = (props: PropsType) => {
     return props.children;
   }
 
-  return null;
+  return props.children;
 };
 
 LoginGuard.propTypes = {

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { httpPost } from "../helpers/httpService";
 import { Player } from "../types/Player";
 import { notifications } from "@mantine/notifications";
@@ -64,6 +64,12 @@ export const HomePage = (props: PropsType) => {
 
   const [playerName, setPlayerName] = useInputState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (player?.permanent) {
+      navigate("/dashboard");
+    }
+  }, [player, navigate]);
 
   const handleLogout = async () => {
     // get player id from session storage
