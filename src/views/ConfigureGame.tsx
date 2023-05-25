@@ -379,7 +379,7 @@ export const ConfigureGame = (props: PropsType) => {
           onClick={() => createLobby()}
           style={{ margin: "48px 0" }}
         >
-          OPEN
+          Create Game
         </Button>
         <Group className={classes.controls}>
           <Button
