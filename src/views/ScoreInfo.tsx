@@ -7,7 +7,6 @@ import {
   rem,
 } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {

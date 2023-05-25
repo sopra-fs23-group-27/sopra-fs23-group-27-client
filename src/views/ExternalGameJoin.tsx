@@ -14,8 +14,6 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Lobby } from "../types/Lobby";
-import { useEffectOnce } from "../customHooks/useEffectOnce";
-import { join } from "path";
 
 const Application = styled.div`
   width: 100%;

@@ -7,7 +7,7 @@ import { Button, ThemeIcon, createStyles, rem } from "@mantine/core";
 import { Player } from "../types/Player";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { RainbowLoader } from "../components/RainbowLoader";
-import { ScoreInfo } from "../components/ScoreInfo";
+import { ScoreInfo } from "./ScoreInfo";
 import { notifications } from "@mantine/notifications";
 import { Lobby } from "../types/Lobby";
 
