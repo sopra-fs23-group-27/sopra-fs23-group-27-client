@@ -149,7 +149,7 @@ export const ExternalGameJoin = (props: PropsType) => {
       try {
         const res = await httpGet("/lobbies/" + lobbyId, { headers });
         const lobby = res.data as Lobby;
-        if (lobby.privateLobbyKey !== privateLobbyKey) {
+        if (!lobby.isPublic && lobby.privateLobbyKey !== privateLobbyKey) {
           setPlayer(undefined);
           setLobby(undefined);
           sessionStorage.clear();
