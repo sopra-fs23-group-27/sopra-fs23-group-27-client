@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { Button, Input } from "@mantine/core";
 import styled from "styled-components";
+import { notifications } from "@mantine/notifications";
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -15,7 +14,19 @@ const ButtonContainer = styled.div`
 
 export const GameIdInput = () => {
   const [gameURL, setGameURL] = useState("");
-  const navigate = useNavigate();
+
+  const handleNavigateURL = () => {
+    try {
+      window.location.href = gameURL;
+    } catch (error: any) {
+      notifications.show({
+        title: "Invalid Game URL",
+        message: "The game URL you entered is invalid. Please try again.",
+        color: "red",
+      });
+      console.log(error);
+    }
+  };
 
   return (
     <div
@@ -33,12 +44,16 @@ export const GameIdInput = () => {
         type="text"
         value={gameURL}
         placeholder="Game URL"
-        onChange={(e) => setGameURL(e.target.value)}
+        onChange={(event) => setGameURL(event.currentTarget.value)}
       />
       <ButtonContainer>
-        <Link to={gameURL}>
-          <Button>Join Game</Button>
-        </Link>
+        <Button
+          onClick={() => {
+            handleNavigateURL();
+          }}
+        >
+          Join Game
+        </Button>
       </ButtonContainer>
     </div>
   );

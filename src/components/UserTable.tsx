@@ -30,7 +30,7 @@ export function UsersRolesTable(props: PropsType) {
       } catch (error: any) {
         notifications.show({
           title: "Error",
-          message: error.message,
+          message: error.response.data.message,
           color: "red",
         });
         console.log(error);

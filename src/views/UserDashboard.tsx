@@ -140,7 +140,7 @@ export const UserDashboard = (props: PropsType) => {
       stats: number | string;
       progress: number;
       color: string;
-      icon: "up" | "down" | "360" | "clock";
+      icon: 'correct' | 'false' | '360' | 'clock';
     }[];
   }
 
@@ -157,14 +157,14 @@ export const UserDashboard = (props: PropsType) => {
       stats: overallTotalNumberOfCorrectGuesses,
       progress: ratioOfCorrectGuesses,
       color: "green",
-      icon: "up",
+      icon: "correct",
     },
     {
       label: "Wrong Guesses",
       stats: overallTotalNumberOfWrongGuesses,
       progress: ratioOfWrongGuesses,
       color: "red",
-      icon: "down",
+      icon: "false",
     },
     {
       label: "Avg Guessing Speed",
