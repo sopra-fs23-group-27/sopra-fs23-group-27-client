@@ -1,4 +1,4 @@
-import { game } from "../types/databaseTypes";
+import { game } from "../types/game";
 import { useState, SetStateAction, Dispatch } from "react";
 
 import styled from "styled-components";
@@ -131,7 +131,7 @@ type PropsType = {
   setCurrentGameRound: Dispatch<SetStateAction<number>>;
 };
 export const ActiveGameOverview = (props: PropsType) => {
-  const { setLobby, setCurrentGameRound } = props;
+  const { setCurrentGameRound } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [games, setGames] = useState<game[]>([]);
   const navigate = useNavigate();
@@ -181,7 +181,7 @@ export const ActiveGameOverview = (props: PropsType) => {
           message: e.response.data.message,
           color: "red",
         });
-      }      
+      }
     } else {
       notifications.show({
         title: "Error",

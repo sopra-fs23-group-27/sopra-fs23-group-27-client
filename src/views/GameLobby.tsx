@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
 import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
-import { Button, CloseButton } from "@mantine/core";
+import { Button, CloseButton, Title } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Player } from "../types/Player";
 import { ButtonCopy } from "../components/ClipboardButton";
@@ -371,7 +371,9 @@ export const GameLobby = (props: PropsType) => {
                     style={{ position: "relative", left: "18%" }}
                     onClick={() => setShowQrCodeBig(false)}
                   />
-                  <h1>Scan to join the game</h1>
+                  <Title style={{ margin: "24px" }}>
+                    Scan to join the game
+                  </Title>
                   <QRCode value={gameUrl} style={{ width: "100%" }} />
                   <ButtonCopy url={gameUrl} />
                 </QrBox>

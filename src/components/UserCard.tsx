@@ -1,11 +1,8 @@
 import {
-  createStyles,
-  Card,
   Button,
   Text,
+  Title,
   Group,
-  Button as MantineButton,
-  rem,
   Paper,
   TextInput,
   PasswordInput,
@@ -36,23 +33,6 @@ const Container = styled.div`
   align-items: center;
   background-color: transparent;
 `;
-
-type props = {
-  isActive: boolean;
-};
-
-const useStyles = createStyles((theme) => ({
-  card: {
-    backgroundColor:
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
-  },
-
-  avatar: {
-    border: `${rem(2)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white
-    }`,
-  },
-}));
 
 interface UserCardImageProps {
   player: Player | undefined;
@@ -144,7 +124,7 @@ export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
   return (
     <Application>
       <Container>
-        <h1>Update current user: {player?.playerName}</h1>
+        <Title order={1}>Update current user: {player?.playerName}</Title>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
             label="Username"

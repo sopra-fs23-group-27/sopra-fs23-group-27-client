@@ -7,7 +7,6 @@ import {
   rem,
 } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -77,8 +76,6 @@ type PropsType = {
 };
 export const ScoreInfo = ({ setShowScoreInfo }: PropsType) => {
   const { classes } = useStyles();
-  const navigate = useNavigate();
-  const { lobbyId } = useParams();
 
   return (
     <div className={classes.wrapper}>

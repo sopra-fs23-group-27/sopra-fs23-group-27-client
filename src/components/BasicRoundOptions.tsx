@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Text, Title } from "@mantine/core";
+import { Title } from "@mantine/core";
 
 const OptionsGuessBox = styled.div`
   margin-top: 40px;
