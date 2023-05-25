@@ -370,6 +370,7 @@ export const ExternalGameJoin = (props: PropsType) => {
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
             <TextInput
               label="Name"
+              placeholder="Name"
               onChange={handleSetPlayerName}
               value={playerName}
             />
