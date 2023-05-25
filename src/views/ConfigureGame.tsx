@@ -274,7 +274,9 @@ export const ConfigureGame = (props: PropsType) => {
         {showSettings && !isBasic && (
           <RangeOptions>
             <div>
-              <h2>Number of Rounds</h2>
+              <Title order={2} style={{ margin: "24px 0 8px 0" }}>
+                Number of Rounds
+              </Title>
               <RangeInput
                 min={2}
                 max={12}
@@ -283,7 +285,9 @@ export const ConfigureGame = (props: PropsType) => {
               />
             </div>
             <div>
-              <h2>Show first hint after</h2>
+              <Title order={2} style={{ margin: "24px 0 8px 0" }}>
+                Show first hint after
+              </Title>
               <RangeInput
                 min={0}
                 max={15}
@@ -292,7 +296,9 @@ export const ConfigureGame = (props: PropsType) => {
               />
             </div>
             <div>
-              <h2>Hints interval</h2>
+              <Title order={2} style={{ margin: "24px 0 8px 0" }}>
+                Hints interval
+              </Title>
               <RangeInput
                 min={3}
                 max={10}
@@ -301,7 +307,9 @@ export const ConfigureGame = (props: PropsType) => {
               />
             </div>
             <div>
-              <h2>Time Limit per round</h2>
+              <Title order={2} style={{ margin: "24px 0 8px 0" }}>
+                Time Limit per round
+              </Title>
               <RangeInput
                 min={20}
                 max={120}
@@ -314,7 +322,9 @@ export const ConfigureGame = (props: PropsType) => {
         {showSettings && isBasic && (
           <RangeOptions>
             <div>
-              <h2>Number of Rounds</h2>
+              <Title order={2} style={{ margin: "24px 0 8px 0" }}>
+                Number of Rounds
+              </Title>
               <RangeInput
                 min={2}
                 max={12}
@@ -323,7 +333,9 @@ export const ConfigureGame = (props: PropsType) => {
               />
             </div>
             <div>
-              <h2>Number of Options</h2>
+              <Title order={2} style={{ margin: "24px 0 8px 0" }}>
+                Number of Options
+              </Title>
               <RangeInput
                 min={2}
                 max={6}
@@ -333,7 +345,9 @@ export const ConfigureGame = (props: PropsType) => {
             </div>
 
             <div>
-              <h2>Time limit per round</h2>
+              <Title order={2} style={{ margin: "24px 0 8px 0" }}>
+                Time limit per round
+              </Title>
               <RangeInput
                 min={5}
                 max={30}
@@ -344,7 +358,9 @@ export const ConfigureGame = (props: PropsType) => {
           </RangeOptions>
         )}
 
-        <h2>Select Regions</h2>
+        <Title order={2} style={{ margin: "36px 0 16px 0" }}>
+          Select Regions
+        </Title>
 
         <ImageCheckboxes setContinent={setContinent} />
 

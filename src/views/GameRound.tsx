@@ -4,7 +4,7 @@ import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { RainbowLoader } from "../components/RainbowLoader";
 import { notifications } from "@mantine/notifications";
-import { BasicRoundOptions } from "../components/BasicGame/BasicRoundOptions";
+import { BasicRoundOptions } from "../components/BasicRoundOptions";
 import { GuessHistory } from "../components/GuessHistory";
 import { Player } from "../types/Player";
 import { TextInput, Button, Text, Title } from "@mantine/core";
@@ -60,6 +60,8 @@ const Main = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 12px;
   background-color: #f5f7f9;
 `;
 const FlagContainer = styled.div`
@@ -76,7 +78,6 @@ const FlagCover = styled.div`
   width: 600px;
   height: 400px;
 `;
-const Hint = styled.p``;
 const TextGuessBox = styled.div`
   display: flex;
   flex-direction: column;

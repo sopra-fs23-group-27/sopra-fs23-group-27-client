@@ -1,4 +1,4 @@
-import { game } from "../types/databaseTypes";
+import { game } from "../types/game";
 
 export const emptyGame: game = {
   lobbyId: -1,

@@ -11,6 +11,7 @@ import {
   Title,
   Paper,
   PasswordInput,
+  Text,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Lobby } from "../types/Lobby";
@@ -24,25 +25,6 @@ const Application = styled.div`
   // background-color: #f5f7f9;
 `;
 
-const LoginButton = styled.button<props>`
-  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
-  text-align: center;
-  border: none;
-  padding: 16px 64px;
-  margin: 32px 0;
-  color: ${(props) => (props.isActive ? "white" : "gray")};
-
-  background-color: ${(props) =>
-    props.isActive ? "rgb(34, 139, 230)" : "lightgray"};
-  &:hover {
-    background-color: ${(props) => (props.isActive ? "#1c7ed6" : "lightgray")};
-  }
-`;
-
-type props = {
-  isActive: boolean;
-};
-
 type PropsType = {
   setLobby: Dispatch<SetStateAction<Lobby | undefined>>;
   player: Player | undefined;
@@ -51,8 +33,7 @@ type PropsType = {
 };
 
 export const ExternalGameJoin = (props: PropsType) => {
-  const { setLobby, player, setPlayer, setCurrentGameRound } =
-    props;
+  const { setLobby, player, setPlayer, setCurrentGameRound } = props;
   const [playerName, setPlayerName] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [nameInput, setNameInput] = useState("");
@@ -198,13 +179,14 @@ export const ExternalGameJoin = (props: PropsType) => {
     const playerId = sessionStorage.getItem("currentPlayerId");
     try {
       await httpPost(
-        "/players/" + playerId + "/logout" + "?playerId=" + playerId,
+        `/players/${playerId}/logout?playerId=${playerId}`,
         {},
         { headers: { Authorization: sessionStorage.getItem("FlagManiaToken") } }
       );
       notifications.show({
         title: "Malicious behavior detected!",
-        message: "You just got kicked from the game for maliciously trying to join a private lobby without the key!",
+        message:
+          "You just got kicked from the game for maliciously trying to join a private lobby without the key!",
         color: "red",
       });
 
@@ -224,7 +206,6 @@ export const ExternalGameJoin = (props: PropsType) => {
     }
   };
 
-
   const loginUserJoin = async () => {
     try {
       const res = await httpPost(
@@ -235,7 +216,7 @@ export const ExternalGameJoin = (props: PropsType) => {
         },
         { headers: {} }
       );
-      
+
       // Set the player state variable using the data returned from the API
       setPlayer(res.data);
 
@@ -256,7 +237,7 @@ export const ExternalGameJoin = (props: PropsType) => {
       // Set the lobby state variable using the data returned from the API
       const lobby = response.data as Lobby;
       setLobby(lobby);
-      
+
       // join game
       joinGame(privateLobbyKey, res.data.playerName);
     } catch (err: any) {
@@ -284,10 +265,13 @@ export const ExternalGameJoin = (props: PropsType) => {
       // show notification that player has successfully logged in and joined the game
       notifications.show({
         title: "Success",
-        message: "Great to see you " + playerName + "! You have successfully joined the game.",
+        message:
+          "Great to see you " +
+          playerName +
+          "! You have successfully joined the game.",
         color: "green",
       });
-      
+
       // navigate to game
       setCurrentGameRound(0);
       navigate("/lobbies/" + lobbyId);
@@ -314,7 +298,9 @@ export const ExternalGameJoin = (props: PropsType) => {
     <Application>
       <Container size="xl" my={40}>
         <Title>FlagMania</Title>
-        <p>Welcome to Flagmania, are you ready to join the game?</p>
+        <Text size="lg" style={{ margin: "24px 0" }}>
+          Welcome to Flagmania, are you ready to join the game?
+        </Text>
         <Switch
           onClick={() => handleLoginJoin()}
           size="xl"
@@ -324,32 +310,33 @@ export const ExternalGameJoin = (props: PropsType) => {
         </Switch>
         {showLogin ? (
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput
-            label="Username"
-            placeholder="Username"
-            value={nameInput}
-            onChange={handleNameInputChange}
-            size="xl"
-            required
-          />
-          <PasswordInput
-            label="Password"
-            placeholder="Password"
-            value={passwordInput}
-            onChange={handlePasswordInputChange}
-            size="xl"
-            required
-            mt="md"
-          />
-          <Button
-            onClick={loginUserJoin}
-            disabled={!isFormFilledOut}
-            fullWidth
-            size="xl"
-          >
-            Sign in
-          </Button>
-        </Paper>
+            <TextInput
+              label="Username"
+              placeholder="Username"
+              value={nameInput}
+              onChange={handleNameInputChange}
+              size="xl"
+              required
+            />
+            <PasswordInput
+              label="Password"
+              placeholder="Password"
+              value={passwordInput}
+              onChange={handlePasswordInputChange}
+              size="xl"
+              required
+              mt="md"
+            />
+            <Button
+              onClick={loginUserJoin}
+              disabled={!isFormFilledOut}
+              fullWidth
+              size="xl"
+              style={{ marginTop: "24px" }}
+            >
+              Sign in
+            </Button>
+          </Paper>
         ) : (
           <Paper withBorder shadow="md" p={30} mt={30} radius="md">
             <TextInput
@@ -360,6 +347,7 @@ export const ExternalGameJoin = (props: PropsType) => {
             <Button
               disabled={!playerName}
               onClick={() => handleUserJoin("/lobbies/" + lobbyId)}
+              style={{ marginTop: "24px" }}
             >
               Join Game
             </Button>

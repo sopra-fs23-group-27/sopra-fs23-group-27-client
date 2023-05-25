@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { UsersRolesTable } from "../components/UserTable";
 import { httpGet, httpPut } from "../helpers/httpService";
 import { RainbowLoader } from "../components/RainbowLoader";
-import { Button, CloseButton } from "@mantine/core";
+import { Button, CloseButton, Title } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Player } from "../types/Player";
 import { ButtonCopy } from "../components/ClipboardButton";
@@ -103,6 +103,14 @@ export const GameLobby = (props: PropsType) => {
   const [playerRoles, setPlayerRoles] = useState<{ [key: string]: boolean }>(
     {}
   );
+
+  useEffectOnce(() => {
+    setTimeout(() => {
+      if (!lobby) {
+        resendLobbySettings();
+      }
+    }, 1000);
+  });
 
   // map playername to name and role
   const playerNamesAndRoles = joinedPlayerNames.map((playerName: string) => {
@@ -223,6 +231,16 @@ export const GameLobby = (props: PropsType) => {
       setPlayerRoles(newPlayerRoles);
     }
   );
+  const resendLobbySettings = () => {
+    if (stompClient) {
+      stompClient.publish({
+        destination: `/app/games/${lobbyId}/send-lobby-settings`,
+        body: JSON.stringify({ playerToken }),
+      });
+    } else {
+      console.error("Error: Could not send message");
+    }
+  };
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/game-start`,
@@ -353,7 +371,9 @@ export const GameLobby = (props: PropsType) => {
                     style={{ position: "relative", left: "18%" }}
                     onClick={() => setShowQrCodeBig(false)}
                   />
-                  <h1>Scan to join the game</h1>
+                  <Title style={{ margin: "24px" }}>
+                    Scan to join the game
+                  </Title>
                   <QRCode value={gameUrl} style={{ width: "100%" }} />
                   <ButtonCopy url={gameUrl} />
                 </QrBox>

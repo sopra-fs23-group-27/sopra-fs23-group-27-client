@@ -1,11 +1,8 @@
 import {
-  createStyles,
-  Card,
   Button,
   Text,
+  Title,
   Group,
-  Button as MantineButton,
-  rem,
   Paper,
   TextInput,
   PasswordInput,
@@ -205,7 +202,7 @@ export function UserCardImage({ player, setPlayer }: UserCardImageProps) {
   return (
     <Application>
       <Container>
-        <h1>Update current user: {player?.playerName}</h1>
+        <Title order={1}>Update current user: {player?.playerName}</Title>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput
             label="Username"

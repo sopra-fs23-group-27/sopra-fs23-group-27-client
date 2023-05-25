@@ -46,9 +46,7 @@ interface advancedProps {
 export function LobbySettingsAdvanced(props: advancedProps) {
   const { classes } = useStyles();
   const {
-    lobbyId,
     lobbyName,
-    continent,
     numberOfPlayers,
     numberOfRounds,
     showFirstHintAfter,
