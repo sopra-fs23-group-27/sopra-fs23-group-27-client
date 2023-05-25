@@ -211,9 +211,8 @@ export const ExternalGameJoin = (props: PropsType) => {
         }
       );
       notifications.show({
-        title: "Invalid key!",
-        message:
-          "You just got kicked from the game for trying to join a private lobby without the correct key!",
+        title: "Game join not successful",
+        message: "You're not allowed to join this game!",
         color: "red",
       });
 
