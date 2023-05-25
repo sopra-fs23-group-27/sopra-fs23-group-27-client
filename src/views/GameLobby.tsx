@@ -104,6 +104,14 @@ export const GameLobby = (props: PropsType) => {
     {}
   );
 
+  useEffectOnce(() => {
+    setTimeout(() => {
+      if (!lobby) {
+        resendLobbySettings();
+      }
+    }, 1000);
+  });
+
   // map playername to name and role
   const playerNamesAndRoles = joinedPlayerNames.map((playerName: string) => {
     const role = playerRoles[playerName] ? "Admin" : "Player";
@@ -223,6 +231,16 @@ export const GameLobby = (props: PropsType) => {
       setPlayerRoles(newPlayerRoles);
     }
   );
+  const resendLobbySettings = () => {
+    if (stompClient) {
+      stompClient.publish({
+        destination: `/app/games/${lobbyId}/send-lobby-settings`,
+        body: JSON.stringify({ playerToken }),
+      });
+    } else {
+      console.error("Error: Could not send message");
+    }
+  };
 
   useSubscription(
     `/user/queue/lobbies/${lobbyId}/game-start`,
